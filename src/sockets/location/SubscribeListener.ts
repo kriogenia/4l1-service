@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import { SocketEvent } from "@sockets";
 
 const onSuscribe = (socket: Socket, io: Server) => (data: any) => {
 	// Log operation
@@ -14,7 +15,7 @@ const onSuscribe = (socket: Socket, io: Server) => (data: any) => {
 	socket.join(`${roomName}`)
 	console.log(`User ${userName} joined Room ${roomName}`)
 	
-	io.to(`${roomName}`).emit("newSuscription", userName);
+	io.to(`${roomName}`).emit(SocketEvent.NEW_SUSCRIBER, userName);
 }
 
 export { onSuscribe }

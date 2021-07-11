@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import { SocketEvent } from "@sockets";
 
 const onUnsuscribe = (socket: Socket, io: Server) => (data: any) => {
 	// Log operation
@@ -13,7 +14,7 @@ const onUnsuscribe = (socket: Socket, io: Server) => (data: any) => {
 	socket.leave(`${roomName}`)
 	console.log(`User ${userName} leaved Room ${roomName}`)
 	
-	io.to(`${roomName}`).emit("newSuscription", userName);
+	io.to(`${roomName}`).emit(SocketEvent.NEW_UNSUSCRIBER, userName);
 }
 
 export { onUnsuscribe }

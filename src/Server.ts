@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { ioListener } from "./sockets";
+import { ioListener, SocketEvent } from "@sockets";
 
 /* EXPRESS SERVER */
 const app = express();
@@ -23,6 +23,6 @@ const io = new Server(server, {
 });
 
 /* SOCKET.IO LISTENER */
-io.on("connection", ioListener);
+io.on(SocketEvent.CONNECTION, ioListener(io));
 
-export { server, io }
+export { server }

@@ -1,15 +1,16 @@
-import { Socket } from "socket.io";
-import { io } from "../Server";
+import { Server, Socket } from "socket.io";
 import { onSuscribe, onSendLocation, onUnsuscribe, onDisconnect } from "./location";
+import { SocketEvent } from "./SocketEvent";
 
-const ioListener = (socket: Socket) => {
+const  { DISCONNECT, SEND_LOCATION, SUSCRIBE, UNSUSCRIBE } = SocketEvent;
+
+const ioListener = (io: Server) => (socket: Socket) => {
     console.log(`Connection : SocketId = ${socket.id}`)
-    
-    socket.on('subscribe', onSuscribe(socket, io));
-    socket.on('shareLocation', onSendLocation(socket, io));
-	socket.on("unsuscribe", onUnsuscribe(socket, io));
-    socket.on('disconnect', onDisconnect(socket, io));
-
+    // Define the events and their listeners
+    socket.on(DISCONNECT, onDisconnect(socket, io));
+    socket.on(SEND_LOCATION, onSendLocation(socket, io));
+    socket.on(SUSCRIBE, onSuscribe(socket, io));
+	socket.on(UNSUSCRIBE, onUnsuscribe(socket, io));
 }
 
-export { ioListener }
+export { ioListener, SocketEvent }
