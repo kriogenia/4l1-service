@@ -1,5 +1,9 @@
+import './pre-start';
 import { server } from "@server";
 
-server.listen(3000, "127.0.0.1", () => {
+const port = Number(process.env.PORT || 3000);
+const host = process.env.host || "localhost";
+
+server.listen(port, host, () => {
 	console.log('Running server on port');
 });
