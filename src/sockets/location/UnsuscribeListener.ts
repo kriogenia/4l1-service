@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { SocketEvent } from "@sockets";
+import { SocketEvent } from "@/sockets";
 
 const onUnsuscribe = (socket: Socket, io: Server) => (data: any) => {
 	// Log operation

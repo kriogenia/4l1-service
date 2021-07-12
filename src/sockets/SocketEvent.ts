@@ -1,4 +1,5 @@
 export enum SocketEvent {
+	CONNECT = "connect",
 	CONNECTION = "connection",
 	DISCONNECT = "disconnect",
 	NEW_SUSCRIBER = "new_suscriber",

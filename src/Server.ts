@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { ioListener, SocketEvent } from "@sockets";
+import { ioListener, SocketEvent } from "@/sockets";
 
 /* EXPRESS SERVER */
 const app = express();

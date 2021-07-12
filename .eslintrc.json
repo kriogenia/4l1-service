@@ -22,6 +22,9 @@
           "code": 110
         }
       ],
+	  "node/no-extraneous-import": ["error", {
+		"allowModules": ["@jest/types"]
+	  }],
       "no-console": 1,
       "no-extra-boolean-cast": 0,
       "@typescript-eslint/no-unused-vars": [1, { "argsIgnorePattern": "^_" }],

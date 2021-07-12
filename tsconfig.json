@@ -5,6 +5,7 @@
 	  "target": "es6",
 	  "noImplicitAny": true,
 	  "moduleResolution": "node",
+	  "resolveJsonModule": true,
 	  "sourceMap": true,
 	  "outDir": "dist",
 	  "baseUrl": ".",
@@ -12,12 +13,14 @@
 		"@server": [
 			"src/Server"
 		],
-		"@*": [
+		"@/*": [
 			"src/*"
 		]
 	  }
 	},
 	"include": [
-	  "src/**/*"
+	  "src/**/*",
+	  "__tests__/**/*",
+	  "jest.config.ts"
 	]
   }

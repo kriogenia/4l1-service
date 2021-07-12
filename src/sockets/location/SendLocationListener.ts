@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { SocketEvent } from "@sockets";
+import { SocketEvent } from "@/sockets";
 
 const onSendLocation = (socket: Socket, _io: Server) => (data: any) => {
 	// Log operation <- middleware?
