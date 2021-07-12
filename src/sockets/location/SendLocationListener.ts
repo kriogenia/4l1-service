@@ -4,10 +4,11 @@ import { SocketEvent } from "@/sockets";
 const onSendLocation = (socket: Socket, _io: Server) => (data: any) => {
 	// Log operation <- middleware?
 	// Check data integrity
-	// Broadcast location
+	// Broadcast locatio
+	const obj = JSON.parse(data);
 	console.log(`Location sent - Socket:[${socket.id}]`);
-	console.log({data});
-	socket.broadcast.to(`${data.roomName}`).emit(SocketEvent.UPDATE_LOCATION, JSON.stringify(data))
+	console.log({obj});
+	socket.broadcast.to(`${obj.roomName}`).emit(SocketEvent.UPDATE_LOCATION, JSON.stringify(obj))
 }
 
 export { onSendLocation }
