@@ -1,17 +1,8 @@
-import express from "express";
-import morgan from "morgan";
+
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { RootEvent, onConnection } from "@/sockets";
-
-/* EXPRESS SERVER */
-const app = express();
-
-if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
-}
-
-app.get("/", (_req, res) => res.send("Hello world"));
+import { app } from "./App";
 
 /**
  * HTTP Server running the application
