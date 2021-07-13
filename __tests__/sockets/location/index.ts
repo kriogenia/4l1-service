@@ -2,9 +2,10 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { io as Client, Socket } from "socket.io-client";
 import { AddressInfo } from "net";
-import { ioListener, SocketEvent } from "@/sockets";
+import { onConnection, RootEvent } from "@/sockets";
+import { LocationEvent } from "@/sockets/location";
 
-describe("In the socket server", () => {
+describe("Calling location:", () => {
 	
 	let url: string;
 	let server: Server;
@@ -32,7 +33,7 @@ describe("In the socket server", () => {
 		const httpServer = createServer();
 		/* Declares and configures the socket server */
 		server = new Server(httpServer);
-		server.on(SocketEvent.CONNECTION, ioListener(server));
+		server.on(RootEvent.CONNECTION, onConnection(server));
 		/* Starts the server and saves the url */
 		httpServer.listen(() => {
 			url = `http://localhost:${(httpServer.address() as AddressInfo).port}`;
@@ -46,10 +47,10 @@ describe("In the socket server", () => {
 	beforeEach((done) => {
 		/* Connects clientA */
 		clientA = Client(url, { forceNew: true });
-		clientA.on(SocketEvent.CONNECT, () => {
+		clientA.on(RootEvent.CONNECT, () => {
 			/* Once connected, connects clientB */
 			clientB = Client(url, { forceNew: true });
-			clientB.on(SocketEvent.CONNECT, done);
+			clientB.on(RootEvent.CONNECT, done);
 		});
 	});
 
@@ -70,22 +71,22 @@ describe("In the socket server", () => {
 		clientB.disconnect();
 	});
 
-	describe("the 'suscribe' event", () => {
+	describe("subscribe event", () => {
 
-		it("should emit to the room the name of new suscriber", 
+		it("should emit to the room the name of new subscriber", 
 		(done) => {
 			/* ClientA should receive its own userName as new suscriber */
-			clientA.on(SocketEvent.NEW_SUSCRIBER, (arg) => {
+			clientA.on(LocationEvent.SUBSCRIPTION, (arg) => {
 				expect(arg).toBe(dataA.userName);
 				done();
 			});
 			/* Emit the event */
-			clientA.emit(SocketEvent.SUSCRIBE, JSON.stringify(dataA));
+			clientA.emit(LocationEvent.SUBSCRIBE, JSON.stringify(dataA));
 		});
 
 	});
 	
-	describe("the 'send_location' event", () => {
+	describe("send event", () => {
 
 		it("should broadcast the location to the rest of the room", 
 		(done) => {
@@ -95,18 +96,18 @@ describe("In the socket server", () => {
 				...room
 			}
 			/* ClientB should receive clientA sent location */
-			clientB.on(SocketEvent.UPDATE_LOCATION, (arg) => {
+			clientB.on(LocationEvent.UPDATE, (arg) => {
 				expect(JSON.parse(arg)).toEqual(location);
 				done();
 			});
 			/* Preparation to send the location once clientB is suscribed */
-			clientB.on(SocketEvent.NEW_SUSCRIBER, (args) => {
+			clientB.on(LocationEvent.SUBSCRIPTION, (args) => {
 				if (args === dataB.userName) {
-					clientA.emit(SocketEvent.SEND_LOCATION, JSON.stringify(location));
+					clientA.emit(LocationEvent.SEND, JSON.stringify(location));
 				}
 			});
 			/* Client B subscribes to the room and starts the chain */
-			clientB.emit(SocketEvent.SUSCRIBE, JSON.stringify(dataB));
+			clientB.emit(LocationEvent.SUBSCRIBE, JSON.stringify(dataB));
 		});
 
 	});

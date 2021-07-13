@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import { SocketEvent } from "@/sockets";
+import { LocationEvent } from "./";
 
-const onSuscribe = (socket: Socket, io: Server) => (data: any) => {
+export const onSubscribe = (socket: Socket, io: Server) => (data: any) => {
 	// Log operation
 	// Check data integrity
 	// Check that the user can suscribe to that room
@@ -15,7 +15,5 @@ const onSuscribe = (socket: Socket, io: Server) => (data: any) => {
 	socket.join(`${roomName}`)
 	console.log(`User ${userName} joined Room ${roomName}`)
 	
-	io.to(`${roomName}`).emit(SocketEvent.NEW_SUSCRIBER, userName);
+	io.to(`${roomName}`).emit(LocationEvent.SUBSCRIPTION, userName);
 }
-
-export { onSuscribe }

@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import { SocketEvent } from "@/sockets";
+import { LocationEvent } from "./";
 
-const onUnsuscribe = (socket: Socket, io: Server) => (data: any) => {
+export const onUnsubscribe = (socket: Socket, io: Server) => (data: any) => {
 	// Log operation
 	// Check data integrity
 	// Disconnect the socket from the room
@@ -14,7 +14,5 @@ const onUnsuscribe = (socket: Socket, io: Server) => (data: any) => {
 	socket.leave(`${roomName}`)
 	console.log(`User ${userName} leaved Room ${roomName}`)
 	
-	io.to(`${roomName}`).emit(SocketEvent.NEW_UNSUSCRIBER, userName);
+	io.to(`${roomName}`).emit(LocationEvent.UNSUBSCRIPTION, userName);
 }
-
-export { onUnsuscribe }
