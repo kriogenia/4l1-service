@@ -8,14 +8,19 @@ import { Environment } from "./shared/constants";
  */
 const app = express();
 
+/************** PRE-ROUTING MIDDLEWARES **************/
+
 if (process.env.NODE_ENV === Environment.DEV) {
+	// Logs all the incoming requests
     app.use(morgan("dev"));
 }
 
 if (process.env.NODE_ENV === Environment.PROD) {
+	// Sets security headers
     app.use(helmet());
 }
 
+// Testing endpoint
 app.get("/", (_req, res) => res.send("Hello world"));
 
 export { app }

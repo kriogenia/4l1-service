@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { LocationEvent } from "./";
 
-export const onSubscribe = (socket: Socket, io: Server) => (data: any) => {
+export const onSubscribe = (socket: Socket, io: Server) => (data: string) => {
 	// Log operation
 	// Check data integrity
 	// Check that the user can suscribe to that room

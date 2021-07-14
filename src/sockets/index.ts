@@ -2,6 +2,7 @@ import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
 import { setFeedSockets } from "./feed";
 import { setLocationSockets } from "./location";
+import { logListener } from "./Middlewares";
 
 /**
  * Sets up the socket with listeners
@@ -27,6 +28,8 @@ export enum RootEvent {
  */
 export const onConnection = (io: Server) => (socket: Socket) => {
     LOG.info(`Connection : SocketId = ${socket.id}`);
+	/* PRE-ACTION MIDDLEWARES */
+	socket.onAny(logListener(socket));
 	/* ROOT EVENTS */
 	socket.on(RootEvent.DISCONNECT, onDisconnect(socket));
 	/* LOCATION EVENTS */
