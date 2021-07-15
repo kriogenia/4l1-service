@@ -1,19 +1,19 @@
+import { LOG } from "@/shared/Logger";
+import { SubscriptionRequest, SubscriptionNotification } from "@/shared/schemas";
 import { Server, Socket } from "socket.io";
 import { LocationEvent } from "./";
 
-export const onSubscribe = (socket: Socket, io: Server) => (data: string) => {
-	// Log operation
+export const onSubscribe = (socket: Socket, io: Server) => (data: SubscriptionRequest) => {
 	// Check data integrity
 	// Check that the user can suscribe to that room
 	// If so, connect the socket to the room
 	// Emit notification of the user joining the room
-	console.log("Called onSuscribe");
-	const room_data = JSON.parse(data)
-	const userName = room_data.userName;
-	const roomName = room_data.roomName;
-
-	socket.join(`${roomName}`)
-	console.log(`User ${userName} joined Room ${roomName}`)
-	
-	io.to(`${roomName}`).emit(LocationEvent.SUBSCRIPTION, userName);
+	const { user_name, room_code } = data;
+	socket.join(`${room_code}`);
+	LOG.info(`User[${user_name}] joined Room[${room_code}] through Socket[${socket.id}] `);
+	const notification: SubscriptionNotification = {
+		user_name: user_name,
+		timestamp: Date.now()
+	}
+	io.to(`${room_code}`).emit(LocationEvent.SUBSCRIPTION, notification);
 }

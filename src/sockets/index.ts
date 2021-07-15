@@ -5,13 +5,6 @@ import { setLocationSockets } from "./location";
 import { logListener } from "./Middlewares";
 
 /**
- * Sets up the socket with listeners
- */
-export interface ISocketSetUp {
-	(socket: Socket, io: Server): void
-}
-
-/**
  * Keys of the root events
  */
 export enum RootEvent {
@@ -27,7 +20,7 @@ export enum RootEvent {
  * @returns "connection" event listener
  */
 export const onConnection = (io: Server) => (socket: Socket) => {
-    LOG.info(`Connection : SocketId = ${socket.id}`);
+    LOG.info(`Connection - Socket: [${socket.id}]`);
 	/* PRE-ACTION MIDDLEWARES */
 	socket.onAny(logListener(socket));
 	/* ROOT EVENTS */
@@ -43,5 +36,5 @@ export const onConnection = (io: Server) => (socket: Socket) => {
  * @returns listener to "disconnection" events
  */
 const onDisconnect = (socket: Socket) => () => {
-	LOG.info(`Disconnection : SocketId = ${socket.id}`);
+	LOG.info(`Disconnection - Socket: [${socket.id}]`);
 }
