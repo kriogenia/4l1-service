@@ -1,4 +1,4 @@
-import './pre-start';
+import "./pre-start";
 import { server } from "@server";
 import { LOG } from '@/shared/Logger';
 import { AddressInfo } from 'net'
