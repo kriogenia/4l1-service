@@ -1,7 +1,8 @@
 import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
-import { Environment } from "./shared/constants";
+import baseRouter from "@/routes";
+import { Environment } from "@/shared/constants";
 
 /**
  * Express server to manage all the routing
@@ -20,7 +21,6 @@ if (process.env.NODE_ENV === Environment.PROD) {
     app.use(helmet());
 }
 
-// Testing endpoint
-app.get("/", (_req, res) => res.send("Hello world"));
+app.use(baseRouter);
 
 export { app }
