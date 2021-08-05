@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import baseRouter from "@/routes";
@@ -12,15 +12,19 @@ const app = express();
 /************** PRE-ROUTING MIDDLEWARES **************/
 
 if (process.env.NODE_ENV === Environment.DEV) {
-	// Logs all the incoming requests
+	/* Logs all the incoming requests */
     app.use(morgan("dev"));
 }
 
 if (process.env.NODE_ENV === Environment.PROD) {
-	// Sets security headers
+	/* Sets security headers */
     app.use(helmet());
 }
 
+/* Parses the body JSONs */
+app.use(json())
+
+/* Set the root router */
 app.use(baseRouter);
 
 export { app }
