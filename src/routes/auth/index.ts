@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { login } from "./Login";
+import { validateCredentials } from "./Login";
 
 const authRouter = Router();
 
-/* POST /login */
-authRouter.post("/login", login);
+/* POST /validate */
+authRouter.post("/validate", validateCredentials);
 
 export default authRouter;
