@@ -1,24 +1,30 @@
 import { Request, Response } from "express";
-import * as core from "express-serve-static-core";
+import { StatusCodes } from "http-status-codes";
+import { UserModel } from "@/models/User";
+import { AppAuthCredentials } from "@/interfaces";
+import { msg_invalid_google_id } from "@/shared/strings"; 
 
-/**
- * Model of the app authentication credentials
- * @property {string?} givenName of the user
- * @property {string?} familyName of the user
- * @property {string} id GoogleIdToken of the user
- */
-interface AppAuthCredentials {
-	givenName?: string,
-	familyName?: string,
-	id?: string
-}
-
-export const validateCredentials = (req: Request<unknown, unknown, AppAuthCredentials>, 
-	res: Response): Response => {
+export const validateCredentials = async (req: Request<unknown, unknown, AppAuthCredentials>, 
+	res: Response): Promise<Response<string>> => {
 	// Retrieve the credentials	
 	const credentials = req.body;
-	console.log(credentials.id);
-	console.log(credentials.givenName);
-	console.log(credentials.familyName);
-	return res.status(200).send({auth: "Auth"});
+	if (!credentials.id) {
+		// TODO implement error handling
+		return res.status(StatusCodes.BAD_REQUEST)
+				.json({ message: msg_invalid_google_id });
+	}
+	return UserModel.find({ googleId: credentials.id }).exec()
+		.then(result => {
+			if (result.length > 0) {
+				console.log("return user");
+			} else {
+				return res.status(StatusCodes.OK).send({
+					givenName: credentials.givenName,
+					familyName: credentials.familyName,
+					googleId: credentials.id,
+					role: undefined
+				});
+			}
+		})
+		.catch();
 }

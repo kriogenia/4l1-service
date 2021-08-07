@@ -2,11 +2,26 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { RootEvent, onConnection } from "@/sockets";
 import { app } from "./App";
+<<<<<<< HEAD
 import { connectToMongo } from "./Mongo";
+=======
+import { connectToMongo } from "./MongoClient";
+>>>>>>> dd9a615... Improve package distribution
 
 /* MONGODB CONNECTION */
 connectToMongo();
 
+<<<<<<< HEAD
+=======
+/**
+ * HTTP Server running the application
+const credentials = {
+	key: fs.readFileSync("key.pem"),
+   cert: fs.readFileSync("cert.pem")
+};
+*/
+
+>>>>>>> dd9a615... Improve package distribution
 const server = createServer(app);						// HTTP
 //const server = createServer(credentials, app);		// HTTPS
 

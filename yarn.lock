@@ -589,7 +589,7 @@
 
 "@typegoose/typegoose@^8.1.1":
   version "8.1.1"
-  resolved "https://registry.npmjs.org/@typegoose/typegoose/-/typegoose-8.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.1.1.tgz#bad88b711f27178923687618d38efb1dfedee7dc"
   integrity sha512-itsozSJ2v4pZ+mQ5whkNl9AVVAh/LWoJandN2lnMUcJxHLyng6emLxJPwRuSTgcOdXLMUm5VYA4U3eBs7Dbe+Q==
   dependencies:
     lodash "^4.17.20"
@@ -2850,7 +2850,7 @@ http-proxy-agent@^4.0.1:
 
 http-status-codes@^2.1.4:
   version "2.1.4"
-  resolved "https://registry.npmjs.org/http-status-codes/-/http-status-codes-2.1.4.tgz"
+  resolved "https://registry.yarnpkg.com/http-status-codes/-/http-status-codes-2.1.4.tgz#453d99b4bd9424254c4f6a9a3a03715923052798"
   integrity sha512-MZVIsLKGVOVE1KEnldppe6Ij+vmemMuApDfjhVSLzyYP+td0bREEYyAoIw9yFePoBXManCuBqmiNP5FqJS5Xkg==
 
 https-proxy-agent@^5.0.0:
@@ -3930,7 +3930,7 @@ lodash@4.x, lodash@^4.17.20, lodash@^4.7.0:
 
 loglevel@^1.7.0:
   version "1.7.1"
-  resolved "https://registry.npmjs.org/loglevel/-/loglevel-1.7.1.tgz"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.7.1.tgz#005fde2f5e6e47068f935ff28573e125ef72f197"
   integrity sha512-Hesni4s5UkWkwCGJMQGAh71PaLUmKFM60dHvq0zi/vDhhrzuk+4GgNbTXJ12YYQJn6ZKBDNIjYcuQGKudvqrIw==
 
 lru-cache@^6.0.0:
@@ -4753,7 +4753,7 @@ readdirp@~3.6.0:
 
 reflect-metadata@^0.1.13:
   version "0.1.13"
-  resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.13.tgz"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
 
 regex-not@^1.0.0, regex-not@^1.0.2:
@@ -5530,10 +5530,15 @@ tslib@^1.8.1:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.1.0, tslib@^2.3.0:
+tslib@^2.1.0:
   version "2.3.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
+
+tslib@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
 
 tsutils@^3.21.0:
   version "3.21.0"
