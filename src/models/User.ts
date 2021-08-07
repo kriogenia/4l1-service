@@ -1,6 +1,29 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, post, prop } from "@typegoose/typegoose";
+import Logger from "jet-logger";
 
-class User {
+/**
+ * List of possible types of user
+ */
+export enum Role {
+	Keeper = "keeper",
+	Patient = "patient",
+	Blank = "blank"
+}
+
+/**
+ * Post hook to log any new user creation
+ */
+@post<User>("save", (user) => {
+	Logger.Info(`New User[${user._id as string ?? ""}] created with GoogleID[${user.googleId}] `)
+})
+/**
+ * Entity of the application users
+ * @property {string?} givenName of the user
+ * @property {string?} familyName of the user
+ * @property {string} googleId of the account that user used to authenticate
+ * @property {Role} role type of user
+ */
+export class User {
 
 	@prop()
 	public givenName: string;
@@ -13,12 +36,10 @@ class User {
 
 	@prop({ required: true })
 	public role: Role;
+
 }
 
-enum Role {
-	Keeper = "keeper",
-	Patient = "patient",
-	Blank = "blank"
-}
-
+/**
+ * Model to manage User database operations
+ */
 export const UserModel = getModelForClass(User);

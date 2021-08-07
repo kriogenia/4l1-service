@@ -4,9 +4,7 @@ import helmet from "helmet";
 import baseRouter from "@/routes";
 import { Environment } from "@/shared/constants";
 
-/**
- * Express server to manage all the routing
- */
+/*********** CREATE THE EXPRESS APPLICATION ***********/
 const app = express();
 
 /************** PRE-ROUTING MIDDLEWARES **************/
@@ -24,7 +22,8 @@ if (process.env.NODE_ENV === Environment.PROD) {
 /* Parses the body JSONs */
 app.use(json())
 
-/* Set the root router */
+/**************** SET THE BASE ROUTER ****************/
 app.use(baseRouter);
 
+/************** EXPORT THE APPLICATION ***************/
 export { app }
