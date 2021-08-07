@@ -7,3 +7,13 @@ export enum Environment {
 	PROD = "production",
 	TEST = "test"
 }
+
+/**
+ * Severity levels
+ */
+ export enum Severity {
+    INFO,
+    IMP,
+    WARN,
+    ERR
+}

@@ -1,4 +1,4 @@
-import { getModelForClass, post, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
 
@@ -11,28 +11,29 @@ export enum Role {
 	Blank = "blank"
 }
 
+
 /**
  * Post hook to log any new user creation
  */
 @post<UserSchema>("save", (user) => {
-	Logger.Info(`New User[${user._id as string ?? ""}] created with GoogleID[${user.googleId}] `)
+	Logger.Info(`New User[${user.id as string ?? ""}] created with GoogleID[${user.googleId}] `)
 })
 /**
  * Entity of the application users
- * @property {string?} givenName of the user
- * @property {string?} familyName of the user
- * @property {string} googleId of the account that user used to authenticate
+ * @property {string?} displayName name of the user to display in the app
+ * @property {string} googleId of the account that user uses to authenticate
  * @property {Role} role type of user
  */
+ @modelOptions({ schemaOptions: { collection: "users" } })
 class UserSchema {
 
 	@prop()
-	public givenName: string;
+	public displayName?: string;
 
-	@prop()
-	public familyName?: string;
-
-	@prop({ required: true })
+	@prop({ 
+		required: true,
+		unique: true
+	})
 	public googleId: string;
 
 	@prop({ required: true })
