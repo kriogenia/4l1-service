@@ -3,10 +3,14 @@ import { Server } from "socket.io";
 import { RootEvent, onConnection } from "@/sockets";
 import { app } from "./App";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { connectToMongo } from "./Mongo";
 =======
 import { connectToMongo } from "./MongoClient";
 >>>>>>> dd9a615... Improve package distribution
+=======
+import { connectToMongo } from "./Mongo";
+>>>>>>> 9875a76... Create mock database
 
 /* MONGODB CONNECTION */
 connectToMongo();
