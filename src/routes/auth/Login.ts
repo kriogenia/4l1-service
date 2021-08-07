@@ -25,7 +25,7 @@ export const login = async (req: Request<unknown, unknown, AppAuthCredentials>,
 	// TODO validate token with google
 	// If the id is valid, get the user to return
 	return getUserByGoogleId(credentials)
-		.then((user) => res.status(StatusCodes.OK).send(user))
+		.then((user) => res.status(StatusCodes.OK).json(user).send())
 		.catch((e: Error) => {
 			throw e;
 		});
