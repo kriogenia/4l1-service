@@ -8,6 +8,9 @@ const config: Config.InitialOptions = {
 	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 	modulePaths: [
 		"<rootDir>"
+	],
+	testPathIgnorePatterns: [
+		"<rootDir>/__tests__/util/*"
 	]
 }
 

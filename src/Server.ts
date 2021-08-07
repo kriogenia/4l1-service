@@ -5,7 +5,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { RootEvent, onConnection } from "@/sockets";
 import { app } from "./App";
-import { connectToMongo } from "./MongoClient";
+import { connectToMongo } from "./Mongo";
 
 /* MONGODB CONNECTION */
 connectToMongo();
