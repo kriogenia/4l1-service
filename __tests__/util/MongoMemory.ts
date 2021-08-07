@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
-const mongoMock = new MongoMemoryServer();
+let mongoMock: MongoMemoryServer;
 
 /**
  * Creates a connection to the local memory database
  */
-export const connectToDb = async () => {
+export const connect = async () => {
+	mongoMock = await MongoMemoryServer.create()
 	const uri = mongoMock.getUri();
 	await mongoose.connect(uri, {
 		useNewUrlParser: true,
@@ -17,8 +18,8 @@ export const connectToDb = async () => {
 /**
  * Disconnects from the local memory database
  */
-export const closeDb = async () => {
-	await mongoose.connection.dropDatabase();
+export const close = async () => {
+	//await mongoose.connection.dropDatabase();
 	await mongoose.connection.close();
 	await mongoMock.stop();
 }
@@ -26,8 +27,8 @@ export const closeDb = async () => {
 /**
  * Clears the whole local memory database
  */
-export const clearDb = async () => {
-	const collections = mongoose.connection.collections
+export const clear = async () => {
+	const collections = mongoose.connection.collections;
 	for (const key in collections) {
 		await collections[key].deleteMany({});
 	}

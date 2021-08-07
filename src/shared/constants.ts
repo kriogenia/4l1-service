@@ -4,5 +4,6 @@
 export enum Environment {
 	AZ = "azure",
 	DEV = "development",
-	PROD = "production"
+	PROD = "production",
+	TEST = "test"
 }

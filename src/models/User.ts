@@ -1,4 +1,5 @@
 import { getModelForClass, post, prop } from "@typegoose/typegoose";
+import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
 
 /**
@@ -13,7 +14,7 @@ export enum Role {
 /**
  * Post hook to log any new user creation
  */
-@post<User>("save", (user) => {
+@post<UserSchema>("save", (user) => {
 	Logger.Info(`New User[${user._id as string ?? ""}] created with GoogleID[${user.googleId}] `)
 })
 /**
@@ -23,7 +24,7 @@ export enum Role {
  * @property {string} googleId of the account that user used to authenticate
  * @property {Role} role type of user
  */
-export class User {
+class UserSchema {
 
 	@prop()
 	public givenName: string;
@@ -39,7 +40,9 @@ export class User {
 
 }
 
+export type User = DocumentType<UserSchema, BeAnObject>;
+
 /**
  * Model to manage User database operations
  */
-export const UserModel = getModelForClass(User);
+export const UserModel = getModelForClass(UserSchema);
