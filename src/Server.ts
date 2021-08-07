@@ -2,32 +2,12 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { RootEvent, onConnection } from "@/sockets";
 import { app } from "./App";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { connectToMongo } from "./Mongo";
-=======
-import { connectToMongo } from "./MongoClient";
->>>>>>> dd9a615... Improve package distribution
-=======
-import { connectToMongo } from "./Mongo";
->>>>>>> 9875a76... Create mock database
 
 /* MONGODB CONNECTION */
 connectToMongo();
 
-<<<<<<< HEAD
-=======
-/**
- * HTTP Server running the application
-const credentials = {
-	key: fs.readFileSync("key.pem"),
-   cert: fs.readFileSync("cert.pem")
-};
-*/
-
->>>>>>> dd9a615... Improve package distribution
 const server = createServer(app);						// HTTP
-//const server = createServer(credentials, app);		// HTTPS
 
 /* SOCKET.IO SERVER */
 const io = new Server(server);		// change to io.listen?
