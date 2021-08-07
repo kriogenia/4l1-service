@@ -4,7 +4,7 @@ import { io as Client, Socket } from "socket.io-client";
 import { AddressInfo } from "net";
 import { onConnection, RootEvent } from "@/sockets";
 import { LocationEvent } from "@/sockets/location";
-import { SubscriptionNotification, SubscriptionRequest } from "@/shared/schemas";
+import { SubscriptionNotification, SubscriptionRequest } from "@/interfaces";
 
 //jest.setTimeout(10000);
 describe("Calling location:", () => {
@@ -22,12 +22,12 @@ describe("Calling location:", () => {
 		user_name: "userA",
 		...room
 	};
-
+/*
 	const dataB: SubscriptionRequest = {
 		user_name: "userB",
 		...room
 	}
-
+*/
 	/**
 	 * Creates the socket server and both clients to use
 	 */

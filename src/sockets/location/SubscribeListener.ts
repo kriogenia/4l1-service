@@ -1,5 +1,5 @@
 import { LOG } from "@/shared/Logger";
-import { SubscriptionRequest, SubscriptionNotification } from "@/shared/schemas";
+import { SubscriptionRequest, SubscriptionNotification } from "@/interfaces";
 import { Server, Socket } from "socket.io";
 import { LocationEvent } from "./";
 
