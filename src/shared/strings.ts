@@ -1,0 +1,1 @@
+export const msg_invalid_google_id = "The specified user does not have a valid ID";

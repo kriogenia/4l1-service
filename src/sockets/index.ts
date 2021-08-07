@@ -2,7 +2,7 @@ import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
 import { setFeedSockets } from "./feed";
 import { setLocationSockets } from "./location";
-import { logListener } from "./Middlewares";
+import { logListener } from "./middlewares";
 
 /**
  * Keys of the root events
