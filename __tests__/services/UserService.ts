@@ -1,4 +1,3 @@
-import { AppAuthCredentials } from "@/interfaces";
 import { Role, UserModel } from "@/models/User";
 import { getUserByGoogleId } from "@/services/UserService";
 import * as db from "@test-util/MongoMemory";
@@ -11,17 +10,12 @@ afterAll(db.close);
 describe("The function getUserByGoogleId", () => {
 
 	it ("should generate a new user when no matching user exists", (done) => {
-		const credentials: AppAuthCredentials = {
-			givenName: "name",
-			familyName: "surname",
-			id: "test"
-		};
-		getUserByGoogleId(credentials)
+		const googleId = "googleId";
+		getUserByGoogleId(googleId)
 			.then((user) => {
 				expect(user.id).not.toBeNull();
-				expect(user.givenName).toBe(credentials.givenName);
-				expect(user.familyName).toBe(credentials.familyName);
-				expect(user.googleId).toBe(credentials.id);
+				expect(user.displayName).toBeUndefined();
+				expect(user.googleId).toBe(googleId);
 				expect(user.role).toBe(Role.Blank);
 				done();
 			})
@@ -29,19 +23,16 @@ describe("The function getUserByGoogleId", () => {
 	});
 	
 	it ("should return the matching user", async () => {
-		const credentials: AppAuthCredentials = {
-			id: "test"
-		};
-		// insert the user
+		const googleId = "googleId";
+		// create the user
 		const expected = await UserModel.create({
-			googleId: credentials.id,
+			googleId: googleId,
 			role: Role.Keeper
 		});
-		return getUserByGoogleId(credentials)
+		return getUserByGoogleId(googleId)
 			.then((user) => {
 				expect(user.id).toEqual(expected.id);
-				expect(user.givenName).toBe(expected.givenName);
-				expect(user.familyName).toBe(expected.familyName);
+				expect(user.displayName).toBe(expected.displayName);
 				expect(user.googleId).toBe(expected.googleId);
 				expect(user.role).toBe(expected.role);
 			});

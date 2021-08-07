@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { login } from "./Login";
+import { signIn } from "./SignIn";
 
 const authRouter = Router();
 
-/* POST /auth/login */
-authRouter.post("/login", login);
+/* GET /auth/signin */
+authRouter.get("/signin/:token", signIn);
 
 export default authRouter;

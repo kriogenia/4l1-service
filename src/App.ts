@@ -3,8 +3,9 @@ import morgan from "morgan";
 import helmet from "helmet";
 import baseRouter from "@/routes";
 import { Environment } from "@/shared/constants";
+import { handleError } from "./shared/ErrorHandler";
 
-/*********** CREATE THE EXPRESS APPLICATION ***********/
+/*********** CREATE THE EXPRESS APPLICATION **********/
 const app = express();
 
 /************** PRE-ROUTING MIDDLEWARES **************/
@@ -24,6 +25,9 @@ app.use(json())
 
 /**************** SET THE BASE ROUTER ****************/
 app.use(baseRouter);
+
+/************* POST-ROUTING MIDDLEWARES **************/
+app.use(handleError);
 
 /************** EXPORT THE APPLICATION ***************/
 export { app }
