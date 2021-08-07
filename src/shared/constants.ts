@@ -3,5 +3,6 @@
  */
 export enum Environment {
 	DEV = "development",
-	PROD = "production"
+	PROD = "production",
+	TEST = "test"
 }

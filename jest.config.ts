@@ -9,6 +9,9 @@ const config: Config.InitialOptions = {
 	modulePaths: [
 		"<rootDir>"
 	],
+	setupFiles: [
+		"<rootDir>/__tests__/util/test.config.ts"
+	],
 	testPathIgnorePatterns: [
 		"<rootDir>/__tests__/util/*"
 	]
