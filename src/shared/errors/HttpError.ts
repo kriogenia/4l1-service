@@ -36,7 +36,7 @@ export class HttpError extends Error {
 		super(message);
 		Object.setPrototypeOf(this, new.target.prototype);
 		Error.captureStackTrace(this);
-		this.name = name || "Error";
+		this.name = name || "HttpError";
 		this.status = status || StatusCodes.INTERNAL_SERVER_ERROR;
 		this.severity = severity || Severity.ERR;
 	}

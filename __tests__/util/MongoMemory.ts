@@ -10,6 +10,7 @@ export const connect = async () => {
 	mongoMock = await MongoMemoryServer.create()
 	const uri = mongoMock.getUri();
 	await mongoose.connect(uri, {
+		useCreateIndex: true,
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	});

@@ -3,7 +3,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import baseRouter from "@/routes";
 import { Environment } from "@/shared/constants";
-import { handleError } from "./shared/ErrorHandler";
+import { handleError } from "@/routes/middlewares";
 
 /*********** CREATE THE EXPRESS APPLICATION **********/
 const app = express();

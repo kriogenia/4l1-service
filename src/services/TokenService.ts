@@ -45,5 +45,4 @@ export const generatePair = (id: string) => {
 	);
 }
 
-
-// TODO store clean up function
+// TODO database clean up function

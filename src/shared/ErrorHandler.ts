@@ -1,29 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import { Severity } from "./constants";
 import { HttpError } from "./errors";
 import { LOG } from "./Logger";
-
-/**
- * Handles the errors associated to a request and response
- * @param err error to handle
- * @param _req original request
- * @param res carried response
- * @param _next next function
- * @returns error response to return to the user
- */
- export const handleError = (err: Error, _req: Request, res: Response, next: NextFunction) : void => {
-	errorHandler.handleError(err);
-    if (errorHandler.isTrustedError(err)) {
-        res.status(err.status).json(err.toJson()).send();
-		next();
-    } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            message: "An unexpected error has occurred"
-        }).send();
-		next(err);
-    }
-}
 
 class ErrorHandler {
 
@@ -40,7 +17,7 @@ class ErrorHandler {
 	 */
 	handleError = (error: Error): void => {
         if (this.isTrustedError(error)) {
-            this.logMap.get(error.severity)?.call(this, error);
+            this.logMap.get(error.severity).call(this, error);
         } else {
 			LOG.err(error, true);
 		}
