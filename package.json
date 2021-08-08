@@ -1,6 +1,6 @@
 {
   "name": "4l1-service",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "API Service for 4l1 project",
   "main": "dist/index.js",
   "repository": "https://github.com/kriogenia/4l1-service",
@@ -48,6 +48,7 @@
     "eslint-plugin-node": "^11.1.0",
     "jest": "^27.0.6",
     "mongodb-memory-server": "^7.3.5",
+    "ts-jest": "^27.0.3",
     "ts-node-dev": "^1.1.8",
     "tsconfig-paths": "^3.10.1"
   }
