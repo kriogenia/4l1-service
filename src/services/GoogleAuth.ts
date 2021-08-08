@@ -19,5 +19,4 @@ export const verify = async (token: string) => {
 		errorHandler.handleError(e);
 		throw badRequestError(msg_invalid_google_id);
 	});
-  
 }

@@ -11,7 +11,7 @@ export enum Environment {
  * Severity levels
  */
  export enum Severity {
-    INFO,
+    INFO = 1,
     IMP,
     WARN,
     ERR
