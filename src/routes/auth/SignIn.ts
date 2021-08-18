@@ -33,9 +33,8 @@ export const signIn = async (req: Request<SignInParams>, res: Response,
 		UserService.getUserByGoogleId(userId)
 			.then((user) => {
 				// Return the user and the session tokens
-				const tokens = generatePair(user.id);
 				return res.status(StatusCodes.OK).json({
-					...tokens,
+					session: generatePair(user.id),
 					user: user.toJSON()
 				}).send();
 			})
