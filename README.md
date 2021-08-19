@@ -23,9 +23,7 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 |:-:		| :-:					|:-:										|
 | URL     	| /auth/signin/:token	|											|
 | Params    | token: string			| Google Id Token of the user 				|
-| Response	| auth: string			| Auth token								|
-|			| refresh: string		| Refresh token								|
-|			| expiration: number	| Expiration timestamp of the auth token	|
+| Response	| session: object		| Tokens and expiration time				|
 |			| user: object			| Logged in user details					|
 
 

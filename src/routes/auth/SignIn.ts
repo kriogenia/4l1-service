@@ -1,13 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { msg_invalid_google_id } from "@/shared/strings"; 
+import { invalid_google_id } from "@/shared/errors/messages"; 
 import * as UserService from "@/services/UserService";
 import { badRequestError } from "@/shared/errors";
 import * as GoogleAuth from "@/services/GoogleAuth";
-import { generatePair } from "@/services/TokenService";
+import { generate } from "@/services/TokenService";
+import { User } from "@/models/User";
+import { LeanDocument } from "mongoose";
+import { SessionPackage } from "@/interfaces";
 
 interface SignInParams {
 	token: string
+}
+
+interface SignInResponse {
+	session: SessionPackage,
+	user: LeanDocument<User>
 }
 
 /**
@@ -19,25 +27,22 @@ interface SignInParams {
  * @param res carried response
  * @returns response with the user account details
  */
-export const signIn = async (req: Request<SignInParams>, res: Response, 
-	next: NextFunction): Promise<void|Response> => 
+export const signIn = async (
+	req: Request<SignInParams>, 
+	res: Response<SignInResponse>, 
+	next: NextFunction): Promise<void|Response<SignInResponse>> => 
 {
 	// Retrieve the token	
 	const token = req.params.token;
 	if (!token) {
-		return next(badRequestError(msg_invalid_google_id));
+		return next(badRequestError(invalid_google_id));
 	}
 	// Verify the Google token
-	return GoogleAuth.verify(token).then((userId) =>
-		// If the id is valid, get the user to return
-		UserService.getUserByGoogleId(userId)
-			.then((user) => {
-				// Return the user and the session tokens
-				return res.status(StatusCodes.OK).json({
-					session: generatePair(user.id),
-					user: user.toJSON()
-				}).send();
-			})
-			.catch(next)
-		).catch(next);
+	return GoogleAuth.verify(token)
+		.then(UserService.getUserByGoogleId)
+		.then((user) => res.status(StatusCodes.OK).json({
+				session: generate(user.id),
+				user: user.toJSON()
+			}).send())
+		.catch(next);
 }
