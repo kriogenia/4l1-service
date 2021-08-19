@@ -1,6 +1,6 @@
 import { errorHandler } from "@/shared/ErrorHandler";
 import { badRequestError } from "@/shared/errors";
-import { msg_invalid_google_id } from "@/shared/strings";
+import { invalid_google_id } from "@/shared/errors/messages";
 import { OAuth2Client } from "google-auth-library";
 
 /**
@@ -17,6 +17,6 @@ export const verify = async (token: string) => {
 	.then((ticket) => ticket.getPayload().sub)
 	.catch((e: Error) => {
 		errorHandler.handleError(e);
-		throw badRequestError(msg_invalid_google_id);
+		throw badRequestError(invalid_google_id);
 	});
 }

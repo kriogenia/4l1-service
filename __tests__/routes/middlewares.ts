@@ -17,8 +17,8 @@ describe("The handle error middleware", () => {
 	beforeEach(() => {
         mockRequest = {};
         mockResponse = {
-			status: jest.fn((_code: number)=> mockResponse as Response),
-            json: jest.fn((_body: any)=> mockResponse as Response),
+			status: jest.fn((_code: number) => mockResponse as Response),
+            json: jest.fn((_body: any) => mockResponse as Response),
 			send: jest.fn()
         };
     });
