@@ -2,7 +2,7 @@ import { Role, UserModel } from "@/models/User";
 import { getUserByGoogleId } from "@/services/UserService";
 import * as db from "@test-util/MongoMemory";
 
-/* Test catabase deployment and management */
+/* Test database deployment and management */
 beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
