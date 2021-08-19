@@ -1,13 +1,13 @@
 import { app } from "@/App";
-import { SessionPackage } from "@/interfaces";
 import request from "supertest";
 import * as jwt from "jsonwebtoken";
 import { ERR_MSG } from "@/shared/errors";
 import { StatusCodes } from "http-status-codes";
+import { checkSessionPackage } from "@test-util/checkers";
 
 describe("Calling POST /auth/refresh", () => {
 
-	it("with valid tokens should return a new session package", 
+	it("should return a new session package when provided valid tokens ", 
 	async () => {
 		const authToken = jwt.sign(
 			{ sessionId : "id" }, 
@@ -27,13 +27,10 @@ describe("Calling POST /auth/refresh", () => {
 				refresh: refreshToken
 			})
 			.expect(StatusCodes.OK);
-		const session: SessionPackage = response.body.session;
-		expect(session.auth).not.toBeNull();
-		expect(session.refresh).not.toBeNull();
-		expect(session.expiration).not.toBeNull();
+		checkSessionPackage(response.body.session);
 	});
 
-	it("with invalid tokens should return a new error response", 
+	it("should return a new error response when provided invalid tokens", 
 	async () => {
 		const response = await request(app)
 			.post("/auth/refresh")

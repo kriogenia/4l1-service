@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { invalid_google_id } from "@/shared/errors/messages"; 
+import { StatusCodes } from "http-status-codes"; 
 import * as UserService from "@/services/UserService";
-import { badRequestError } from "@/shared/errors";
 import * as GoogleAuth from "@/services/GoogleAuth";
 import { generate } from "@/services/TokenService";
 import { User } from "@/models/User";
@@ -32,14 +30,9 @@ export const signIn = async (
 	res: Response<SignInResponse>, 
 	next: NextFunction): Promise<void|Response<SignInResponse>> => 
 {
-	// Retrieve the token	
-	const token = req.params.token;
-	if (!token) {
-		return next(badRequestError(invalid_google_id));
-	}
 	// Verify the Google token
-	return GoogleAuth.verify(token)
-		.then(UserService.getUserByGoogleId)
+	return GoogleAuth.verify(req.params.token)
+		.then(UserService.getUserByGoogleId)	// And get the user to return
 		.then((user) => res.status(StatusCodes.OK).json({
 				session: generate(user.id),
 				user: user.toJSON()
