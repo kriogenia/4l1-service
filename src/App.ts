@@ -6,6 +6,7 @@ import { Environment } from "@/shared/constants";
 import { handleError } from "@/routes/middlewares";
 
 /*********** CREATE THE EXPRESS APPLICATION **********/
+/** Express application */
 const app = express();
 
 /************** PRE-ROUTING MIDDLEWARES **************/
