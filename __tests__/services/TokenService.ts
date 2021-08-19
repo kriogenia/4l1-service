@@ -1,6 +1,6 @@
 import { SessionPackage } from "@/interfaces";
 import { generate, refresh } from "@/services/TokenService";
-import { ERR_MSG, unathorizedError } from "@/shared/errors";
+import { ERR_MSG } from "@/shared/errors";
 import * as jwt from "jsonwebtoken";
 
 describe("The token generation", () => {
@@ -79,7 +79,7 @@ describe("The token refresh", () => {
 
 });
 
-function verifyPackage(pack: SessionPackage) {
+const verifyPackage = (pack: SessionPackage) => {
 	// Check auth token
 	const decodedAuth = jwt.verify(pack.auth, process.env.AUTH_TOKEN_SECRET) as jwt.JwtPayload;
 	expect(decodedAuth.sessionId).toBe("id");
