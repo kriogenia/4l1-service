@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
-=======
-import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose";
-import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
-import Logger from "jet-logger";
->>>>>>> dc82caa... Implement error handling
 
 /** List of possible types of user */
 export enum Role {
@@ -15,7 +9,6 @@ export enum Role {
 	Blank = "blank"
 }
 
-<<<<<<< HEAD
 /** 
  * Simplified model representing an address with the needed info to allow personal 
  * localization of the user. 
@@ -26,13 +19,10 @@ interface Address {
 	locality?: string,
 	region?: string
 }
-=======
->>>>>>> dc82caa... Implement error handling
 
 /**
  * Reduced and sharable version of the user data to just enable contact
  */
-<<<<<<< HEAD
 export interface UserContact {
 	role: Role,
 	displayName?: string,
@@ -44,14 +34,6 @@ export interface UserContact {
 
 /**
  * Entity of the application users
-=======
-@post<UserSchema>("save", (user) => {
-	Logger.Info(`New User[${user.id as string ?? ""}] created with GoogleID[${user.googleId}] `)
-})
-/**
- * Entity of the application users
- * @property {string?} displayName name of the user to display in the app
->>>>>>> dc82caa... Implement error handling
  * @property {string} googleId of the account that user uses to authenticate
  * @property {Role} role type of user
  * @property {string?} displayName name of the user to display in the app
@@ -61,7 +43,6 @@ export interface UserContact {
  * @property {User[]?} bonds list of keepers of the patient
  * @property {User?} kept bonded patient of the keeper
  */
-<<<<<<< HEAD
  @modelOptions({ 
 	schemaOptions: { collection: "users" },
 	options: { allowMixed: Severity.ALLOW } 
@@ -82,19 +63,6 @@ export class UserSchema {
 
 	@prop()
 	public altPhoneNumber?: string;
-=======
- @modelOptions({ schemaOptions: { collection: "users" } })
-class UserSchema {
-
-	@prop()
-	public displayName?: string;
-
-	@prop({ 
-		required: true,
-		unique: true
-	})
-	public googleId: string;
->>>>>>> dc82caa... Implement error handling
 
 	@prop()
 	public address?: Address;

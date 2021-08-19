@@ -11,6 +11,13 @@ interface TokenPayload extends jwt.JwtPayload {
 }
 
 /**
+ * Content stored in the token
+ */
+interface TokenPayload extends jwt.JwtPayload {
+	sessionId: string
+}
+
+/**
  * Generates a pair of auth and refresh tokens with the auth expiration time
  * @param id of the user
  * @returns object with the both tokens and expiring time

@@ -144,16 +144,12 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 * [**Http Status Codes**](https://www.npmjs.com/package/http-status-codes)
 * [**Jet-Logger**](https://www.npmjs.com/package/jet-logger)
 * [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)
-<<<<<<< HEAD
 * [**mongoose**](https://www.npmjs.com/package/mongoose)
-=======
->>>>>>> d0e0ac0... Update README.md
 * [**Morgan**](https://www.npmjs.com/package/morgan)
 * [**Socket.io**](https://www.npmjs.com/package/socket.io)
 * [**Typegoose**](https://www.npmjs.com/package/@typegoose/typegoose)
 * [**Typescript**](https://www.npmjs.com/package/typescript)
 
-<<<<<<< HEAD
 ### Testing
 * [**Jest**](https://www.npmjs.com/package/jest) 
 * [**mongodb-memory-server**](https://www.npmjs.com/package/mongodb-memory-server)
@@ -162,7 +158,3 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 
 ### Linting
 * [**eslint**](https://www.npmjs.com/package/eslint)
-=======
-## Testing
-The testing have been done with [**Jest**](https://www.npmjs.com/package/jest) and [**TS-Jest**](https://www.npmjs.com/package/ts-jest).
->>>>>>> d0e0ac0... Update README.md
