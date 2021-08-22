@@ -1,6 +1,8 @@
 import { SessionPackage } from "@/interfaces";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import * as jwt from "jsonwebtoken";
+import { token } from "morgan";
+import * as SessionService from "./SessionService";
 
 /**
  * Content stored in the token
@@ -15,34 +17,43 @@ interface TokenPayload extends jwt.JwtPayload {
  * @returns object with the both tokens and expiring time
  */
 export const generate = (id: string) : SessionPackage => {
-	const auth =  authToken(id);
-	const refresh = refreshToken(id);
-	const expiration = (jwt.decode(auth) as TokenPayload).exp;
-	// store the tokens
+	const { AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME } = process.env;
+	const auth =  newToken(id, AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME);
+	const { REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION_TIME } = process.env;
+	const refresh = newToken(id, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION_TIME);
+	SessionService.startSession(auth, refresh, (jwt.decode(refresh) as TokenPayload).exp);
 	return {
 		auth: auth,
 		refresh: refresh,
-		expiration: expiration
+		expiration: (jwt.decode(auth) as TokenPayload).exp
 	}
 }
 
 /**
+ * Checks if the token are valid and related to any active session
+ * @param auth token of the session
+ * @param refresh token of the session
+ * @returns 
+ */
+export const check = (auth: string, refresh: string): Promise<boolean> => {
+	return SessionService.checkValidTuple(auth, refresh);
+}
+
+/**
  * Checks if the provided pair of tokens are valid and return a new pair in case
- * that they are
+ * that they are, killing the previously stored session
  * @param auth 		Authentication token
  * @param refresh 	Refresh token
  * @returns 		New tokens and expiration time
  */
-export const refresh = async (auth: string, refresh: string): Promise<SessionPackage> => {
+export const refresh = async (auth: string, refresh: string) => {
 	return verifyToken(refresh, process.env.REFRESH_TOKEN_SECRET)
-		.then((refreshPayload) => {
-			const authPayload = jwt.decode(auth) as TokenPayload;
-			if (authPayload.sessionId !== refreshPayload.sessionId) {
-				throw unathorizedError(ERR_MSG.tokens_not_related)
+		.then(() => SessionService.isOpen(refresh))
+		.then((isOpen) =>{
+			if (isOpen) {
+				SessionService.closeSession(refresh);
 			}
-			// TODO check the stored tokens -> TODO store the tokens
-			// If they are valid, delete them and persist a new pair
-			return generate(authPayload.sessionId);
+			return generate((jwt.decode(auth) as TokenPayload).sessionId);
 		})
 		.catch((err: Error) => {
 			if (err instanceof jwt.TokenExpiredError) {
@@ -56,30 +67,18 @@ export const refresh = async (auth: string, refresh: string): Promise<SessionPac
 }
 
 /**
- * Synchronously generates an authentication token for the user to use
+ * Synchronously generates a new token with the provided info
  * @param id of the user
- * @returns auth token
+ * @returns JSON web token
  */
- const authToken = (id: string): string => {
-	const { AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME } = process.env;
+ const newToken = (id: string, secret: string, expiration: string): string => {
 	return jwt.sign(
-			{ sessionId : id }, 
-			AUTH_TOKEN_SECRET, 
-			{ expiresIn: AUTH_TOKEN_EXPIRATION_TIME }
-	);
-}
-
-/**
- * Synchronously generates an refresh token for the user to use
- * @param id of the user
- * @returns refresh token
- */
- const refreshToken = (id: string): string => {
-	const { REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION_TIME } = process.env;
-	return jwt.sign(
-			{ sessionId : id }, 
-			REFRESH_TOKEN_SECRET, 
-			{ expiresIn: REFRESH_TOKEN_EXPIRATION_TIME }
+			{ 
+				sessionId : id,
+				time: Date.now()
+			}, 
+			secret, 
+			{ expiresIn: expiration }
 	);
 }
 

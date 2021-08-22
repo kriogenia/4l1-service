@@ -22,7 +22,7 @@ describe("Calling GET /auth/signin", () => {
 
 	it("should return a new user and session when given an unregistered Google Id", 
 	async () => {
-		const token = "valid";
+		const token = "signin_valid";
 		const response = await request(app)
 			.get(`/auth/signin/${token}`)
 			.send()
@@ -36,7 +36,7 @@ describe("Calling GET /auth/signin", () => {
 	
 	it("should return the user and a new session when given an registered Google Id", 
 	async () => {
-		const token = "existent";
+		const token = "signin_existent";
 		const user = await UserService.getUserByGoogleId(token);
 
 		const response = await request(app)

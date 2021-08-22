@@ -30,10 +30,7 @@ class UserSchema {
 	@prop()
 	public displayName?: string;
 
-	@prop({ 
-		required: true,
-		unique: true
-	})
+	@prop({ required: true, unique: true })
 	public googleId: string;
 
 	@prop({ required: true })

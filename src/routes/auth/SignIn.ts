@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes"; 
 import * as UserService from "@/services/UserService";
 import * as GoogleAuth from "@/services/GoogleAuth";
-import { generate } from "@/services/TokenService";
+import * as TokenService from "@/services/TokenService";
 import { User } from "@/models/User";
 import { LeanDocument } from "mongoose";
 import { SessionPackage } from "@/interfaces";
@@ -34,7 +34,7 @@ export const signIn = async (
 	return GoogleAuth.verify(req.params.token)
 		.then(UserService.getUserByGoogleId)	// And get the user to return
 		.then((user) => res.status(StatusCodes.OK).json({
-				session: generate(user.id),
+				session: TokenService.generate(user.id),
 				user: user.toJSON()
 			}).send())
 		.catch(next);
