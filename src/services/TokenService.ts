@@ -1,5 +1,6 @@
 import { SessionPackage } from "@/interfaces";
 import { badRequestError, ERR_MSG, unathorizedError } from "@/shared/errors";
+import { auth } from "google-auth-library";
 import * as jwt from "jsonwebtoken";
 import * as SessionService from "./SessionService";
 
@@ -29,14 +30,13 @@ export const generate = (id: string) : SessionPackage => {
 }
 
 /**
- * Verifies the auth token to check if it's still valid to use
+ * Verifies the auth token and checks if it's still valid to use
  * @param token auth token to check
- * @returns the token paylo
+ * @returns true if it's valid, false otherwise
  */
-export const checkAuth = async (token: string): Promise<TokenPayload> => {
+export const checkAuth = async (token: string): Promise<boolean> => {
 	return verifyToken(token, process.env.AUTH_TOKEN_SECRET)
-		//.then(SessionService.checkValidTuple)
-		//.catch();
+		.then(() => SessionService.isSessionOpen(token));
 }
 
 /**
