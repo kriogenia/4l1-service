@@ -20,7 +20,7 @@ export const refresh = async (
 {
 	const { auth, refresh } = req.body;
 	return TokenService
-		.check(auth, refresh)				// Checks that the session is valid
+		.checkTuple(auth, refresh)				// Checks that the session is valid
 		.then((isValid) => {
 			if (isValid) return TokenService.refresh(auth, refresh); // If it is refresh it
 			throw unathorizedError(ERR_MSG.session_invalid);

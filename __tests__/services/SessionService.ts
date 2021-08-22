@@ -1,4 +1,4 @@
-import { checkValidTuple, startSession } from "@/services/SessionService";
+import { checkSessionTuple, startSession } from "@/services/SessionService";
 import * as db from "@test-util/MongoMemory";
 
 /* Test database deployment and management */
@@ -35,7 +35,7 @@ describe("The function checkValidTuple", () => {
 
 		expect.assertions(1);
 		startSession(auth, refresh, expiration)
-		.then((session) => checkValidTuple(session.auth, session.refresh))
+		.then((session) => checkSessionTuple(session.auth, session.refresh))
 		.then((isValid) => {
 			expect(isValid).toBeTruthy();
 			done();
@@ -47,7 +47,7 @@ describe("The function checkValidTuple", () => {
 		const refresh = "sessionservice_refresh";
 
 		expect.assertions(1);
-		checkValidTuple(auth, refresh)
+		checkSessionTuple(auth, refresh)
 		.then((isValid) => {
 			expect(isValid).toBeFalsy();
 			done();
@@ -61,7 +61,7 @@ describe("The function checkValidTuple", () => {
 
 		expect.assertions(1);
 		startSession(auth, refresh, expiration)
-		.then((session) => checkValidTuple("other", session.refresh))
+		.then((session) => checkSessionTuple("other", session.refresh))
 		.then((isValid) => {
 			expect(isValid).toBeFalsy();
 			done();

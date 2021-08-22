@@ -31,13 +31,16 @@ export const closeSession = (token: string): void => {
  * @param token refresh token of the session to check
  * @returns true if the session is open, false otherwise
  */
-export const isOpen = async (token: string): 
-Promise<boolean> => {
-	return SessionModel.exists({
-		refresh: token
-	})
-}
+ export const isSessionOpen = async (token: string): 
+ Promise<boolean> => SessionModel.exists({ auth: token });
 
+/**
+ * Checks if the specified refresh session is currently open
+ * @param token refresh token of the session to check
+ * @returns true if the session is open, false otherwise
+ */
+export const isSessionRefreshable = async (token: string): 
+Promise<boolean> => SessionModel.exists({ refresh: token });
 
 /**
  * Search in the database any stored session with the provided auth token and refresh
@@ -47,7 +50,7 @@ Promise<boolean> => {
  * @param refresh token
  * @returns true if the session exists, false otherwise
  */
-export const checkValidTuple = async (auth: string, refresh: string): 
+export const checkSessionTuple = async (auth: string, refresh: string): 
 Promise<boolean> => {
 	return new Promise((resolve, reject) => {
 		SessionModel.findOne({ 

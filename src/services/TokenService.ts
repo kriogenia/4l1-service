@@ -1,7 +1,6 @@
 import { SessionPackage } from "@/interfaces";
-import { ERR_MSG, unathorizedError } from "@/shared/errors";
+import { badRequestError, ERR_MSG, unathorizedError } from "@/shared/errors";
 import * as jwt from "jsonwebtoken";
-import { token } from "morgan";
 import * as SessionService from "./SessionService";
 
 /**
@@ -30,13 +29,24 @@ export const generate = (id: string) : SessionPackage => {
 }
 
 /**
+ * Verifies the auth token to check if it's still valid to use
+ * @param token auth token to check
+ * @returns the token paylo
+ */
+export const checkAuth = async (token: string): Promise<TokenPayload> => {
+	return verifyToken(token, process.env.AUTH_TOKEN_SECRET)
+		//.then(SessionService.checkValidTuple)
+		//.catch();
+}
+
+/**
  * Checks if the token are valid and related to any active session
  * @param auth token of the session
  * @param refresh token of the session
  * @returns 
  */
-export const check = (auth: string, refresh: string): Promise<boolean> => {
-	return SessionService.checkValidTuple(auth, refresh);
+export const checkTuple = (auth: string, refresh: string): Promise<boolean> => {
+	return SessionService.checkSessionTuple(auth, refresh);
 }
 
 /**
@@ -46,23 +56,16 @@ export const check = (auth: string, refresh: string): Promise<boolean> => {
  * @param refresh 	Refresh token
  * @returns 		New tokens and expiration time
  */
-export const refresh = async (auth: string, refresh: string) => {
+export const refresh = async (auth: string, refresh: string):
+Promise<SessionPackage> => {
 	return verifyToken(refresh, process.env.REFRESH_TOKEN_SECRET)
-		.then(() => SessionService.isOpen(refresh))
-		.then((isOpen) =>{
-			if (isOpen) {
+		.then(() => SessionService.isSessionRefreshable(refresh))
+		.then((isRefreshable) =>{
+			if (isRefreshable) {
 				SessionService.closeSession(refresh);
+				return generate((jwt.decode(auth) as TokenPayload).sessionId);
 			}
-			return generate((jwt.decode(auth) as TokenPayload).sessionId);
-		})
-		.catch((err: Error) => {
-			if (err instanceof jwt.TokenExpiredError) {
-				throw unathorizedError(ERR_MSG.token_expired);
-			}
-			if (err instanceof jwt.JsonWebTokenError) {
-				throw unathorizedError(ERR_MSG.token_invalid);
-			}
-			throw err;
+			throw badRequestError(ERR_MSG.token_invalid);
 		});
 }
 
@@ -85,8 +88,15 @@ export const refresh = async (auth: string, refresh: string) => {
 const verifyToken = (token: string, secret: string): Promise<TokenPayload> => {
 	return new Promise((resolve, reject) => {
 		jwt.verify(token, secret, (err, token) => {
-			if (err) return reject(err);
-			else return resolve(token as TokenPayload);
+			if (err) {
+				if (err instanceof jwt.TokenExpiredError) {
+					return reject(unathorizedError(ERR_MSG.token_expired));
+				}
+				if (err instanceof jwt.JsonWebTokenError) {
+					return reject(unathorizedError(ERR_MSG.token_invalid));
+				}
+				return reject(err);
+			} else return resolve(token as TokenPayload);
 		});
 	});
 }
