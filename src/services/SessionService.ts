@@ -18,12 +18,14 @@ Promise<Session> => {
 
 /**
  * Closes the session, deleting it from the database
+ * and returning the number of sessions
  * @param token refresh token of the session to delete
+ * @returns number of deleted sessions
  */
-export const closeSession = (token: string): void => {
-	SessionModel.remove({
-		refresh: token
-	});
+export const closeSession = async (token: string):
+Promise<number> => {
+	return SessionModel.deleteOne({ refresh: token})
+		.then((result) => result.deletedCount);
 }
 
 /**

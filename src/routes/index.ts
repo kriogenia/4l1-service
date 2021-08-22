@@ -15,16 +15,8 @@ baseRouter.use("/auth", authRouter);
 
 /*********** PRIVATE ENDPOINTS ***********/
 
-const privateRouter = Router();
-
-/* Pre-routing middlewares */
-privateRouter.use(validateToken);
-// privateRouter.use(getSessionId);
-
 /* /user */
-privateRouter.use("/user", userRouter);
-
-baseRouter.use(privateRouter);
+baseRouter.use("/user", validateToken, userRouter);
 
 /****************************************/
 
