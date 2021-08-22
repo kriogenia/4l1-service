@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRouter from "./auth";
+import { validateToken } from "./middlewares";
 import userRouter from "./user";
 
 const baseRouter = Router();
@@ -16,7 +17,8 @@ baseRouter.use("/auth", authRouter);
 
 const privateRouter = Router();
 
-// privateRouter.use(validateToken);
+/* Pre-routing middlewares */
+privateRouter.use(validateToken);
 // privateRouter.use(getSessionId);
 
 /* /user */
