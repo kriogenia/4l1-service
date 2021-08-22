@@ -1,30 +1,26 @@
 import { app } from "@/App";
 import request from "supertest";
-import * as jwt from "jsonwebtoken";
+import * as db from "@test-util/MongoMemory";
 import { ERR_MSG } from "@/shared/errors";
 import { StatusCodes } from "http-status-codes";
 import { checkSessionPackage } from "@test-util/checkers";
+import * as TokenService from "@/services/TokenService";
+
+/* Test database deployment and management */
+beforeAll(db.connect);
+afterEach(db.clear);
+afterAll(db.close);
 
 describe("Calling POST /auth/refresh", () => {
 
-	it("should return a new session package when provided valid tokens ", 
+	it("should return a new session package when provided active tokens ", 
 	async () => {
-		const authToken = jwt.sign(
-			{ sessionId : "id" }, 
-			process.env.AUTH_TOKEN_SECRET, 
-			{ expiresIn: process.env.AUTH_TOKEN_EXPIRATION_TIME }
-		);
-		const refreshToken = jwt.sign(
-			{ sessionId : "id" }, 
-			process.env.REFRESH_TOKEN_SECRET, 
-			{ expiresIn: process.env.REFRESH_TOKEN_EXPIRATION_TIME }
-		);
-
+		const tokens = TokenService.generate("refresh");
 		const response = await request(app)
 			.post("/auth/refresh")
 			.send({
-				auth: authToken,
-				refresh: refreshToken
+				auth: tokens.auth,
+				refresh: tokens.refresh
 			})
 			.expect(StatusCodes.OK);
 		checkSessionPackage(response.body.session);
@@ -39,7 +35,7 @@ describe("Calling POST /auth/refresh", () => {
 				refresh: "refreshToken"
 			})
 			.expect(StatusCodes.UNAUTHORIZED);
-		expect(response.body.message).toBe(ERR_MSG.token_invalid);
+		expect(response.body.message).toBe(ERR_MSG.session_invalid);
 	});
 
 });

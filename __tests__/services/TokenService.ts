@@ -1,30 +1,49 @@
 import { SessionPackage } from "@/interfaces";
-import { generate, refresh } from "@/services/TokenService";
+import * as SessionService from "@/services/SessionService";
+import { check, generate, refresh } from "@/services/TokenService";
 import { ERR_MSG } from "@/shared/errors";
+import { mocked } from "ts-jest/utils";
 import * as jwt from "jsonwebtoken";
+
+/** Session service mock */
+jest.mock("@/services/SessionService");
+const mockCheckValidTuple =  mocked(SessionService.checkValidTuple);
+mockCheckValidTuple.mockImplementation((auth: string, refresh: string) => {
+	return Promise.resolve(auth === refresh);
+});
+
+const id = "tokenservice";
 
 describe("The token generation", () => {
 
 	it("should generate two valid tokens and the expected auth expiration time", () => {
-		const pack = generate("id");
+		const pack = generate("tokenservice");
 		verifyPackage(pack);
+	});
+
+});
+
+describe("The token check", () => {
+
+	it("should return true if the tokens are valid", () => {
+		expect.assertions(1);
+		expect(check("tokenservice", "tokenservice")).resolves.toBeTruthy();
+	});
+	
+	it("should return false if the tokens are invalid", () => {
+		expect.assertions(1);
+		expect(check("tokenservice", "servicetoken")).resolves.toBeFalsy();
 	});
 
 });
 
 describe("The token refresh", () => {
 
-	let id: string;
-	let authToken: string;
-
-	beforeEach(() => {
-		id = "id";
-		authToken = jwt.sign(
-			{ sessionId : id }, 
-			process.env.AUTH_TOKEN_SECRET, 
-			{ expiresIn: process.env.AUTH_TOKEN_EXPIRATION_TIME }
-		);
-	});
+	const authToken = jwt.sign(
+		{ sessionId : id }, 
+		process.env.AUTH_TOKEN_SECRET, 
+		{ expiresIn: process.env.AUTH_TOKEN_EXPIRATION_TIME }
+	);
 
 	it("should generate a new session package when provided with valid tokens", 
 	(done) => {
@@ -73,7 +92,7 @@ describe("The token refresh", () => {
 		
 		return refresh(authToken,unrelatedRefreshToken)
 			.catch((e: Error) => {
-				expect(e.message).toMatch(ERR_MSG.tokens_not_related)
+				expect(e.message).toMatch(ERR_MSG.session_invalid)
 			});
 	});
 
@@ -82,10 +101,10 @@ describe("The token refresh", () => {
 const verifyPackage = (pack: SessionPackage) => {
 	// Check auth token
 	const decodedAuth = jwt.verify(pack.auth, process.env.AUTH_TOKEN_SECRET) as jwt.JwtPayload;
-	expect(decodedAuth.sessionId).toBe("id");
+	expect(decodedAuth.sessionId).toBe(id);
 	// Check refresh token
 	const decodedRefresh = jwt.verify(pack.refresh, process.env.REFRESH_TOKEN_SECRET) as jwt.JwtPayload;
-	expect(decodedRefresh.sessionId).toBe("id");
+	expect(decodedRefresh.sessionId).toBe(id);
 	// Check expiration time
 	expect(pack.expiration).toBe(decodedAuth.iat + 60 * 60);
 }
