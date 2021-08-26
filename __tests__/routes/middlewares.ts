@@ -1,7 +1,7 @@
 import { handleError, validateToken } from "@/routes/middlewares";
 import { checkAuth, extractId } from "@/services/TokenService";
 import { errorHandler } from "@/shared/ErrorHandler";
-import { badRequestError, ERR_MSG, HttpError } from "@/shared/errors";
+import { badRequestError, ERR_MSG, HttpError, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { mocked } from "ts-jest/utils";
@@ -53,16 +53,29 @@ describe("The token validation middleware", () => {
 	
 	});
 
+	it("should throw an error if the authorization header is missing", async () => {
+		mockRequest.headers = {};
+
+		expect.assertions(1);
+		return validateToken(mockRequest as Request, mockResponse as Response, nextFunction)
+			.then(() => {
+				expect(nextFunction).toHaveBeenCalledWith(
+					badRequestError(ERR_MSG.auth_header_missing)
+				);
+			});
+	});
+
 	it("should throw an error if the header is missing the Bearer", async () => {
 		mockRequest.headers = {
 			authorization: "invalid"
 		};
 
-		expect.assertions(2);
+		expect.assertions(1);
 		return validateToken(mockRequest as Request, mockResponse as Response, nextFunction)
-			.catch((e: HttpError) => {
-				expect(e.status).toEqual(StatusCodes.BAD_REQUEST);
-				expect(e.message).toEqual(ERR_MSG.auth_header);
+			.then(() => {
+				expect(nextFunction).toHaveBeenCalledWith(
+					badRequestError(ERR_MSG.auth_header_wrong)
+				);
 			});
 	});
 
@@ -71,11 +84,12 @@ describe("The token validation middleware", () => {
 			authorization: "invalid token"
 		};
 
-		expect.assertions(2);
+		expect.assertions(1);
 		return validateToken(mockRequest as Request, mockResponse as Response, nextFunction)
-			.catch((e: HttpError) => {
-				expect(e.status).toEqual(StatusCodes.BAD_REQUEST);
-				expect(e.message).toEqual(ERR_MSG.auth_header);
+			.then(() => {
+				expect(nextFunction).toHaveBeenCalledWith(
+					badRequestError(ERR_MSG.auth_header_wrong)
+				);
 			});
 	});
 
@@ -84,11 +98,12 @@ describe("The token validation middleware", () => {
 			authorization: "Bearer invalid"
 		};
 
-		expect.assertions(2);
+		expect.assertions(1);
 		return validateToken(mockRequest as Request, mockResponse as Response, nextFunction)
-			.catch((e: HttpError) => {
-				expect(e.status).toEqual(StatusCodes.UNAUTHORIZED);
-				expect(e.message).toEqual(ERR_MSG.session_invalid);
+			.then(() => {
+				expect(nextFunction).toHaveBeenCalledWith(
+					unathorizedError(ERR_MSG.session_invalid)
+				);
 			});
 	});
 

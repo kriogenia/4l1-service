@@ -1,9 +1,14 @@
+import { Role } from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 interface UpdateBody {
-	name: string,
-	role: string
+	displayName?: string,
+	role?: Role,
+	mainPhoneNumber?: string,
+	altPhoneNumber?: string,
+	//address?: Address,
+	email?: string
 }
 
 interface UpdateResponse {
@@ -22,10 +27,7 @@ export const update = /*async*/ (
 	res: Response<UpdateResponse>, 
 	_next: NextFunction): /*Promise<void|*/Response<UpdateResponse>/*>*/ => 
 {
-	const {name, role} = req.body;
-	console.log(`Triggered update with ${name} and ${role}`);
-	// Check name and role, transform role
-	// User service -> update user -> then respond
+	console.log({req})
 	return res.status(StatusCodes.OK).send({
 		message: "The specified user has been updated succesfully"
 	})
