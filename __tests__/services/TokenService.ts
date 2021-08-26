@@ -1,9 +1,10 @@
 import { SessionPackage } from "@/interfaces";
 import * as SessionService from "@/services/SessionService";
-import { checkTuple, generate, refresh } from "@/services/TokenService";
+import { checkTuple, extractId, generate, refresh } from "@/services/TokenService";
 import { ERR_MSG } from "@/shared/errors";
 import { mocked } from "ts-jest/utils";
 import * as jwt from "jsonwebtoken";
+import { auth } from "google-auth-library";
 
 /** Session service mock */
 jest.mock("@/services/SessionService");
@@ -109,6 +110,18 @@ describe("The token refresh", () => {
 
 });
 
+describe("The id extraction", () => {
+
+	it("should return the sessionId stored in the token", () => {
+		const token = jwt.sign(
+			{ sessionId : id }, 
+			"secret"
+		);
+		expect(extractId(token)).toEqual(id);
+	});
+
+});
+
 const verifyPackage = (pack: SessionPackage) => {
 	// Check auth token
 	const decodedAuth = jwt.verify(pack.auth, process.env.AUTH_TOKEN_SECRET) as jwt.JwtPayload;
@@ -119,4 +132,3 @@ const verifyPackage = (pack: SessionPackage) => {
 	// Check expiration time
 	expect(pack.expiration).toBe(decodedAuth.iat + 60 * 60);
 }
-

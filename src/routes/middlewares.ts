@@ -6,25 +6,27 @@ import { StatusCodes } from "http-status-codes";
 
 /**
  * Validates the token passed in the Authorization header following the HTTP conventions.
- * If it's valid adds the same header to the response and calls the next function.
+ * If it's valid adds the same header to the response, stores the uuid of the user in the
+ * request as sessionId and calls the next function.
  * It throws an error if the header is invalid or the token doesn't correspond to any
  * active session.
  * @param req original request
  * @param res carried response
  * @param next next function
  */
-export const validateToken = (req: Request, res: Response, next: NextFunction)
-: void => {
+export const validateToken = async (req: Request, res: Response, next: NextFunction)
+: Promise<void> => {
 	const bearerHeader = req.headers.authorization;
 	const parts = bearerHeader.split(" ");
 	if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
-		TokenService.checkAuth(parts[1])
+		return TokenService.checkAuth(parts[1])
 			.then((isValid) => {
 				if (isValid) {
 					res.setHeader("Authorization", bearerHeader);
+					req.sessionId = TokenService.extractId(parts[1]);
 					next();
 				} else {
-					unathorizedError(ERR_MSG.session_invalid)
+					throw unathorizedError(ERR_MSG.session_invalid)
 				}
 			})
 	} else {
