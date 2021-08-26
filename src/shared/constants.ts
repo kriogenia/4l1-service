@@ -3,5 +3,16 @@
  */
 export enum Environment {
 	DEV = "development",
-	PROD = "production"
+	PROD = "production",
+	TEST = "test"
+}
+
+/**
+ * Severity levels
+ */
+ export enum Severity {
+    INFO = 1,
+    IMP,
+    WARN,
+    ERR
 }

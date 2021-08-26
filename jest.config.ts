@@ -1,4 +1,4 @@
-import { pathsToModuleNameMapper } from 'ts-jest/utils';
+import { pathsToModuleNameMapper } from "ts-jest/utils";
 import { compilerOptions } from "./tsconfig.json";
 import type { Config } from "@jest/types";
 
@@ -8,6 +8,12 @@ const config: Config.InitialOptions = {
 	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 	modulePaths: [
 		"<rootDir>"
+	],
+	setupFiles: [
+		"<rootDir>/__tests__/util/test.config.ts"
+	],
+	testPathIgnorePatterns: [
+		"<rootDir>/__tests__/util/*"
 	]
 }
 

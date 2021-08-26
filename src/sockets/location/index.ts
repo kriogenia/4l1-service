@@ -1,5 +1,4 @@
 import { Server, Socket } from "socket.io";
-import { ISocketSetUp } from "..";
 import { onSend } from "./SendListener";
 import { onSubscribe } from "./SubscribeListener";
 import { onUnsubscribe } from "./UnsuscribeListener";
@@ -21,7 +20,7 @@ export enum LocationEvent {
  * @param socket to poblate with listeners
  * @param io to use in the listeners
  */
-export const setLocationSockets: ISocketSetUp = (socket: Socket, io: Server) => {
+export const setLocationSockets = (socket: Socket, io: Server) => {
     socket.on(LocationEvent.SEND, onSend(socket, io));
     socket.on(LocationEvent.SUBSCRIBE, onSubscribe(socket, io));
 	socket.on(LocationEvent.UNSUBSCRIBE, onUnsubscribe(socket, io));

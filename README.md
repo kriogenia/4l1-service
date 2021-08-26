@@ -1,6 +1,7 @@
-# Location Service
-This service will be in charge of managing the location share for the 4l1 project.
-The broadcasting of those locations will be implemented with WebSocker using Socket.io.
+# AllForOne Service
+This service is in charge of managing all the back-end operations of the 4l1 project.
+The service provides a RESTful API to handle the user logic and a WebSocket server
+for the location and feed features using Socket.io. 
 
 ## Deployment
 This service has only been deployed on local on a WSL2 of a Windows machine.
@@ -18,7 +19,27 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 
 ## Endpoints
 
+| Sign In	|              			|											|
+|:-:		| :-:					|:-:										|
+| URL     	| /auth/signin/:token	|											|
+| Params    | token: string			| Google Id Token of the user 				|
+| Response	| session: object		| Tokens and expiration time				|
+|			| user: object			| Logged in user details					|
+
+
 ## Dependencies
+* [**Command Line Args**](https://www.npmjs.com/package/command-line-args)
+* [**dotenv**](https://www.npmjs.com/package/dotenv)
 * [**Express**](https://www.npmjs.com/package/express)
+* [**Google Auth Library**](https://www.npmjs.com/package/google-auth-library)
+* [**Helmet**](https://www.npmjs.com/package/helmet)
+* [**Http Status Codes**](https://www.npmjs.com/package/http-status-codes)
+* [**Jet-Logger**](https://www.npmjs.com/package/jet-logger)
+* [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)
+* [**Morgan**](https://www.npmjs.com/package/morgan)
 * [**Socket.io**](https://www.npmjs.com/package/socket.io)
+* [**Typegoose**](https://www.npmjs.com/package/@typegoose/typegoose)
 * [**Typescript**](https://www.npmjs.com/package/typescript)
+
+## Testing
+The testing have been done with [**Jest**](https://www.npmjs.com/package/jest) and [**TS-Jest**](https://www.npmjs.com/package/ts-jest).
