@@ -1,6 +1,5 @@
 import { SessionPackage } from "@/interfaces";
 import { badRequestError, ERR_MSG, unathorizedError } from "@/shared/errors";
-import { auth } from "google-auth-library";
 import * as jwt from "jsonwebtoken";
 import * as SessionService from "./SessionService";
 
@@ -63,10 +62,19 @@ Promise<SessionPackage> => {
 		.then((isRefreshable) =>{
 			if (isRefreshable) {
 				SessionService.closeSession(refresh);
-				return generate((jwt.decode(auth) as TokenPayload).sessionId);
+				return generate(extractId(auth));
 			}
 			throw badRequestError(ERR_MSG.token_invalid);
 		});
+}
+
+/**
+ * Extracts and returns the sessionId stored in the token
+ * @param token Token with the sessionId
+ * @returns sessionId stored in the token
+ */
+export const extractId = (token: string): string => {
+	return (jwt.decode(token) as TokenPayload).sessionId;
 }
 
 /**
