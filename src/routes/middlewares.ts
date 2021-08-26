@@ -17,21 +17,26 @@ import { StatusCodes } from "http-status-codes";
 export const validateToken = async (req: Request, res: Response, next: NextFunction)
 : Promise<void> => {
 	const bearerHeader = req.headers.authorization;
-	const parts = bearerHeader.split(" ");
-	if (parts.length === 2 && /^Bearer$/i.test(parts[0])) {
-		return TokenService.checkAuth(parts[1])
-			.then((isValid) => {
-				if (isValid) {
-					res.setHeader("Authorization", bearerHeader);
-					req.sessionId = TokenService.extractId(parts[1]);
-					next();
-				} else {
-					throw unathorizedError(ERR_MSG.session_invalid)
-				}
-			})
-	} else {
-		throw badRequestError(ERR_MSG.auth_header);
+	if (!bearerHeader) {
+		return next(badRequestError(ERR_MSG.auth_header_missing));
 	}
+
+	const parts = bearerHeader.split(" ");
+	if (parts.length !== 2 || !/^Bearer$/i.test(parts[0])) {
+		return next(badRequestError(ERR_MSG.auth_header_wrong));
+	}
+
+	return TokenService.checkAuth(parts[1])
+		.then((isValid) => {
+			if (isValid) {
+				res.setHeader("Authorization", bearerHeader);
+				req.sessionId = TokenService.extractId(parts[1]);
+				next();
+			} else {
+				throw unathorizedError(ERR_MSG.session_invalid);
+			}
+		})
+		.catch(next)
 }
 
 /**
