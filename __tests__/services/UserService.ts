@@ -54,6 +54,12 @@ describe("The update", () => {
 		user.mainPhoneNumber = "main",
 		user.altPhoneNumber = "alt",
 		user.email = "email";
+		user.address = {
+			firstLine: "first",
+			secondLine: "second",
+			locality: "locality",
+			region: "region"
+		}
 
 		await update(user);
 		const dbUser = await UserModel.findById(user._id);
@@ -63,6 +69,7 @@ describe("The update", () => {
 		expect(dbUser.mainPhoneNumber).toEqual(user.mainPhoneNumber);
 		expect(dbUser.altPhoneNumber).toEqual(user.altPhoneNumber);
 		expect(dbUser.email).toEqual(user.email);
+		expect(dbUser.address).toEqual(user.address);
 	});
 
 });
