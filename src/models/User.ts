@@ -2,19 +2,24 @@ import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
 
-/**
- * List of possible types of user
- */
+/** List of possible types of user */
 export enum Role {
 	Keeper = "keeper",
 	Patient = "patient",
 	Blank = "blank"
 }
 
+/** Simplified model representing an address with the needed info to allow personal 
+ * localization of the user. */
+interface Address {
+	firstLine?: string,
+	secondLine?: string,
+	locality?: string,
+	region?: string
+}
 
-/**
- * Post hook to log any new user creation
- */
+
+/** Post hook to log any new user creation */
 @post<UserSchema>("save", (user) => {
 	Logger.Info(`New User[${user.id as string ?? ""}] created with GoogleID[${user.googleId}] `)
 })
@@ -45,6 +50,9 @@ class UserSchema {
 
 	@prop()
 	public altPhoneNumber?: string;
+
+	@prop()
+	public address?: Address;
 	
 	@prop()
 	public email?: string;

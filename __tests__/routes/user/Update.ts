@@ -35,7 +35,13 @@ describe("Calling PUT /user/update", () => {
 			displayName: "Name",
 			mainPhoneNumber: "123456789",
 			altPhoneNumber: "987654321",
-			email: "email@address.com"
+			email: "email@address.com",
+			address: {
+				firstLine: "first",
+				secondLine: "second",
+				locality: "locality",
+				region: "region"
+			}
 		};
 
 		const response = await putRequest(endpoint, session.auth)
@@ -49,6 +55,7 @@ describe("Calling PUT /user/update", () => {
 		expect(dbUser.mainPhoneNumber).toEqual(updatedUser.mainPhoneNumber);
 		expect(dbUser.altPhoneNumber).toEqual(updatedUser.altPhoneNumber);
 		expect(dbUser.email).toEqual(updatedUser.email);
+		expect(dbUser.address).toEqual(updatedUser.address);
 	});
 
 	it("should return an error when the requester is not the user", async () => {
