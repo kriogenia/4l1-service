@@ -18,13 +18,15 @@ beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
+const endpoint = "/auth/signin/";
+
 describe("Calling GET /auth/signin", () => {
 
 	it("should return a new user and session when given an unregistered Google Id", 
 	async () => {
 		const token = "signin_valid";
 		const response = await request(app)
-			.get(`/auth/signin/${token}`)
+			.get(`${endpoint}${token}`)
 			.send()
 			.expect(StatusCodes.OK);
 
@@ -37,10 +39,10 @@ describe("Calling GET /auth/signin", () => {
 	it("should return the user and a new session when given an registered Google Id", 
 	async () => {
 		const token = "signin_existent";
-		const user = await UserService.getUserByGoogleId(token);
+		const user = await UserService.getByGoogleId(token);
 
 		const response = await request(app)
-			.get(`/auth/signin/${token}`)
+			.get(`${endpoint}${token}`)
 			.send()
 			.expect(StatusCodes.OK);
 
@@ -53,7 +55,7 @@ describe("Calling GET /auth/signin", () => {
 	it("should return an error when requested without token", 
 	async () => {
 		await request(app)
-			.get(`/auth/signin/`)
+			.get(`${endpoint}`)
 			.send()
 			.expect(StatusCodes.NOT_FOUND);
 	});

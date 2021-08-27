@@ -4,7 +4,6 @@ import { checkTuple, extractId, generate, refresh } from "@/services/TokenServic
 import { ERR_MSG } from "@/shared/errors";
 import { mocked } from "ts-jest/utils";
 import * as jwt from "jsonwebtoken";
-import { auth } from "google-auth-library";
 
 /** Session service mock */
 jest.mock("@/services/SessionService");
