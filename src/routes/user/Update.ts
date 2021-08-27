@@ -1,15 +1,10 @@
-import { Role } from "@/models/User";
+import { User } from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-
-interface UpdateBody {
-	displayName?: string,
-	role?: Role,
-	mainPhoneNumber?: string,
-	altPhoneNumber?: string,
-	//address?: Address,
-	email?: string
-}
+import { LeanDocument } from "mongoose";
+import * as UserService from "@/services/UserService";
+import { ERR_MSG, unathorizedError } from "@/shared/errors";
+import { msg_update_completed } from "@/shared/constants";
 
 interface UpdateResponse {
 	message: string
@@ -22,13 +17,15 @@ interface UpdateResponse {
  * @param _next 
  * @returns 
  */
-export const update = /*async*/ (
-	req: Request<unknown, unknown, UpdateBody>, 
+export const update = async (
+	req: Request<unknown, unknown, LeanDocument<User>>, 
 	res: Response<UpdateResponse>, 
-	_next: NextFunction): /*Promise<void|*/Response<UpdateResponse>/*>*/ => 
+	next: NextFunction): Promise<void|Response<UpdateResponse>> => 
 {
-	console.log({req})
-	return res.status(StatusCodes.OK).send({
-		message: "The specified user has been updated succesfully"
-	})
+	if (req.sessionId !== req.body._id) {
+		next(unathorizedError(ERR_MSG.unauthorized_operation))
+	}
+	return UserService.update(req.body)
+		.then(() => res.status(StatusCodes.CREATED).send({ message: msg_update_completed }))
+		.catch(next);
 }

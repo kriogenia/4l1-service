@@ -17,3 +17,5 @@ export enum Environment {
     WARN,
     ERR
 }
+
+export const msg_update_completed = "The specified user has been updated succesfully";

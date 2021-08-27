@@ -1,7 +1,6 @@
 import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
-import { createTrue } from "typescript";
 
 /**
  * Post hook to log any new session creation

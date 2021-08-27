@@ -1,4 +1,5 @@
 import { Role, User, UserModel } from "@/models/User"
+import { LeanDocument } from "mongoose";
 
 /**
  * Retrieves the user associated with the provided Google Id.
@@ -6,7 +7,7 @@ import { Role, User, UserModel } from "@/models/User"
  * @param userId unique Google Id of the user
  * @returns user account related to that id
  */
-export const getUserByGoogleId = async (userId: string): Promise<User> => {
+export const getByGoogleId = async (userId: string): Promise<User> => {
 	// Check if we already have the user
 	return new Promise((resolve, reject) => {
 		UserModel.findOne({ googleId: userId }).exec(
@@ -14,6 +15,22 @@ export const getUserByGoogleId = async (userId: string): Promise<User> => {
 				if (err) return reject(err);
 				// return the user found or a new one if there's no user found
 				resolve(result ?? generateUser(userId))
+			}
+		);
+	});
+}
+
+/**
+ * Updates the persisted user with the provided information
+ * @param user User to be updated with its new info
+ * @returns update user
+ */
+export const update = async (user: LeanDocument<User>): Promise<User> => {
+	return new Promise((resolve, reject) => {
+		UserModel.findByIdAndUpdate(user._id, user).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
 			}
 		);
 	});

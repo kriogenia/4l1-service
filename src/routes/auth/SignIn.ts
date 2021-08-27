@@ -32,7 +32,7 @@ export const signIn = async (
 {
 	// Verify the Google token
 	return GoogleAuth.verify(req.params.token)
-		.then(UserService.getUserByGoogleId)	// And get the user to return
+		.then(UserService.getByGoogleId)	// And get the user to return
 		.then((user) => res.status(StatusCodes.OK).json({
 				session: TokenService.generate(user.id),
 				user: user.toJSON()
