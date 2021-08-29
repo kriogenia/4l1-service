@@ -1,11 +1,79 @@
-import { Role, UserModel } from "@/models/User";
-import { getByGoogleId, update } from "@/services/UserService";
+import { Role, User, UserModel } from "@/models/User";
+import { bond, getByGoogleId, update } from "@/services/UserService";
+import { badRequestError, ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
+import { mongoose } from "@typegoose/typegoose";
 
 /* Test database deployment and management */
 beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
+
+describe("The bond function", () => {
+
+	let patient: User;
+	let keeper: User;
+
+	beforeEach(async () => {
+		patient = await UserModel.create({
+			googleId: "patient",
+			role: Role.Patient
+		});
+		keeper = await UserModel.create({
+			googleId: "keeper",
+			role: Role.Keeper
+		});
+	});
+
+	it("should create the bond when everything is correct", async () => {
+		await bond(patient._id, keeper._id);
+
+		const storedPatient = await UserModel.findById(patient._id);
+		expect(storedPatient.bonds.length).toBe(1);
+		expect(storedPatient.bonds[0]).toEqual(keeper._id);
+		const storedKeeper = await UserModel.findById(keeper._id);
+		expect(storedKeeper.kept).toEqual(patient._id);
+	});	
+
+	it("should throw an error when the user roles are wrong", async () => {
+		const blank = await UserModel.create({
+			googleId: "keeper",
+			role: Role.Blank
+		});
+
+		const message = "Invalid bond. The correct bond is PATIENT bonds with KEEPER";
+		expect.assertions(5);
+		await bond(keeper._id, patient._id).catch(e => { expect(e).toEqual(Error(message))});
+		await bond(keeper._id, blank._id).catch(e => { expect(e).toEqual(Error(message))});
+		await bond(blank._id, keeper._id).catch(e => { expect(e).toEqual(Error(message))});
+		await bond(blank._id, patient._id).catch(e => { expect(e).toEqual(Error(message))});
+		await bond(patient._id, blank._id).catch(e => { expect(e).toEqual(Error(message))});
+		await bond(patient._id, keeper._id).catch(e => { expect(e).toEqual(Error(message))});
+	});
+
+	it("should throw an error when the patient has the max number of bonds", async () => {
+		for (let i = 0; i < parseInt(process.env.MAX_BONDS); i++) {
+			patient.bonds.push(new mongoose.Types.ObjectId());
+		}
+		await patient.save();
+
+		expect.assertions(1);
+		return bond(patient._id, keeper._id).catch(e => { 
+			expect(e).toEqual(badRequestError(ERR_MSG.maximum_bonds_reached))
+		});
+	});
+
+	it("should throw an error when the keeper is already kept", async () => {
+		keeper.kept = patient._id;
+		await keeper.save();
+
+		expect.assertions(1);
+		return bond(patient._id, keeper._id).catch(e => { 
+			expect(e).toEqual(badRequestError(ERR_MSG.keeper_already_bonded))
+		});
+	});
+
+});
 
 describe("The function getUserByGoogleId", () => {
 

@@ -32,10 +32,21 @@ export const openSession = (done: (response: {
  * retrieved in the openSession
  * @param endpoint of the request
  * @param token authorization token
- * @returns request ready to be sent
+ * @returns request ready to be sent or populated
  */
  export const getRequest = (endpoint: string, token: string) => {
 	return request(app).get(endpoint).set("Authorization", `Bearer ${token}`);
+}
+
+/**
+ * Builds a test POST request to the specified endpoint with the authorization token
+ * retrieved in the openSession
+ * @param endpoint of the request
+ * @param token authorization token
+ * @returns request ready to be sent or populated
+ */
+ export const postRequest = (endpoint: string, token: string) => {
+	return request(app).post(endpoint).set("Authorization", `Bearer ${token}`);
 }
 
 /**
@@ -43,7 +54,7 @@ export const openSession = (done: (response: {
  * retrieved in the openSession
  * @param endpoint of the request
  * @param token authorization token
- * @returns request ready to be sent
+ * @returns request ready to be sent or populated
  */
  export const putRequest = (endpoint: string, token: string) => {
 	return request(app).put(endpoint).set("Authorization", `Bearer ${token}`);
