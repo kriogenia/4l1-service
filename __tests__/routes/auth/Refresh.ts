@@ -15,7 +15,7 @@ describe("Calling POST /auth/refresh", () => {
 
 	it("should return a new session package when provided active tokens ", 
 	async () => {
-		const tokens = TokenService.generate("refresh");
+		const tokens = TokenService.sessionPackage("refresh");
 		const response = await request(app)
 			.post("/auth/refresh")
 			.send({

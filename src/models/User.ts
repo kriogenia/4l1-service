@@ -1,5 +1,5 @@
-import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose";
-import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
+import { getModelForClass, modelOptions, post, prop, Severity } from "@typegoose/typegoose";
+import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
 
 /** List of possible types of user */
@@ -33,7 +33,10 @@ interface Address {
  * @property {string?} altPhoneNumber alternative phone number to use as way of contact
  * @property {string?} email email address of the user
  */
- @modelOptions({ schemaOptions: { collection: "users" } })
+ @modelOptions({ 
+	schemaOptions: { collection: "users" },
+	options: { allowMixed: Severity.ALLOW } 
+})
 class UserSchema {
 
 	@prop({ required: true, unique: true })
@@ -56,6 +59,9 @@ class UserSchema {
 	
 	@prop()
 	public email?: string;
+
+	@prop({ ref: () => UserSchema })
+	public bonds?: Ref<UserSchema>[];
 
 }
 
