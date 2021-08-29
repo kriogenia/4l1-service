@@ -18,4 +18,4 @@ export enum Environment {
     ERR
 }
 
-export const msg_update_completed = "The specified user has been updated succesfully";
+export const msg_update_completed = "The specified user has been updated successfully";

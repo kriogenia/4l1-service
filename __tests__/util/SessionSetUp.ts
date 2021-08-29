@@ -28,12 +28,23 @@ export const openSession = (done: (response: {
 };
 
 /**
+ * Builds a test GET request to the specified endpoint with the authorization token
+ * retrieved in the openSession
+ * @param endpoint of the request
+ * @param token authorization token
+ * @returns request ready to be sent
+ */
+ export const getRequest = (endpoint: string, token: string) => {
+	return request(app).get(endpoint).set("Authorization", `Bearer ${token}`);
+}
+
+/**
  * Builds a test PUT request to the specified endpoint with the authorization token
  * retrieved in the openSession
  * @param endpoint of the request
  * @param token authorization token
  * @returns request ready to be sent
  */
-export const putRequest = (endpoint: string, token: string) => {
+ export const putRequest = (endpoint: string, token: string) => {
 	return request(app).put(endpoint).set("Authorization", `Bearer ${token}`);
 }
