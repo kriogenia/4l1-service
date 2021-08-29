@@ -2,6 +2,18 @@ import { Role, User, UserModel } from "@/models/User"
 import { LeanDocument } from "mongoose";
 
 /**
+ * Builds a bond between the users with the specified ids
+ * @param patientId id of the patient
+ * @param keeperId id of the keeper
+ * @returns promise without return
+ */
+export const bond = async (patientId: string, keeperId: string): Promise<void> => {
+	const patient = await UserModel.findById(patientId);
+	const keeper = await UserModel.findById(keeperId);
+	return patient.bondWith(keeper);
+}
+
+/**
  * Retrieves the user associated with the provided Google Id.
  * If there's no user, create a new one to return it.
  * @param userId unique Google Id of the user

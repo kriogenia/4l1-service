@@ -52,10 +52,21 @@ export const checkAuth = async (token: string): Promise<boolean> => {
  * Checks if the token are valid and related to any active session
  * @param auth token of the session
  * @param refresh token of the session
- * @returns 
+ * @returns true if it's valid, false otherwise
  */
 export const checkPackage = (auth: string, refresh: string): Promise<boolean> => {
 	return SessionService.checkSessionTuple(auth, refresh);
+}
+
+/**
+ * Checks if the provided bonding token is valid and returns its stored SessionId
+ * in case that it's
+ * @param token bonding token
+ * @returns sessionId of the token creator
+ */
+export const decodeBond = async (token: string): Promise<string> => {
+	return verifyToken(token, process.env.BOND_TOKEN_SECRET)
+		.then((payload) => payload.sessionId);
 }
 
 /**

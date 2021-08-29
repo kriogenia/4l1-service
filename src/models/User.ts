@@ -1,3 +1,4 @@
+import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { getModelForClass, modelOptions, post, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import Logger from "jet-logger";
@@ -32,6 +33,8 @@ interface Address {
  * @property {string?} mainPhoneNumber main phone number to use as way of contact
  * @property {string?} altPhoneNumber alternative phone number to use as way of contact
  * @property {string?} email email address of the user
+ * @property {User[]?} bonds list of keepers of the patient
+ * @property {User?} kept bonded patient of the keeper
  */
  @modelOptions({ 
 	schemaOptions: { collection: "users" },
@@ -62,6 +65,31 @@ class UserSchema {
 
 	@prop({ ref: () => UserSchema })
 	public bonds?: Ref<UserSchema>[];
+
+	@prop({ ref: () => UserSchema })
+	public kept?: Ref<UserSchema>;
+
+	/**
+	 * Builds a bond between the specified patient and keeper if the requisites
+	 * are covered
+	 * @param patient 	patient to be bonded
+	 * @param keeper	keeper to be bonded
+	 */
+	public async bondWith(this: DocumentType<UserSchema>, keeper: DocumentType<UserSchema>)
+	: Promise<void> {
+		if (this.role !== Role.Patient || keeper.role !== Role.Keeper) {
+			throw Error("Invalid bond. The correct bond is PATIENT bonds with KEEPER");
+		}
+		if (this.bonds.length >= parseInt(process.env.MAX_BONDS)) {
+			throw badRequestError(ERR_MSG.maximum_bonds_reached);
+		}
+		if (keeper.kept !== undefined) {
+			throw badRequestError(ERR_MSG.keeper_already_bonded);
+		}
+		this.bonds.push(keeper);
+		keeper.kept = this;
+		await Promise.all([this.save(), keeper.save()]);
+	}
 
 }
 
