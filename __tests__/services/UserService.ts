@@ -1,5 +1,5 @@
 import { Role, User, UserModel } from "@/models/User";
-import { bond, getByGoogleId, update } from "@/services/UserService";
+import { bond, getByGoogleId, getCared, update } from "@/services/UserService";
 import { badRequestError, ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
 import { mongoose } from "@typegoose/typegoose";
@@ -32,7 +32,7 @@ describe("The bond function", () => {
 		expect(storedPatient.bonds.length).toBe(1);
 		expect(storedPatient.bonds[0]).toEqual(keeper._id);
 		const storedKeeper = await UserModel.findById(keeper._id);
-		expect(storedKeeper.kept).toEqual(patient._id);
+		expect(storedKeeper.cared).toEqual(patient._id);
 	});	
 
 	it("should throw an error when the user roles are wrong", async () => {
@@ -64,13 +64,52 @@ describe("The bond function", () => {
 	});
 
 	it("should throw an error when the keeper is already kept", async () => {
-		keeper.kept = patient._id;
+		keeper.cared = patient._id;
 		await keeper.save();
 
 		expect.assertions(1);
 		return bond(patient._id, keeper._id).catch(e => { 
 			expect(e).toEqual(badRequestError(ERR_MSG.keeper_already_bonded))
 		});
+	});
+
+});
+
+describe("The cared request", () => {
+
+	it("should return the data of the user cared when it exists", async () => {
+		const patient = await UserModel.create({
+			googleId: "patient",
+			role: Role.Patient
+		});
+		const keeper = await UserModel.create({
+			googleId: "keeper",
+			role: Role.Keeper,
+			cared: patient
+		});
+
+		expect.assertions(3);
+		return getCared(keeper._id)
+			.then((cared) => {
+				expect(cared._id).toEqual(patient._id);
+				expect(cared.googleId).toEqual(patient.googleId);
+				expect(cared.role).toEqual(patient.role);
+			});
+
+	});
+
+	it("should return null if the user doesn't have any cared user", async () => {
+		const patient = await UserModel.create({
+			googleId: "patient",
+			role: Role.Patient
+		});
+
+		expect.assertions(1);
+		return getCared(patient._id)
+			.then((cared) => {
+				expect(cared).toBeNull();
+			});
+
 	});
 
 });

@@ -1,6 +1,5 @@
 import { SessionPackage } from "@/interfaces";
 import { Role, User, UserModel } from "@/models/User";
-import { bond } from "@/services/TokenService";
 import { ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
 import { openSession, postRequest } from "@test-util/SessionSetUp";
@@ -56,7 +55,7 @@ describe("Calling POST /user/bond/establish", () => {
 		expect(storedPatient.bonds.length).toBe(1);
 		expect(storedPatient.bonds[0].toString()).toMatch(user._id);
 		const storedKeeper = await UserModel.findById(user._id);
-		expect(storedKeeper.kept).toEqual(patient._id);
+		expect(storedKeeper.cared).toEqual(patient._id);
 	});
 
 	it("should return an error when the token is not valid", async () => {
