@@ -33,6 +33,28 @@ export const getByGoogleId = async (userId: string): Promise<User> => {
 }
 
 /**
+ * Retrieves the data of the user cared by the specified user if it exists
+ * @param userId Id of the user requesting the data
+ * @returns data of the patient bond with the user
+ */
+export const getCared = async (userId: string): Promise<User> => {
+	return new Promise((resolve, reject) => {
+		UserModel.findById(userId).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				if (!result.cared) return resolve(null);	// If the user doesn't have cared, return null
+				UserModel.findById(result.cared).exec(
+					(err, result) => {
+						if (err) return reject(err);
+						resolve(result);
+					}
+				);
+			}
+		);
+	});
+}
+
+/**
  * Updates the persisted user with the provided information
  * @param user User to be updated with its new info
  * @returns update user

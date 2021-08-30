@@ -67,7 +67,7 @@ class UserSchema {
 	public bonds?: Ref<UserSchema>[];
 
 	@prop({ ref: () => UserSchema })
-	public kept?: Ref<UserSchema>;
+	public cared?: Ref<UserSchema>;
 
 	/**
 	 * Builds a bond between the specified patient and keeper if the requisites
@@ -83,11 +83,11 @@ class UserSchema {
 		if (this.bonds.length >= parseInt(process.env.MAX_BONDS)) {
 			throw badRequestError(ERR_MSG.maximum_bonds_reached);
 		}
-		if (keeper.kept !== undefined) {
+		if (keeper.cared !== undefined) {
 			throw badRequestError(ERR_MSG.keeper_already_bonded);
 		}
 		this.bonds.push(keeper);
-		keeper.kept = this;
+		keeper.cared = this;
 		await Promise.all([this.save(), keeper.save()]);
 	}
 
