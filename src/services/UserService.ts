@@ -1,4 +1,5 @@
 import { Role, User, UserModel } from "@/models/User"
+import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { LeanDocument } from "mongoose";
 
 /**
@@ -36,22 +37,66 @@ export const getByGoogleId = async (userId: string): Promise<User> => {
  * Retrieves the data of the user cared by the specified user if it exists
  * @param userId Id of the user requesting the data
  * @returns data of the patient bond with the user
+ * @throws a BAD_REQUEST error when the user is not a Keeper
  */
 export const getCared = async (userId: string): Promise<User> => {
+	return getUserById(userId)
+			.then((user) => {
+				if (user.role !== Role.Keeper) {
+					throw Error(ERR_MSG.only_keepers_cared);
+				}
+				if (!user.cared) return null;	// If the user doesn't have cared, return null
+				return getUserById(user.cared.toString());
+			});
+}
+
+/**
+ * Retrieves the Users bonded by a Patient
+ * @param userId of the Patient
+ * @returns the data of the Users bonded by the Patient
+ * @throws a BAD_REQUEST error when the user is not a Patient
+ */
+export const getBonds = async (userId: string): Promise<User[]> => {
 	return new Promise((resolve, reject) => {
-		UserModel.findById(userId).exec(
-			(err, result) => {
-				if (err) return reject(err);
-				if (!result.cared) return resolve(null);	// If the user doesn't have cared, return null
-				UserModel.findById(result.cared).exec(
+		getUserById(userId)
+			.then((user) => {
+				if (user.role !== Role.Patient) {
+					throw Error(ERR_MSG.only_patients_bond);
+				}
+				UserModel.find({ _id: { $in: user.bonds } }).exec(
 					(err, result) => {
 						if (err) return reject(err);
 						resolve(result);
 					}
 				);
-			}
-		);
+			})
+			.catch(reject);
 	});
+}
+
+/**
+ * Retrieves the Users bonded by the Patient cared by a Keeper
+ * @param userId of the Keeper
+ * @returns the data of the Users caring for the same Patient as the requestor
+ * @throws a BAD_REQUEST error when the user is not a Keeper is not bonded
+ */
+export const getBondsOfCared = async (userId: string): Promise<User[]> => {
+	return getCared(userId)
+			.then((cared) => {
+				if (cared == null) {
+					throw badRequestError(ERR_MSG.keeper_not_bonded)
+				}
+				return getBonds(cared._id);
+			});
+}
+
+/**
+ * Retrieves the role of the specified user
+ * @param userId of the user to check
+ * @returns the role of the user with the matching id
+ */
+export const getRole = async (userId: string): Promise<Role> => {
+	return getUserById(userId).then((user) => user.role);
 }
 
 /**
@@ -79,5 +124,21 @@ const generateUser = async (userId: string): Promise<User> => {
 	return await UserModel.create({
 		googleId: userId,
 		role: Role.Blank
+	});
+}
+
+/**
+ * Promise of user retrieve by its Id
+ * @param userId of the user to get
+ * @returns data of the user with the matching id
+ */
+const getUserById = async (userId: string): Promise<User> => {
+	return new Promise((resolve, reject) => {
+		UserModel.findById(userId).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
+			}
+		);
 	});
 }
