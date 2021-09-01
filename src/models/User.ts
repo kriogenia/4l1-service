@@ -10,13 +10,27 @@ export enum Role {
 	Blank = "blank"
 }
 
-/** Simplified model representing an address with the needed info to allow personal 
- * localization of the user. */
+/** 
+ * Simplified model representing an address with the needed info to allow personal 
+ * localization of the user. 
+ * */
 interface Address {
 	firstLine?: string,
 	secondLine?: string,
 	locality?: string,
 	region?: string
+}
+
+/**
+ * Reduced and sharable version of the user data to just enable contact
+ */
+export interface UserContact {
+	role: Role,
+	displayName?: string,
+	mainPhoneNumber?: string,
+	altPhoneNumber?: string,
+	address?: Address,
+	email?: string
 }
 
 
@@ -68,6 +82,17 @@ class UserSchema {
 
 	@prop({ ref: () => UserSchema })
 	public cared?: Ref<UserSchema>;
+
+	public get public(): UserContact {
+		return {
+			role: this.role,
+			displayName: this.displayName,
+			mainPhoneNumber: this.mainPhoneNumber,
+			altPhoneNumber: this.altPhoneNumber,
+			address: this.address,
+			email: this.email
+		}
+	}
 
 	/**
 	 * Builds a bond between the specified patient and keeper if the requisites
