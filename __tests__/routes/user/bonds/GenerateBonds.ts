@@ -12,7 +12,7 @@ afterAll(db.close);
 
 const endpoint = "/user/bond/generate";
 
-describe("Calling GET /user/bond/generate", () => {
+describe("Calling GET " + endpoint, () => {
 
 	let session: SessionPackage;
 	let user: LeanDocument<User>;

@@ -13,7 +13,7 @@ afterAll(db.close);
 
 const endpoint = "/user/update/";
 
-describe("Calling PUT /user/update", () => {
+describe("Calling PUT " + endpoint, () => {
 
 	let session: SessionPackage;
 	let user: LeanDocument<User>;

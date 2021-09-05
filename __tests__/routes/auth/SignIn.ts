@@ -20,7 +20,7 @@ afterAll(db.close);
 
 const endpoint = "/auth/signin/";
 
-describe("Calling GET /auth/signin", () => {
+describe("Calling GET " + endpoint, () => {
 
 	it("should return a new user and session when given an unregistered Google Id", 
 	async () => {

@@ -11,7 +11,7 @@ afterAll(db.close);
 
 const endpoint = "/user/cared";
 
-describe("Calling PUT /user/update", () => {
+describe("Calling GET " + endpoint, () => {
 
 	let session: SessionPackage;
 	let user: LeanDocument<User>;
@@ -32,6 +32,7 @@ describe("Calling PUT /user/update", () => {
 			role: Role.Patient
 		});
 		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Keeper,
 			cared: patient
 		});
 
@@ -46,6 +47,10 @@ describe("Calling PUT /user/update", () => {
 	});
 
 	it("should receive an OK response with null when there's no cared", async () => {
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Keeper
+		});
+
 		const response = await getRequest(endpoint, session.auth)
 			.send()
 			.expect(StatusCodes.OK);
