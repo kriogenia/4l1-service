@@ -15,7 +15,7 @@ interface TokenPayload extends jwt.JwtPayload {
  * @param id of the user
  * @returns object with the both tokens and expiring time
  */
-export const generate = (id: string) : SessionPackage => {
+export const sessionPackage = (id: string) : SessionPackage => {
 	const { AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME } = process.env;
 	const auth =  newToken(id, AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME);
 	const { REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION_TIME } = process.env;
@@ -26,6 +26,16 @@ export const generate = (id: string) : SessionPackage => {
 		refresh: refresh,
 		expiration: (jwt.decode(auth) as TokenPayload).exp
 	}
+}
+
+/**
+ * Generates a new token to bond users
+ * @param id of the patient user
+ * @returns token to bond
+ */
+export const bond = (id: string): string => {
+	const { BOND_TOKEN_SECRET, BOND_TOKEN_EXPIRATION_TIME } = process.env;
+	return newToken(id, BOND_TOKEN_SECRET, BOND_TOKEN_EXPIRATION_TIME);
 }
 
 /**
@@ -42,10 +52,21 @@ export const checkAuth = async (token: string): Promise<boolean> => {
  * Checks if the token are valid and related to any active session
  * @param auth token of the session
  * @param refresh token of the session
- * @returns 
+ * @returns true if it's valid, false otherwise
  */
-export const checkTuple = (auth: string, refresh: string): Promise<boolean> => {
+export const checkPackage = (auth: string, refresh: string): Promise<boolean> => {
 	return SessionService.checkSessionTuple(auth, refresh);
+}
+
+/**
+ * Checks if the provided bonding token is valid and returns its stored SessionId
+ * in case that it's
+ * @param token bonding token
+ * @returns sessionId of the token creator
+ */
+export const decodeBond = async (token: string): Promise<string> => {
+	return verifyToken(token, process.env.BOND_TOKEN_SECRET)
+		.then((payload) => payload.sessionId);
 }
 
 /**
@@ -62,7 +83,7 @@ Promise<SessionPackage> => {
 		.then((isRefreshable) =>{
 			if (isRefreshable) {
 				SessionService.closeSession(refresh);
-				return generate(extractId(auth));
+				return sessionPackage(extractId(auth));
 			}
 			throw badRequestError(ERR_MSG.token_invalid);
 		});

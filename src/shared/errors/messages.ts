@@ -1,5 +1,12 @@
-export const auth_header = "The authorization header is not correct";
+export const auth_header_missing = "The authorization header is missing";
+export const auth_header_wrong = "The authorization header is not correct";
+export const keeper_already_bonded = "This Keeper is already bonded";
+export const keeper_not_bonded = "This Keeper is not yet bonded";
 export const invalid_google_id = "The specified user does not have a valid ID";
+export const maximum_bonds_reached = "The specified patient has already reached the maximum number of bonds";
+export const only_keepers_cared = "Only Keepers can have cared users";
+export const only_patients_bond = "Only Patients can have direct bonds";
 export const session_invalid = "The token doesn't correspond to any active session";
-export const token_expired = "The provided token is expired, please log in again";
-export const token_invalid = "The provided token is invalid, please log in again";
+export const token_expired = "The provided token is expired";
+export const token_invalid = "The provided token is invalid";
+export const unauthorized_operation = "The specified operation can't be performed by this user";

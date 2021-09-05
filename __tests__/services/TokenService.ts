@@ -1,10 +1,9 @@
 import { SessionPackage } from "@/interfaces";
 import * as SessionService from "@/services/SessionService";
-import { checkTuple, extractId, generate, refresh } from "@/services/TokenService";
-import { ERR_MSG } from "@/shared/errors";
+import { extractId, sessionPackage, refresh, checkPackage, bond, decodeBond } from "@/services/TokenService";
+import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { mocked } from "ts-jest/utils";
 import * as jwt from "jsonwebtoken";
-import { auth } from "google-auth-library";
 
 /** Session service mock */
 jest.mock("@/services/SessionService");
@@ -14,8 +13,19 @@ const id = "tokenservice";
 describe("The token generation", () => {
 
 	it("should generate two valid tokens and the expected auth expiration time", () => {
-		const pack = generate("tokenservice");
+		const pack = sessionPackage("tokenservice");
 		verifyPackage(pack);
+	});
+
+});
+
+describe("The bonding token generation", () => {
+
+	it("should generate a valid bonding token of the requested id", () => {
+		const id = "bonding";
+		const bonding = bond(id);
+		const decoded = jwt.verify(bonding, process.env.BOND_TOKEN_SECRET) as jwt.JwtPayload;
+		expect(decoded.sessionId).toBe(id);
 	});
 
 });
@@ -29,12 +39,55 @@ describe("The token tuple check", () => {
 
 	it("should return true if the tokens are valid", () => {
 		expect.assertions(1);
-		expect(checkTuple("tokenservice", "tokenservice")).resolves.toBeTruthy();
+		expect(checkPackage("tokenservice", "tokenservice")).resolves.toBeTruthy();
 	});
 	
 	it("should return false if the tokens are invalid", () => {
 		expect.assertions(1);
-		expect(checkTuple("tokenservice", "servicetoken")).resolves.toBeFalsy();
+		expect(checkPackage("tokenservice", "servicetoken")).resolves.toBeFalsy();
+	});
+
+});
+
+describe("The bonding token decode", () => {
+
+	it("should return the id of the requester when given a valid token", (done) => {
+		const bondingToken = jwt.sign(
+			{ sessionId : id }, 
+			process.env.BOND_TOKEN_SECRET, 
+			{ expiresIn: process.env.BOND_TOKEN_EXPIRATION_TIME }
+		);
+
+		expect.assertions(1);
+		decodeBond(bondingToken)
+			.then((decoded) => {
+				expect(decoded).toEqual(id);
+				done();
+			});
+	});
+	
+	it("should throw an error when the token is expired", (done) => {
+		const bondingToken = jwt.sign(
+			{ sessionId : id }, 
+			process.env.BOND_TOKEN_SECRET, 
+			{ expiresIn: "1ms" }
+		);
+
+		expect.assertions(1);
+		decodeBond(bondingToken)
+			.catch((error) => {
+				expect(error).toEqual(unathorizedError(ERR_MSG.token_expired));
+				done();
+			});
+	});
+	
+	it("should throw an error when the token is invalid", (done) => {
+		expect.assertions(1);
+		decodeBond("invalid")
+			.catch((error) => {
+				expect(error).toEqual(unathorizedError(ERR_MSG.token_invalid));
+				done();
+			});
 	});
 
 });

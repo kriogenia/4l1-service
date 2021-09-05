@@ -23,7 +23,8 @@ interface SignInResponse {
  * new one to return.
  * @param req request with the Google credentials
  * @param res carried response
- * @returns response with the user account details
+ * @param next invokation of the next middleware to use in case of error
+ * @returns the sending response with the session package or error message
  */
 export const signIn = async (
 	req: Request<SignInParams>, 
@@ -32,9 +33,9 @@ export const signIn = async (
 {
 	// Verify the Google token
 	return GoogleAuth.verify(req.params.token)
-		.then(UserService.getUserByGoogleId)	// And get the user to return
+		.then(UserService.getByGoogleId)	// And get the user to return
 		.then((user) => res.status(StatusCodes.OK).json({
-				session: TokenService.generate(user.id),
+				session: TokenService.sessionPackage(user.id),
 				user: user.toJSON()
 			}).send())
 		.catch(next);

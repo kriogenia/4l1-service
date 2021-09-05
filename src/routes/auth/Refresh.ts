@@ -13,6 +13,14 @@ interface RefreshResponse {
 	session: SessionPackage
 }
 
+/**
+ * Checks the Session package provided, if it's refreshable, generate a new Session
+ * package to return to the user
+ * @param req request with the session package
+ * @param res carried response
+ * @param next invokation of the next middleware to use in case of error
+ * @returns the sendind response with the new session package or error message
+ */
 export const refresh = async (
 	req: Request<unknown, unknown, RefreshBody>, 
 	res: Response<RefreshResponse>, 
@@ -20,7 +28,7 @@ export const refresh = async (
 {
 	const { auth, refresh } = req.body;
 	return TokenService
-		.checkTuple(auth, refresh)				// Checks that the session is valid
+		.checkPackage(auth, refresh)				// Checks that the session is valid
 		.then((isValid) => {
 			if (isValid) return TokenService.refresh(auth, refresh); // If it is refresh it
 			throw unathorizedError(ERR_MSG.session_invalid);
