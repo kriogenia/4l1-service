@@ -19,12 +19,47 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 
 ## Endpoints
 
-| Sign In	|              			|											|
+| Sign In	| GET        			|											|
 |:-:		| :-:					|:-:										|
 | URL     	| /auth/signin/:token	|											|
 | Params    | token: string			| Google Id Token of the user 				|
 | Response	| session: object		| Tokens and expiration time				|
 |			| user: object			| Logged in user details					|
+
+| Refresh	| POST					|											|
+|:-:		| :-:					|:-:										|
+| URL     	| /auth/refresh			|											|
+| Body	    | auth: string			| Authentication token of the user			|
+| 	    	| refresh: string		| Refresh token of the user 				|
+| Response	| session: object		| New tokens and expiration time			|
+
+| Update user	| PUT         			|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /user/update			|											|
+| Body	    	| user: object			| New data of the user to update			|
+| Response		| message: string		| Success confirmation message				|
+
+| Cared			| GET           		|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /user/cared			|											|
+| Response		| cared: object			| User data of the cared user				|
+
+| Bonds list	| GET           		|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /user/bond/list		|											|
+| Response		| bonds: object[]		| List of user data of bonds				|
+
+| Establish bond| POST           		|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /user/bond/establish	|											|
+| Body	    	| code: string			| Read bonding code							|
+| Response		| message: string		| Success confirmation message				|
+
+| Generate bond	| GET           		|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /user/bond/generate	|											|
+| Response		| code: string			| New bonding code							|
+
 
 
 ## Dependencies

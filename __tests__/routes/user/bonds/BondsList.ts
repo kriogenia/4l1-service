@@ -12,7 +12,7 @@ afterAll(db.close);
 
 const endpoint = "/user/bond/list";
 
-describe("Calling GET /user/bond/list", () => {
+describe("Calling GET " + endpoint, () => {
 
 	let session: SessionPackage;
 	let user: LeanDocument<User>;

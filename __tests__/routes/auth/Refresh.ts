@@ -11,13 +11,15 @@ beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-describe("Calling POST /auth/refresh", () => {
+const endpoint = "/auth/refresh";
+
+describe("Calling POST " + endpoint, () => {
 
 	it("should return a new session package when provided active tokens ", 
 	async () => {
 		const tokens = TokenService.sessionPackage("refresh");
 		const response = await request(app)
-			.post("/auth/refresh")
+			.post(endpoint)
 			.send({
 				auth: tokens.auth,
 				refresh: tokens.refresh
@@ -29,7 +31,7 @@ describe("Calling POST /auth/refresh", () => {
 	it("should return a new error response when provided invalid tokens", 
 	async () => {
 		const response = await request(app)
-			.post("/auth/refresh")
+			.post(endpoint)
 			.send({
 				auth: "authToken",
 				refresh: "refreshToken"

@@ -14,7 +14,7 @@ afterAll(db.close);
 
 const endpoint = "/user/bond/establish";
 
-describe("Calling POST /user/bond/establish", () => {
+describe("Calling POST " + endpoint, () => {
 
 	let session: SessionPackage;
 	let user: LeanDocument<User>;
