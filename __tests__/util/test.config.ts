@@ -1,4 +1,4 @@
-import { Environment } from "@/shared/constants";
+import { Environment } from "@/shared/enums";
 import { config } from "dotenv";
 import path from 'path';
 

@@ -4,7 +4,7 @@ import { SessionPackage } from "@/interfaces";
 import { LeanDocument } from "mongoose";
 import { Role, User, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
-import { msg_update_completed } from "@/shared/constants";
+import { msg_update_completed } from "@/shared/strings";
 import { ERR_MSG } from "@/shared/errors";
 
 beforeAll(db.connect);
