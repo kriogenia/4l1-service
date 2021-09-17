@@ -5,6 +5,6 @@ import { Socket } from "socket.io";
  * @param socket socket subscribed to the global room
  * @returns id of the global room
  */
-export const globalRoom = (socket: Socket): string => {
-	return [...socket.rooms].filter((r) => r.includes("global"))[0];
+export const getRoom = (type: string, socket: Socket): string => {
+	return [...socket.rooms].filter((r) => r.includes(type))[0] ?? null;
 };
