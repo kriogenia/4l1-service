@@ -4,7 +4,6 @@ import { setFeedListeners } from "./feed";
 import { setGlobalListeners } from "./global";
 import { setLocationListeners } from "./location";
 import { logListener } from "./Middlewares";
-export { globalRoom } from "./SocketHelper";
 
 /**
  * Keys of the root events
