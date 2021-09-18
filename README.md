@@ -17,7 +17,9 @@ yarn run dev
 
 This will deploy the server on the 3000 port, you can check it browsing to http://127.0.0.1:3000 (*yarn must be installed in the environment of choice to work*)
 
-## Endpoints
+## REST Endpoints
+
+### Authentication
 
 | Sign In	| GET        			|											|
 |:-:		| :-:					|:-:										|
@@ -33,6 +35,8 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 | 	    	| refresh: string		| Refresh token of the user 				|
 | Response	| session: object		| New tokens and expiration time			|
 
+### User
+
 | Update user	| PUT         			|											|
 |:-:			| :-:					|:-:										|
 | URL     		| /user/update			|											|
@@ -43,6 +47,8 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 |:-:			| :-:					|:-:										|
 | URL     		| /user/cared			|											|
 | Response		| cared: object			| User data of the cared user				|
+
+#### Bonding
 
 | Bonds list	| GET           		|											|
 |:-:			| :-:					|:-:										|
@@ -60,6 +66,63 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 | URL     		| /user/bond/generate	|											|
 | Response		| code: string			| New bonding code							|
 
+## Socket Events
+
+### Global Room
+
+* SUBSCRIBE, global:subscribe
+	* Server event
+	* Subscribes the user to the specified Global Room if they can
+	* Message
+		* id: string. ID of the user joining the room.
+		* owner: string. ID of the user owner of the room.
+	* Emmits
+		* SUBSCRIPTION to all the users in the room	
+
+* SUBSCRIPTION, global:subscription
+	* Client event
+	* Notifies to users in a Global Room about the new subscriber
+	* Message
+		* id: string. ID of the user joining the room.
+		* room: string. ID of the room.	
+
+* SHARE LOCATION, global:share_location
+	* Client event
+	* Notifies to users in the same Global Room that the requester is sharing their location
+	* Message
+		* id: string. ID of the user sharing the location.
+		* displayName: string. Display name of the user sharing the location.	
+
+
+### Location
+
+* SHARE, location:share
+	* Server event
+	* Subscribes the user to a Location room and notifies their peers
+	* Message
+		* id: string. ID of the user sharing the location.
+		* displayName: string. Display name of the user sharing the location.
+	* Emmits
+		* SHARE LOCATION to the rest of users in the same Global Room	
+
+* UPDATE, location:update
+	* Broadcast event
+	* Shares the location of the user with all their peers
+	* Message
+		* id: string. ID of the user sharing the location.
+		* displayName: string. Display name of the user sharing the location.
+		* position: coordinates. Geoposition of the user sharing the location.	
+	* Emmits
+		* UPDATE to the rest of users in the same Location Room	
+
+* STOP, location:stop
+	* Broadcast event
+	* Leaves the Location Room and notifies the rest of users on it
+	* Message
+		* id: string. ID of the user leaving the room.
+		* displayName: string. Display name of the user leaving the room.
+	* Emmits
+		* STOP to the rest of users in the Location Room	
 
 
 ## Dependencies
@@ -71,10 +134,17 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 * [**Http Status Codes**](https://www.npmjs.com/package/http-status-codes)
 * [**Jet-Logger**](https://www.npmjs.com/package/jet-logger)
 * [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)
+* [**mongoose**](https://www.npmjs.com/package/mongoose)
 * [**Morgan**](https://www.npmjs.com/package/morgan)
 * [**Socket.io**](https://www.npmjs.com/package/socket.io)
 * [**Typegoose**](https://www.npmjs.com/package/@typegoose/typegoose)
 * [**Typescript**](https://www.npmjs.com/package/typescript)
 
-## Testing
-The testing have been done with [**Jest**](https://www.npmjs.com/package/jest) and [**TS-Jest**](https://www.npmjs.com/package/ts-jest).
+### Testing
+* [**Jest**](https://www.npmjs.com/package/jest) 
+* [**mongodb-memory-server**](https://www.npmjs.com/package/mongodb-memory-server)
+* [**SuperTest**](https://www.npmjs.com/package/supertest)
+* [**TS-Jest**](https://www.npmjs.com/package/ts-jest)
+
+### Linting
+* [**eslint**](https://www.npmjs.com/package/eslint)
