@@ -1,13 +1,6 @@
-import { getModelForClass, modelOptions, post, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
-import Logger from "jet-logger";
 
-/**
- * Post hook to log any new session creation
- */
-@post<SessionSchema>("save", (session) => {
-	Logger.Info(`New Session[${session.id as string ?? ""}] created with RefreshToken[${session.refresh}] `)
-})
 /**
  * Entity of the application active sessions
  * @property {string} refresh token currently active

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Environment } from "@/shared/enums";
 import { config } from "dotenv";
 import path from 'path';

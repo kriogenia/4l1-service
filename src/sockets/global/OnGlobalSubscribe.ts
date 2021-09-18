@@ -1,5 +1,4 @@
 import * as UserService from "@/services/UserService";
-import { ERR_MSG } from "@/shared/errors";
 import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
 import { GlobalRoomEvent } from ".";

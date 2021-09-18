@@ -1,7 +1,6 @@
 import { badRequestError, ERR_MSG } from "@/shared/errors";
-import { getModelForClass, modelOptions, post, prop, Severity } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
-import Logger from "jet-logger";
 
 /** List of possible types of user */
 export enum Role {
@@ -32,12 +31,6 @@ export interface UserContact {
 	address?: Address,
 	email?: string
 }
-
-
-/** Post hook to log any new user creation */
-@post<UserSchema>("save", (user) => {
-	Logger.Info(`New User[${user.id as string ?? ""}] created with GoogleID[${user.googleId}] `)
-})
 
 /**
  * Entity of the application users

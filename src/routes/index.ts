@@ -1,3 +1,4 @@
+/* istanbul ignore file */	// Set up file, untestable
 import { Router } from "express";
 import authRouter from "./auth";
 import { validateToken } from "./middlewares";
