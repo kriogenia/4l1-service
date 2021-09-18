@@ -121,10 +121,7 @@ const verifyToken = (token: string, secret: string): Promise<TokenPayload> => {
 				if (err instanceof jwt.TokenExpiredError) {
 					return reject(unathorizedError(ERR_MSG.token_expired));
 				}
-				if (err instanceof jwt.JsonWebTokenError) {
-					return reject(unathorizedError(ERR_MSG.token_invalid));
-				}
-				return reject(err);
+				return reject(unathorizedError(ERR_MSG.token_invalid));
 			} else return resolve(token as TokenPayload);
 		});
 	});

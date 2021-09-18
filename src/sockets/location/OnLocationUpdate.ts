@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { LOCATION, LocationEvent } from ".";
 import { getRoom } from "../SocketHelper";
 
-interface Message {
+export interface Message {
 	id: string,
 	displayName: string,
 	position: {

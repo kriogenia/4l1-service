@@ -1,8 +1,13 @@
+/* istanbul ignore file */
 import { onConnection, RootEvent } from "@/sockets";
 import { createServer } from "http";
 import { io as Client, Socket } from "socket.io-client";
 import { Server } from "socket.io";
 import { AddressInfo } from "net";
+import { GlobalRoomEvent } from "@/sockets/global";
+import { Input } from "@/sockets/global/OnGlobalSubscribe";
+import { LocationEvent } from "@/sockets/location";
+import { Message } from "@/sockets/location/OnLocationShare";
 
 export class SocketTestHelper {
 
@@ -58,6 +63,52 @@ export class SocketTestHelper {
 		this.clientA.close();
 		this.clientB.close();
 	}
+
+	/**
+	 * Connect the clients to the same Global Room and executes
+	 * the rest of the test
+	 * @param callback 	rest of the test
+	 */
+	joinGlobal = (callback: () => void) => {
+		const subscription: Input = {
+			id: "patient",
+			owner: "patient"
+		};
+	
+		let doOnce = true;
+		this.clientA.on(GlobalRoomEvent.SUBSCRIPTION, () => {
+			if (doOnce) {
+				doOnce = false;
+				this.clientB.emit(GlobalRoomEvent.SUBSCRIBE, subscription);
+			}
+		});
+		this.clientB.on(GlobalRoomEvent.SUBSCRIPTION, () => {
+			callback();
+		});
+		this.clientA.emit(GlobalRoomEvent.SUBSCRIBE, subscription);
+	}
+
+	/**
+	 * Connect the clients to the same Location Room and executes
+	 * the rest of the test
+	 * @param callback 	rest of the test
+	 */
+	joinLocation = (callback: () => void) => {
+		const share: Message = {
+			id: "keeper",
+			displayName: "KEEPER"
+		}
+		
+		this.joinGlobal(() => {
+			this.clientB.on(GlobalRoomEvent.SHARING_LOCATION, () => {
+				this.clientB.emit(LocationEvent.SHARE, share);
+			});
+			this.clientA.on(GlobalRoomEvent.SHARING_LOCATION, () => {
+				callback();
+			});
+			this.clientA.emit(LocationEvent.SHARE, share);
+		});
+	};
 
 }
 

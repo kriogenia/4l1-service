@@ -11,11 +11,13 @@ const app = express();
 
 /************** PRE-ROUTING MIDDLEWARES **************/
 
+/* istanbul ignore next */	// Not part of the test environment
 if (process.env.NODE_ENV === Environment.DEV) {
 	/* Logs all the incoming requests */
     app.use(morgan("dev"));
 }
 
+/* istanbul ignore next */	// Not part of the test environment
 if (process.env.NODE_ENV === Environment.PROD) {
 	/* Sets security headers */
     app.use(helmet());
