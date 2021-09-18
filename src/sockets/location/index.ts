@@ -1,17 +1,16 @@
 import { Server, Socket } from "socket.io";
-import { onSend } from "./SendListener";
-import { onSubscribe } from "./SubscribeListener";
-import { onUnsubscribe } from "./UnsuscribeListener";
+import { onLocationShare } from "./OnLocationShare";
+import { onLocationStop } from "./OnLocationStop";
+import { onLocationUpdate } from "./OnLocationUpdate";
+
+export const LOCATION = "location";
 
 /**
  * Keys of the location events
  */
 export enum LocationEvent {
-	SEND = "location:send",
-	SUBSCRIBE = "location:subscribe",
-	SUBSCRIPTION = "location:subscription",
-	UNSUBSCRIBE = "location:unsubscribe",
-	UNSUBSCRIPTION = "location:unsuscruption",
+	SHARE = "location:share",
+	STOP = "location:stop",
 	UPDATE = "location:update"
 }
 
@@ -20,8 +19,8 @@ export enum LocationEvent {
  * @param socket to poblate with listeners
  * @param io to use in the listeners
  */
-export const setLocationSockets = (socket: Socket, io: Server) => {
-    socket.on(LocationEvent.SEND, onSend(socket, io));
-    socket.on(LocationEvent.SUBSCRIBE, onSubscribe(socket, io));
-	socket.on(LocationEvent.UNSUBSCRIBE, onUnsubscribe(socket, io));
+export const setLocationListeners = (socket: Socket, io: Server) => {
+	socket.on(LocationEvent.SHARE, onLocationShare(socket, io));
+	socket.on(LocationEvent.STOP, onLocationStop(socket, io));
+	socket.on(LocationEvent.UPDATE, onLocationUpdate(socket, io));
 }

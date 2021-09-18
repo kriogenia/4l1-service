@@ -1,4 +1,4 @@
-import { Severity } from "@/shared/constants";
+import { Severity } from "@/shared/enums";
 import { errorHandler } from "@/shared/ErrorHandler";
 import { HttpError } from "@/shared/errors";
 import { LOG } from "@/shared/Logger";

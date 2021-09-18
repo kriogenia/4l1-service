@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { app } from "@/App";
 import request from "supertest";
 import { mocked } from "ts-jest/utils";

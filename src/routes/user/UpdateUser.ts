@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { LeanDocument } from "mongoose";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
-import { msg_update_completed } from "@/shared/constants";
+import { msg_update_completed } from "@/shared/strings";
 import { BasicResponse } from "@/interfaces";
 
 /**

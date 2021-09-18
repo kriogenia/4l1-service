@@ -1,7 +1,7 @@
 import { BasicResponse } from "@/interfaces";
 import * as TokenService from "@/services/TokenService";
 import * as UserService from "@/services/UserService";
-import { msg_bonding_completed } from "@/shared/constants";
+import { msg_bonding_completed } from "@/shared/strings";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
