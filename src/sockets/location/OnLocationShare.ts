@@ -30,8 +30,7 @@ export const onLocationShare = (socket: Socket, _io: Server) => (data: Input): v
 	const room = global.replace("global", "location");
 	socket.join(room);
 	LOG.info(`User[${data.id}] started sharing its location on Room[${room}]`);
-	// and communicate it through the global room
+	// and communicate it through the location and global room
 	const output: Output = { message: msg_room_subscription, ...data };
 	socket.broadcast.to(global).emit(GlobalRoomEvent.SHARING_LOCATION, output);
-	// TODO subscribe on client location activity to display new connections
 }

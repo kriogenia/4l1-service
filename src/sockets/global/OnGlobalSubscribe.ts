@@ -4,14 +4,15 @@ import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
 import { GlobalRoomEvent } from ".";
 
-interface Input {
+export interface Input {
 	id: string,
 	owner: string
 }
 
-interface Output {
+export interface Output {
 	message: string,
-	user: string
+	user: string,
+	room: string
 }
 
 export const onSubscribe = (socket: Socket, io: Server) => async (data: Input)
@@ -31,7 +32,8 @@ export const onSubscribe = (socket: Socket, io: Server) => async (data: Input)
 
 	const message: Output = {
 		message: "New user has joined the room",
-		user: id
+		user: id,
+		room: roomId
 	};
 	io.to(roomId).emit(GlobalRoomEvent.SUBSCRIPTION, message);
 }
