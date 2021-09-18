@@ -10,7 +10,6 @@ export interface Input {
 }
 
 export interface Output {
-	message: string,
 	user: string,
 	room: string
 }
@@ -23,7 +22,9 @@ export const onSubscribe = (socket: Socket, io: Server) => async (data: Input)
 	if (id !== owner) {
 		const cared = (await UserService.getCared(id)).id;
 		if (cared !== owner) {
-			throw new Error(ERR_MSG.invalid_room_subscription);
+			LOG.err(`User[${id}] requested invalid access to the global room of User[${owner}]`)
+			socket.disconnect();
+			return;
 		}
 	}
 
@@ -31,7 +32,6 @@ export const onSubscribe = (socket: Socket, io: Server) => async (data: Input)
 	LOG.info(`User[${id}] joined Room[${roomId}] through Socket[${socket.id}] `);
 
 	const message: Output = {
-		message: "New user has joined the room",
 		user: id,
 		room: roomId
 	};
