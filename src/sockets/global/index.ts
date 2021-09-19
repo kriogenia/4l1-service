@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { onSubscribe } from "./OnGlobalSubscribe";
 
+export const GLOBAL = "global;"
+
 /**
  * Keys of the global room events
  */
