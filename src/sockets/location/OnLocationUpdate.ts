@@ -18,7 +18,7 @@ export interface Message {
  * @param _io server
  * @param data id, name and location of the user sharing the location
  */
-export const onLocationUpdate = (socket: Socket, _io: Server) => (data: Message): void => {
+export const onUpdate = (socket: Socket, _io: Server) => (data: Message): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	// Share the location with the users connected to the same location room

@@ -1,7 +1,7 @@
 import * as UserService from "@/services/UserService";
 import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
-import { GlobalRoomEvent } from ".";
+import { GLOBAL, GlobalRoomEvent } from ".";
 
 export interface Input {
 	id: string,
@@ -16,7 +16,7 @@ export interface Output {
 export const onSubscribe = (socket: Socket, io: Server) => async (data: Input)
 : Promise<void> => {
 	const { id, owner } = data;
-	const roomId = `global:${owner}`;
+	const roomId = `${GLOBAL}:${owner}`;
 	
 	if (id !== owner) {
 		const cared = (await UserService.getCared(id)).id;

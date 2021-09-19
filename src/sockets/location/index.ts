@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import { onLocationShare } from "./OnLocationShare";
-import { onLocationStop } from "./OnLocationStop";
-import { onLocationUpdate } from "./OnLocationUpdate";
+import { onShare } from "./OnLocationShare";
+import { onStop } from "./OnLocationStop";
+import { onUpdate } from "./OnLocationUpdate";
 
 export const LOCATION = "location";
 
@@ -20,7 +20,7 @@ export enum LocationEvent {
  * @param io to use in the listeners
  */
 export const setLocationListeners = (socket: Socket, io: Server) => {
-	socket.on(LocationEvent.SHARE, onLocationShare(socket, io));
-	socket.on(LocationEvent.STOP, onLocationStop(socket, io));
-	socket.on(LocationEvent.UPDATE, onLocationUpdate(socket, io));
+	socket.on(LocationEvent.SHARE, onShare(socket, io));
+	socket.on(LocationEvent.STOP, onStop(socket, io));
+	socket.on(LocationEvent.UPDATE, onUpdate(socket, io));
 }

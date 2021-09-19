@@ -1,10 +1,14 @@
 import { Server, Socket } from "socket.io";
+import { onJoin } from "./OnFeedJoin";
+
+export const FEED = "feed";
 
 /**
  * Keys of the Feed events
  */
 export enum FeedEvent {
-	SUBSCRIBE = "feed:subscribe"
+	JOIN = "feed:join",
+	JOINED = "feed:join"
 }
 
 /**
@@ -12,6 +16,6 @@ export enum FeedEvent {
  * @param socket to poblate with listeners
  * @param io to use in the listeners
  */
-export const setFeedListeners = (_socket: Socket, _io: Server) => {
-    //socket.on(FeedEvent.SUBSCRIBE, onSubscribe(socket, io));
+export const setFeedListeners = (socket: Socket, io: Server) => {
+    socket.on(FeedEvent.JOIN, onJoin(socket, io));
 }

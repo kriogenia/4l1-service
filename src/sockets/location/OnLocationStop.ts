@@ -14,7 +14,7 @@ export interface Message {
  * @param _io server
  * @param data id and name of the user leaving
  */
-export const onLocationStop = (socket: Socket, io: Server) => (data: Message): void => {
+export const onStop = (socket: Socket, io: Server) => (data: Message): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	
