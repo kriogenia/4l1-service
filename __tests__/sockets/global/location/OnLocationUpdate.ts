@@ -1,12 +1,12 @@
 import { LocationEvent } from "@/sockets/location";
-import { Message } from "@/sockets/location/OnLocationUpdate";
+import { Data } from "@/sockets/location/OnLocationUpdate";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 describe("Updating the location", () => {
 
 	const s = new SocketTestHelper();
 
-	const update: Message = {
+	const update: Data = {
 		id: "id",
 		displayName: "name",
 		position: {
@@ -26,7 +26,7 @@ describe("Updating the location", () => {
 	it("should broadcast the location to the rest of users",
 	(done) => {
 		s.joinLocation(() => {
-			s.clientB.on(LocationEvent.UPDATE, (msg: Message) => {
+			s.clientB.on(LocationEvent.UPDATE, (msg: Data) => {
 				expect(msg).toEqual(update);
 				done();
 			});

@@ -8,7 +8,7 @@ import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
  * @property {number} expiration time of the refresh token
  */
  @modelOptions({ schemaOptions: { collection: "sessions" } })
-class SessionSchema {
+export class SessionSchema {
 
 	@prop({ required: true, unique: true })
 	public refresh: string;
@@ -21,9 +21,8 @@ class SessionSchema {
 
 }
 
+/** Session object */
 export type Session = DocumentType<SessionSchema, BeAnObject>;
 
-/**
- * Model to manage Session database operations
- */
+/** Model to manage Session database operations */
 export const SessionModel = getModelForClass(SessionSchema);
