@@ -4,14 +4,16 @@ import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
 import * as FeedService from "@/services/FeedService";
 import { MessageType } from "@/models/Message";
+import { UserInfo } from "../schemas";
 
-export interface Data {
+export interface Input {
 	message: string,
-	user: {
-		id: string,
-		displayName: string
-	},
+	user: UserInfo,
 	timestamp: number
+}
+
+export interface Output extends Input {
+	_id: string
 }
 
 /**
@@ -21,18 +23,19 @@ export interface Data {
  * @param _io server
  * @param data message to broadcast
  */
-export const onSend = (socket: Socket, _io: Server) => (data: Data): 
+export const onSend = (socket: Socket, io: Server) => async (data: Input): 
 Promise<void> => {
 	const room = getRoom(FEED, socket);
 	if (!room) return;
 	// save the message into the DB
-	FeedService.create({
+	LOG.info(`User[${data.user._id}] sent "${data.message}"`);
+	return FeedService.create({
 		message: data.message,
-		user: data.user.id,
+		user: data.user._id,
 		timestamp: data.timestamp,
 		type: MessageType.Text
-	})
-	// and communicate it through the feed room
-	socket.broadcast.to(room).emit(FeedEvent.SEND, data);
-	LOG.info(`User[${data.user.id}] sent "${data.message}"`);
+	}).then((message) => {
+		const output: Output = {_id: message._id,...data};
+		io.to(room).emit(FeedEvent.NEW, output);	// and communicate it through the feed room
+	}).catch((error) => LOG.err(error));
 }

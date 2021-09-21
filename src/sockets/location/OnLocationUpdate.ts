@@ -3,7 +3,7 @@ import { LOCATION, LocationEvent } from ".";
 import { getRoom } from "../SocketHelper";
 
 export interface Data {
-	id: string,
+	id: string,				// TODO change to UserInfo
 	displayName: string,
 	position: {
 		latitude: number,
