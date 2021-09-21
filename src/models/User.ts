@@ -47,7 +47,7 @@ export interface UserContact {
 	schemaOptions: { collection: "users" },
 	options: { allowMixed: Severity.ALLOW } 
 })
-class UserSchema {
+export class UserSchema {
 
 	@prop({ required: true, unique: true })
 	public googleId: string;
@@ -111,9 +111,8 @@ class UserSchema {
 
 }
 
+/** User object */
 export type User = DocumentType<UserSchema, BeAnObject>;
 
-/**
- * Model to manage User database operations
- */
+/** Model to manage User database operations */
 export const UserModel = getModelForClass(UserSchema);

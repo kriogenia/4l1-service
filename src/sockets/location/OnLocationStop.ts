@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { LOCATION, LocationEvent } from ".";
 import { getRoom } from "../SocketHelper";
 
-export interface Message {
+export interface Data {
 	id: string,
 	displayName: string
 }
@@ -14,7 +14,7 @@ export interface Message {
  * @param _io server
  * @param data id and name of the user leaving
  */
-export const onStop = (socket: Socket, io: Server) => (data: Message): void => {
+export const onStop = (socket: Socket, io: Server) => (data: Data): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	

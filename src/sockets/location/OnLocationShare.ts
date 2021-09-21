@@ -3,7 +3,7 @@ import { GLOBAL, GlobalRoomEvent } from "../global";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 
-export interface Message {
+export interface Data {
 	id: string,
 	displayName: string
 }
@@ -16,7 +16,7 @@ export interface Message {
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onShare = (socket: Socket, _io: Server) => (data: Message): void => {
+export const onShare = (socket: Socket, _io: Server) => (data: Data): void => {
 	const global = getRoom(GLOBAL, socket);
 	if (!global) {
 		LOG.err("The user is not connected to a Global Room");

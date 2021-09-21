@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { LOCATION, LocationEvent } from ".";
 import { getRoom } from "../SocketHelper";
 
-export interface Message {
+export interface Data {
 	id: string,
 	displayName: string,
 	position: {
@@ -18,7 +18,7 @@ export interface Message {
  * @param _io server
  * @param data id, name and location of the user sharing the location
  */
-export const onUpdate = (socket: Socket, _io: Server) => (data: Message): void => {
+export const onUpdate = (socket: Socket, _io: Server) => (data: Data): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	// Share the location with the users connected to the same location room
