@@ -8,6 +8,7 @@ export const FEED = "feed";
  * Keys of the Feed events
  */
 export enum FeedEvent {
+	NEW = "feed:new",
 	JOIN = "feed:join",
 	JOINED = "feed:join",
 	SEND = "feed:send"

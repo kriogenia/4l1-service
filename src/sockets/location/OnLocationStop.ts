@@ -1,11 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { LOCATION, LocationEvent } from ".";
+import { UserInfo } from "../schemas";
 import { getRoom } from "../SocketHelper";
-
-export interface Data {
-	id: string,
-	displayName: string
-}
 
 /**
  * Event triggered when a user leaves the location room.
@@ -14,7 +10,7 @@ export interface Data {
  * @param _io server
  * @param data id and name of the user leaving
  */
-export const onStop = (socket: Socket, io: Server) => (data: Data): void => {
+export const onStop = (socket: Socket, io: Server) => (data: UserInfo): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	

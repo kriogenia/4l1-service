@@ -2,11 +2,7 @@ import { Server, Socket } from "socket.io";
 import { GLOBAL, GlobalRoomEvent } from "../global";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
-
-export interface Data {
-	id: string,
-	displayName: string
-}
+import { UserInfo } from "../schemas";
 
 /**
  * Event triggered when a user starts sharing their location.
@@ -16,7 +12,7 @@ export interface Data {
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onShare = (socket: Socket, _io: Server) => (data: Data): void => {
+export const onShare = (socket: Socket, _io: Server) => (data: UserInfo): void => {
 	const global = getRoom(GLOBAL, socket);
 	if (!global) {
 		LOG.err("The user is not connected to a Global Room");
@@ -26,7 +22,7 @@ export const onShare = (socket: Socket, _io: Server) => (data: Data): void => {
 	// subscribe to location sharing room
 	const room = global.replace(GLOBAL, "location");
 	socket.join(room);
-	LOG.info(`User[${data.id}] started sharing its location on Room[${room}]`);
+	LOG.info(`User[${data._id}] started sharing its location on Room[${room}]`);
 	// and communicate it through the global room
 	socket.broadcast.to(global).emit(GlobalRoomEvent.SHARING_LOCATION, data);
 }
