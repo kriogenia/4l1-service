@@ -7,7 +7,7 @@ import { AddressInfo } from "net";
 import { GlobalRoomEvent } from "@/sockets/global";
 import { Input } from "@/sockets/global/OnGlobalSubscribe";
 import { LocationEvent } from "@/sockets/location";
-import { Data } from "@/sockets/location/OnLocationShare";
+import { UserInfo } from "@/sockets/schemas";
 
 export class SocketTestHelper {
 
@@ -94,8 +94,8 @@ export class SocketTestHelper {
 	 * @param callback 	rest of the test
 	 */
 	joinLocation = (callback: () => void) => {
-		const share: Data = {
-			id: "keeper",
+		const share: UserInfo = {
+			_id: "keeper",
 			displayName: "KEEPER"
 		}
 		

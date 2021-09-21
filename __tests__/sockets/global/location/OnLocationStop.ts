@@ -1,13 +1,13 @@
 import { LocationEvent } from "@/sockets/location";
-import { Data } from "@/sockets/location/OnLocationStop";
+import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 describe("Stop sharing the location", () => {
 
 	const s = new SocketTestHelper();
 
-	const stop: Data = {
-		id: "keeper",
+	const stop: UserInfo = {
+		_id: "keeper",
 		displayName: "KEEPER"
 	}
 
@@ -22,7 +22,7 @@ describe("Stop sharing the location", () => {
 	it("should broadcast the notification to the rest of users",
 	(done) => {
 		s.joinLocation(() => {
-			s.clientB.on(LocationEvent.STOP, (msg: Data) => {
+			s.clientB.on(LocationEvent.STOP, (msg: UserInfo) => {
 				expect(msg).toEqual(stop);
 				done();
 			});

@@ -1,15 +1,15 @@
 import { RootEvent } from "@/sockets";
 import { GlobalRoomEvent } from "@/sockets/global";
 import { LocationEvent } from "@/sockets/location";
-import { Data } from "@/sockets/location/OnLocationShare";
+import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 describe("Start sharing the location", () => {
 
 	const s = new SocketTestHelper();
 
-	const share: Data = {
-		id: "keeper",
+	const share: UserInfo = {
+		_id: "keeper",
 		displayName: "KEEPER"
 	}
 
@@ -24,7 +24,7 @@ describe("Start sharing the location", () => {
 	it("should connect the user to the location room and notify the other users",
 	(done) => {
 		s.joinGlobal(() => {
-			s.clientA.on(GlobalRoomEvent.SHARING_LOCATION, (msg: Data) => {
+			s.clientA.on(GlobalRoomEvent.SHARING_LOCATION, (msg: UserInfo) => {
 				expect(msg).toEqual(share);
 				done();
 			});
