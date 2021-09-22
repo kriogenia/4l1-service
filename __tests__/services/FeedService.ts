@@ -24,16 +24,18 @@ describe("The create operation", () => {
 			message: "message",
 			user: author._id,
 			timestamp: 0,
-			type: MessageType.Text
+			type: MessageType.Text,
+			room: "room"
 		};
 
-		expect.assertions(5);
+		expect.assertions(6);
 		create(message).then((persisted) => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.message).toBe(message.message);
 			expect(persisted.user).toBe(author._id);
 			expect(persisted.timestamp).toBe(message.timestamp);
 			expect(persisted.type).toEqual(message.type);
+			expect(persisted.room).toEqual(message.room);
 			done();
 		});
 

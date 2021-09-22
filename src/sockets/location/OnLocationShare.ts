@@ -3,6 +3,7 @@ import { GLOBAL, GlobalRoomEvent } from "../global";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 import { UserInfo } from "../schemas";
+import { LOCATION } from ".";
 
 /**
  * Event triggered when a user starts sharing their location.
@@ -20,7 +21,7 @@ export const onShare = (socket: Socket, _io: Server) => (data: UserInfo): void =
 		return;
 	}
 	// subscribe to location sharing room
-	const room = global.replace(GLOBAL, "location");
+	const room = global.replace(GLOBAL, LOCATION);
 	socket.join(room);
 	LOG.info(`User[${data._id}] started sharing its location on Room[${room}]`);
 	// and communicate it through the global room

@@ -5,9 +5,11 @@ import { io as Client, Socket } from "socket.io-client";
 import { Server } from "socket.io";
 import { AddressInfo } from "net";
 import { GlobalRoomEvent } from "@/sockets/global";
-import { Input } from "@/sockets/global/OnGlobalSubscribe";
 import { LocationEvent } from "@/sockets/location";
 import { UserInfo } from "@/sockets/schemas";
+import * as UserService from "@/services/UserService";
+import { mocked } from "ts-jest/utils";
+import { Role, User } from "@/models/User";
 
 export class SocketTestHelper {
 
@@ -16,6 +18,9 @@ export class SocketTestHelper {
 	
 	clientA: Socket;
 	clientB: Socket;
+
+	idClientA = "patient";
+	idClientB = "keeper";
 
 	/**
 	 * Creates the server to test the sockets
@@ -70,22 +75,26 @@ export class SocketTestHelper {
 	 * @param callback 	rest of the test
 	 */
 	joinGlobal = (callback: () => void) => {
-		const subscription: Input = {
-			id: "patient",
-			owner: "patient"
-		};
+
+		mocked(UserService.getById).mockImplementation((id: string) => {
+			return Promise.resolve({
+				_id: id, 
+				role: id === this.idClientA ? Role.Patient : Role.Keeper,
+				cared: this.idClientA as unknown
+			} as User)
+		});
 	
 		let doOnce = true;
 		this.clientA.on(GlobalRoomEvent.SUBSCRIPTION, () => {
 			if (doOnce) {
 				doOnce = false;
-				this.clientB.emit(GlobalRoomEvent.SUBSCRIBE, subscription);
+				this.clientB.emit(GlobalRoomEvent.SUBSCRIBE, this.idClientB);
 			}
 		});
 		this.clientB.on(GlobalRoomEvent.SUBSCRIPTION, () => {
 			callback();
 		});
-		this.clientA.emit(GlobalRoomEvent.SUBSCRIBE, subscription);
+		this.clientA.emit(GlobalRoomEvent.SUBSCRIBE, this.idClientA);
 	}
 
 	/**
@@ -95,10 +104,9 @@ export class SocketTestHelper {
 	 */
 	joinLocation = (callback: () => void) => {
 		const share: UserInfo = {
-			_id: "keeper",
+			_id: this.idClientA,
 			displayName: "KEEPER"
 		}
-		
 		this.joinGlobal(() => {
 			this.clientB.on(GlobalRoomEvent.SHARING_LOCATION, () => {
 				this.clientB.emit(LocationEvent.SHARE, share);

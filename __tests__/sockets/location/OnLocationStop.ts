@@ -2,6 +2,9 @@ import { LocationEvent } from "@/sockets/location";
 import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
+/** Needed mock for socket tests */
+jest.mock("@/services/UserService");
+
 describe("Stop sharing the location", () => {
 
 	const s = new SocketTestHelper();
