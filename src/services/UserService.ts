@@ -15,6 +15,22 @@ export const bond = async (patientId: string, keeperId: string): Promise<void> =
 }
 
 /**
+ * Promise of user retrieve by its Id
+ * @param userId of the user to get
+ * @returns data of the user with the matching id
+ */
+export const getById = async (userId: string): Promise<User> => {
+	return new Promise((resolve, reject) => {
+		UserModel.findById(userId).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
+			}
+		);
+	});
+}
+
+/**
  * Retrieves the user associated with the provided Google Id.
  * If there's no user, create a new one to return it.
  * @param userId unique Google Id of the user
@@ -40,13 +56,13 @@ export const getByGoogleId = async (userId: string): Promise<User> => {
  * @throws a BAD_REQUEST error when the user is not a Keeper
  */
 export const getCared = async (userId: string): Promise<User> => {
-	return getUserById(userId)
+	return getById(userId)
 			.then((user) => {
 				if (user.role !== Role.Keeper) {
 					throw Error(ERR_MSG.only_keepers_cared);
 				}
 				if (!user.cared) return null;	// If the user doesn't have cared, return null
-				return getUserById(user.cared.toString());
+				return getById(user.cared.toString());
 			});
 }
 
@@ -58,7 +74,7 @@ export const getCared = async (userId: string): Promise<User> => {
  */
 export const getBonds = async (userId: string): Promise<User[]> => {
 	return new Promise((resolve, reject) => {
-		getUserById(userId)
+		getById(userId)
 			.then((user) => {
 				if (user.role !== Role.Patient) {
 					throw Error(ERR_MSG.only_patients_bond);
@@ -96,7 +112,7 @@ export const getBondsOfCared = async (userId: string): Promise<User[]> => {
  * @returns the role of the user with the matching id
  */
 export const getRole = async (userId: string): Promise<Role> => {
-	return getUserById(userId).then((user) => user.role);
+	return getById(userId).then((user) => user.role);
 }
 
 /**
@@ -124,21 +140,5 @@ const generateUser = async (userId: string): Promise<User> => {
 	return await UserModel.create({
 		googleId: userId,
 		role: Role.Blank
-	});
-}
-
-/**
- * Promise of user retrieve by its Id
- * @param userId of the user to get
- * @returns data of the user with the matching id
- */
-const getUserById = async (userId: string): Promise<User> => {
-	return new Promise((resolve, reject) => {
-		UserModel.findById(userId).exec(
-			(err, result) => {
-				if (err) return reject(err);
-				resolve(result);
-			}
-		);
 	});
 }

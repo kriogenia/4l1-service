@@ -30,6 +30,9 @@ export class MessageSchema {
 	@prop({ required: true })
 	public type: MessageType;
 
+	@prop({ required: true })
+	public room: string;
+
 }
 
 /* Message object */

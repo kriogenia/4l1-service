@@ -5,6 +5,7 @@ export interface MessageData {
 	user: string,
 	timestamp: number,
 	type: MessageType,
+	room: string
 }
 
 export const create = async (message: MessageData):

@@ -33,7 +33,8 @@ Promise<void> => {
 		message: data.message,
 		user: data.user._id,
 		timestamp: data.timestamp,
-		type: MessageType.Text
+		type: MessageType.Text,
+		room: room
 	}).then((message) => {
 		const output: Output = {_id: message._id,...data};
 		io.to(room).emit(FeedEvent.NEW, output);	// and communicate it through the feed room
