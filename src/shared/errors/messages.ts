@@ -4,6 +4,7 @@ export const keeper_already_bonded = "This Keeper is already bonded";
 export const keeper_not_bonded = "This Keeper is not yet bonded";
 export const invalid_google_id = "The specified user does not have a valid ID";
 export const invalid_room_subscription = "Unable to connect this user to the requested room";
+export const invalid_role = "The user doesn't have a role suitable for this operation";
 export const maximum_bonds_reached = "The specified patient has already reached the maximum number of bonds";
 export const only_keepers_cared = "Only Keepers can have cared users";
 export const only_patients_bond = "Only Patients can have direct bonds";
