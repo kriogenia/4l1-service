@@ -12,6 +12,7 @@ let author: User;
 
 beforeEach(async () => {
 	author = await UserModel.create({
+		displayName: "name",
 		googleId: "patient",
 		role: Role.Patient
 	});
@@ -23,6 +24,7 @@ describe("The create operation", () => {
 		const message: MessageData = {
 			message: "message",
 			user: author._id,
+			username: author.displayName,
 			timestamp: 0,
 			type: MessageType.Text,
 			room: "room"
@@ -33,6 +35,7 @@ describe("The create operation", () => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.message).toBe(message.message);
 			expect(persisted.user).toBe(author._id);
+			expect(persisted.username).toEqual(author.displayName);
 			expect(persisted.timestamp).toBe(message.timestamp);
 			expect(persisted.type).toEqual(message.type);
 			expect(persisted.room).toEqual(message.room);
@@ -54,6 +57,7 @@ describe("The batch retrieval with a collection of x elements and a size of y", 
 			return {
 				message: index.toString(),
 				user: author._id,
+				username: author.displayName,
 				timestamp: index,
 				type: MessageType.Text,
 				room: room

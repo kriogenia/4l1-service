@@ -1,5 +1,5 @@
-import { getBatch } from "@/services/FeedService";
 import { Router } from "express";
+import { getBatch } from "./GetBatch";
 
 const messagesRouter = Router();
 
