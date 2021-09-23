@@ -1,7 +1,7 @@
 /* istanbul ignore file */	// Set up file, untestable
 import { Router } from "express";
 import authRouter from "./auth";
-import messagesRouter from "./messages";
+import feedRouter from "./feed";
 import { validateToken } from "./middlewares";
 import userRouter from "./user";
 
@@ -20,8 +20,8 @@ baseRouter.use("/auth", authRouter);
 /* /user */
 baseRouter.use("/user", validateToken, userRouter);
 
-/* /messages */
-baseRouter.use("/messages", validateToken, messagesRouter);
+/* /feed */
+baseRouter.use("/feed", validateToken, feedRouter);
 
 /****************************************/
 
