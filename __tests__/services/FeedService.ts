@@ -30,7 +30,7 @@ describe("The create operation", () => {
 			room: "room"
 		};
 
-		expect.assertions(6);
+		expect.assertions(7);
 		create(message).then((persisted) => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.message).toBe(message.message);

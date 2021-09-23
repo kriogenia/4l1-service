@@ -52,7 +52,7 @@ export class UserSchema {
 	@prop({ required: true, unique: true })
 	public googleId: string;
 
-	@prop({ required: true })
+	@prop({ required: true, enum: Role })
 	public role: Role;
 
 	@prop()

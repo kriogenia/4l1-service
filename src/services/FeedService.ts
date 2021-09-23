@@ -1,7 +1,7 @@
 import { FeedModel, Message, MessageType } from "@/models/Message"
 
 export const DEFAULT_PAGE = 1;
-const DEFAULT_BATCH_SIZE = 30;
+export const DEFAULT_BATCH_SIZE = 25;
 
 /** Minimum info to create new Messages */
 export interface MessageData {
