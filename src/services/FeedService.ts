@@ -7,6 +7,7 @@ const DEFAULT_BATCH_SIZE = 30;
 export interface MessageData {
 	message: string,
 	user: string,
+	username: string,
 	timestamp: number,
 	type: MessageType,
 	room: string

@@ -32,6 +32,7 @@ Promise<void> => {
 	return FeedService.create({
 		message: data.message,
 		user: data.user._id,
+		username: data.user.displayName,
 		timestamp: data.timestamp,
 		type: MessageType.Text,
 		room: room

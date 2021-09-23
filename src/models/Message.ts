@@ -21,8 +21,11 @@ export class MessageSchema {
 	@prop({ required: true })
 	public message: string;
 
-	@prop({ required: true,ref: () => UserSchema })
+	@prop({ required: true, ref: () => UserSchema })
 	public user: Ref<UserSchema>;
+
+	@prop({ required: true })	// Cached
+	public username: string;
 
 	@prop({ required: true })
 	public timestamp: number;
