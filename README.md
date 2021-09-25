@@ -66,6 +66,14 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 | URL     		| /user/bond/generate	|											|
 | Response		| code: string			| New bonding code							|
 
+### Feed
+
+| Message batch	| GET           		|											|
+|:-:			| :-:					|:-:										|
+| URL     		| /feed/messages/:page	|											|
+| Params    	| page: int				| \<Optional\> Page to retrieve  			|
+| Response		| messages: object[]	| Batch of messages retrieved				|
+
 ## Socket Events
 
 ### Global Room
@@ -89,6 +97,13 @@ This will deploy the server on the 3000 port, you can check it browsing to http:
 * SHARE LOCATION, global:share_location
 	* Client event
 	* Notifies to users in the same Global Room that the requester is sharing their location
+	* Message
+		* id: string. ID of the user sharing the location.
+		* displayName: string. Display name of the user sharing the location.	
+
+* JOINING FEED, global:joining_feed
+	* Client event
+	* Notifies to users in the same Global Room that the requester joined the Feed Room
 	* Message
 		* id: string. ID of the user sharing the location.
 		* displayName: string. Display name of the user sharing the location.	
