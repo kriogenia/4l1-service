@@ -30,7 +30,6 @@ export const getBatch = async (
 	next: NextFunction): Promise<void|Response<GetBatchResponse>> => 
 {
 	const page = Math.max(FeedService.DEFAULT_PAGE, req.params.page);
-
 	return UserService.getById(req.sessionId)
 		.then((user) => {
 			if (user.role === Role.Blank) throw badRequestError(ERR_MSG.invalid_role);

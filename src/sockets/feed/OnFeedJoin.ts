@@ -24,5 +24,5 @@ export const onJoin = (socket: Socket, _io: Server) => (data: UserInfo): void =>
 	socket.join(room);
 	LOG.info(`User[${data._id}] joined a feed on Room[${room}]`);
 	// and communicate it through the feed room
-	socket.broadcast.to(room).emit(FeedEvent.JOINED, data);
+	socket.broadcast.to(room).emit(FeedEvent.JOIN, data);
 }
