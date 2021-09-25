@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
-import { GLOBAL } from "../global";
+import { GLOBAL, GlobalRoomEvent } from "../global";
 import { UserInfo } from "../schemas";
 
 /**
@@ -23,6 +23,7 @@ export const onJoin = (socket: Socket, _io: Server) => (data: UserInfo): void =>
 	const room = global.replace(GLOBAL, FEED);
 	socket.join(room);
 	LOG.info(`User[${data._id}] joined a feed on Room[${room}]`);
-	// and communicate it through the feed room
+	// and communicate it through the feed room	(an global to allow testing)
 	socket.broadcast.to(room).emit(FeedEvent.JOIN, data);
+	socket.broadcast.to(global).emit(GlobalRoomEvent.JOINING_FEED, data);
 }

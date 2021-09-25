@@ -7,6 +7,7 @@ export const GLOBAL = "global"
  * Keys of the global room events
  */
 export enum GlobalRoomEvent {
+	JOINING_FEED = "global:joining_feed",
 	SHARING_LOCATION = "global:sharing_location",
 	SUBSCRIBE = "global:subscribe",
 	SUBSCRIPTION = "global:subscription"

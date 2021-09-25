@@ -10,6 +10,7 @@ import { UserInfo } from "@/sockets/schemas";
 import * as UserService from "@/services/UserService";
 import { mocked } from "ts-jest/utils";
 import { Role, User } from "@/models/User";
+import { FeedEvent } from "@/sockets/feed";
 
 export class SocketTestHelper {
 
@@ -115,6 +116,27 @@ export class SocketTestHelper {
 				callback();
 			});
 			this.clientA.emit(LocationEvent.SHARE, share);
+		});
+	};
+
+	/**
+	 * Connect the clients to the same Feed Room and executes
+	 * the rest of the test
+	 * @param callback 	rest of the test
+	 */
+	joinFeed = (callback: () => void) => {
+		const share: UserInfo = {
+			_id: this.idClientA,
+			displayName: "KEEPER"
+		}
+		this.joinGlobal(() => {
+			this.clientB.on(GlobalRoomEvent.JOINING_FEED, () => {
+				this.clientB.emit(FeedEvent.JOIN, share);
+			});
+			this.clientA.on(GlobalRoomEvent.JOINING_FEED, () => {
+				callback();
+			});
+			this.clientA.emit(FeedEvent.JOIN, share);
 		});
 	};
 
