@@ -1,9 +1,15 @@
 import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
-import { setFeedListeners } from "./feed";
-import { setGlobalListeners } from "./global";
-import { setLocationListeners } from "./location";
+import { setFeedSockets } from "./feed";
+import { setLocationSockets } from "./location";
 import { logListener } from "./Middlewares";
+
+/**
+ * Sets up the socket with listeners
+ */
+export interface ISocketSetUp {
+	(socket: Socket, io: Server): void
+}
 
 /**
  * Keys of the root events
@@ -21,15 +27,14 @@ export enum RootEvent {
  * @returns "connection" event listener
  */
 export const onConnection = (io: Server) => (socket: Socket) => {
-    LOG.info(`Connection - Socket: [${socket.id}]`);
+    LOG.info(`Connection : SocketId = ${socket.id}`);
 	/* PRE-ACTION MIDDLEWARES */
-	socket.prependAny(logListener(socket));
+	socket.onAny(logListener(socket));
 	/* ROOT EVENTS */
 	socket.on(RootEvent.DISCONNECT, onDisconnect(socket));
-	/* ROOM EVENTS */
-	setGlobalListeners(socket, io);
-    setLocationListeners(socket, io);
-	setFeedListeners(socket, io);
+	/* LOCATION EVENTS */
+    setLocationSockets(socket, io);
+	setFeedSockets(socket, io);
 }
 
 /**
@@ -38,5 +43,5 @@ export const onConnection = (io: Server) => (socket: Socket) => {
  * @returns listener to "disconnection" events
  */
 const onDisconnect = (socket: Socket) => () => {
-	LOG.info(`Disconnection - Socket: [${socket.id}]`);
+	LOG.info(`Disconnection : SocketId = ${socket.id}`);
 }

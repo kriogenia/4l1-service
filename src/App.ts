@@ -1,36 +1,26 @@
-import express, { json } from "express";
+import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
-import baseRouter from "@/routes";
-import { Environment } from "@/shared/enums";
-import { handleError } from "@/routes/middlewares";
+import { Environment } from "./shared/constants";
 
-/*********** CREATE THE EXPRESS APPLICATION **********/
-/** Express application */
+/**
+ * Express server to manage all the routing
+ */
 const app = express();
 
 /************** PRE-ROUTING MIDDLEWARES **************/
 
-/* istanbul ignore next */	// Not part of the test environment
 if (process.env.NODE_ENV === Environment.DEV) {
-	/* Logs all the incoming requests */
+	// Logs all the incoming requests
     app.use(morgan("dev"));
 }
 
-/* istanbul ignore next */	// Not part of the test environment
 if (process.env.NODE_ENV === Environment.PROD) {
-	/* Sets security headers */
+	// Sets security headers
     app.use(helmet());
 }
 
-/* Parses the body JSONs */
-app.use(json())
+// Testing endpoint
+app.get("/", (_req, res) => res.send("Hello world"));
 
-/**************** SET THE BASE ROUTER ****************/
-app.use(baseRouter);
-
-/************* POST-ROUTING MIDDLEWARES **************/
-app.use(handleError);
-
-/************** EXPORT THE APPLICATION ***************/
 export { app }

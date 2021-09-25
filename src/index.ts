@@ -1,6 +1,6 @@
-import "./pre-start";
+import './pre-start';
 import { server } from "@server";
-import { LOG } from "@/shared/Logger";
+import { LOG } from './shared/Logger';
 
 const port = Number(process.env.PORT || 3000);
 const host = process.env.host || "localhost";

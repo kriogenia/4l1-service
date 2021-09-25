@@ -1,18 +1,12 @@
 import { Server, Socket } from "socket.io";
-import { onJoin } from "./OnFeedJoin";
-import { onLeave } from "./OnFeedLeave";
-import { onSend } from "./OnFeedSend";
-
-export const FEED = "feed";
+import { ISocketSetUp } from "..";
+import { onSubscribe } from "./SubscribeListener";
 
 /**
  * Keys of the Feed events
  */
 export enum FeedEvent {
-	LEAVE = "feed:leave",
-	NEW = "feed:new",
-	JOIN = "feed:join",
-	SEND = "feed:send"
+	SUBSCRIBE = "feed:subscribe"
 }
 
 /**
@@ -20,8 +14,6 @@ export enum FeedEvent {
  * @param socket to poblate with listeners
  * @param io to use in the listeners
  */
-export const setFeedListeners = (socket: Socket, io: Server) => {
-	socket.on(FeedEvent.LEAVE, onLeave(socket, io));
-    socket.on(FeedEvent.JOIN, onJoin(socket, io));
-	socket.on(FeedEvent.SEND, onSend(socket, io));
+export const setFeedSockets: ISocketSetUp = (socket: Socket, io: Server) => {
+    socket.on(FeedEvent.SUBSCRIBE, onSubscribe(socket, io));
 }

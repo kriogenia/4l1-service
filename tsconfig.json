@@ -1,36 +1,26 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"target": "es6",
-		"noImplicitAny": true,
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"sourceMap": true,
-		"outDir": "dist",
-		"baseUrl": ".",
-		"typeRoots": [
-			"./src/@types",
-			"./node_modules/@types"
+	  "module": "commonjs",
+	  "esModuleInterop": true,
+	  "target": "es6",
+	  "noImplicitAny": true,
+	  "moduleResolution": "node",
+	  "resolveJsonModule": true,
+	  "sourceMap": true,
+	  "outDir": "dist",
+	  "baseUrl": ".",
+	  "paths": {
+		"@server": [
+			"src/Server"
 		],
-		"paths": {
-			"@test-util/*": [
-				"__tests__/util/*"
-			],
-			"@server": [
-				"src/Server"
-			],
-			"@/*": [
-				"src/*"
-			]
-		}
+		"@/*": [
+			"src/*"
+		]
+	  }
 	},
 	"include": [
-		"src/**/*",
-		"__tests__/**/*",
-		"jest.config.ts", 
-		"@types/**/*"	
+	  "src/**/*",
+	  "__tests__/**/*",
+	  "jest.config.ts"
 	]
-}
+  }

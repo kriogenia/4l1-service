@@ -7,5 +7,5 @@ import { Socket } from "socket.io";
  * @returns logging function
  */
 export const logListener = (socket: Socket) => (name: string) => {
-	LOG.info(`Event[${name}] - Socket: [${socket.id}]`);
+	LOG.info(`[${name}] Socket: [${socket.id}]`);
 }
