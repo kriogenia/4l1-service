@@ -9,7 +9,7 @@ const userRouter = Router();
 userRouter.put("/:id", update);
 
 /* GET /user/:id/cared */
-userRouter.get("/cared", cared);
+userRouter.get("/:id/cared", cared);
 
 /* /user/bonds/ */
 userRouter.use("/bond", bondRouter);

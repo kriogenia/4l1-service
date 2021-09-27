@@ -72,7 +72,8 @@ describe("Calling GET " + endpoint, () => {
 		});
 		fillDb(user, `${FEED}:${user._id as string}`);
 
-		const response = await getRequest(`${endpoint}/2`, session.auth)
+		const response = await getRequest(endpoint, session.auth)
+			.query({ page: 2})
 			.send()
 			.expect(StatusCodes.OK);
 
@@ -87,7 +88,8 @@ describe("Calling GET " + endpoint, () => {
 		});
 		fillDb(user, `${FEED}:${user._id as string}`);
 
-		const response = await getRequest(`${endpoint}/-1`, session.auth)
+		const response = await getRequest(endpoint, session.auth)
+			.query({ page: -1})
 			.send()
 			.expect(StatusCodes.OK);
 

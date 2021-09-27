@@ -8,7 +8,7 @@ const authRouter = Router();
 authRouter.get("/signin/:token", signIn);
 
 /* GET /auth/refresh */
-authRouter.post("/refresh", refresh);
+authRouter.get("/refresh", refresh);
 
 /* POST /auth/logout */
 

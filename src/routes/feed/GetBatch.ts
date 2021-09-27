@@ -8,7 +8,7 @@ import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { FEED } from "@/sockets/feed";
 import { StatusCodes } from "http-status-codes";
 
-interface GetBatchParams {
+interface GetBatchQueryParams {
 	page?: number
 }
 
@@ -25,11 +25,11 @@ interface GetBatchResponse {
  * @returns the sending response with the list of messages.
  */
 export const getBatch = async (
-	req: Request<GetBatchParams>, 
+	req: Request<unknown, unknown, unknown, GetBatchQueryParams>, 
 	res: Response<GetBatchResponse>, 
 	next: NextFunction): Promise<void|Response<GetBatchResponse>> => 
 {
-	const page = Math.max(FeedService.DEFAULT_PAGE, req.params.page);
+	const page = Math.max(FeedService.DEFAULT_PAGE, req.query.page);
 	return UserService.getById(req.sessionId)
 		.then((user) => {
 			if (user.role === Role.Blank) throw badRequestError(ERR_MSG.invalid_role);

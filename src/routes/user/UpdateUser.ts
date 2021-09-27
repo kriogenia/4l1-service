@@ -1,7 +1,6 @@
-import { Role, User } from "@/models/User";
+import { User } from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { msg_update_completed } from "@/shared/strings";
@@ -26,7 +25,7 @@ export const update = async (
 	next: NextFunction): Promise<void|Response<BasicResponse>> => 
 {
 	if (req.sessionId !== req.params.id) {
-		next(unathorizedError(ERR_MSG.unauthorized_operation))
+		return next(unathorizedError(ERR_MSG.unauthorized_operation));
 	}
 
 	const data = req.body;

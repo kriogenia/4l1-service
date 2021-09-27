@@ -1,8 +1,13 @@
 import { User } from "@/models/User";
 import * as UserService from "@/services/UserService";
+import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { LeanDocument } from "mongoose";
+
+interface GetCaredParams {
+	id: string
+}
 
 interface GetCaredResponse {
 	cared: LeanDocument<User>
@@ -16,10 +21,14 @@ interface GetCaredResponse {
  * @returns data of the cared user or null
  */
 export const cared = async (
-	req: Request, 
+	req: Request<GetCaredParams>, 
 	res: Response<GetCaredResponse>, 
 	next: NextFunction): Promise<void|Response<GetCaredResponse>> => 
 {
+	if (req.sessionId !== req.params.id) {
+		return next(unathorizedError(ERR_MSG.unauthorized_operation));
+	}
+
 	return UserService.getCared(req.sessionId)
 		.then((result) => res.status(StatusCodes.OK).send({ cared: result }))
 		.catch(next);
