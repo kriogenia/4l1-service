@@ -7,7 +7,9 @@ const authRouter = Router();
 /* GET /auth/signin */
 authRouter.get("/signin/:token", signIn);
 
-/* POST /auth/refresh */
+/* GET /auth/refresh */
 authRouter.post("/refresh", refresh);
+
+/* POST /auth/logout */
 
 export default authRouter;

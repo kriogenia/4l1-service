@@ -3,6 +3,7 @@ import { Router } from "express";
 import authRouter from "./auth";
 import feedRouter from "./feed";
 import { validateToken } from "./middlewares";
+import taskRouter from "./task";
 import userRouter from "./user";
 
 const baseRouter = Router();
@@ -17,11 +18,14 @@ baseRouter.use("/auth", authRouter);
 
 /*********** PRIVATE ENDPOINTS ***********/
 
-/* /user */
-baseRouter.use("/user", validateToken, userRouter);
-
 /* /feed */
 baseRouter.use("/feed", validateToken, feedRouter);
+
+/* /task */
+baseRouter.use("/tasks", validateToken, taskRouter);
+
+/* /user */
+baseRouter.use("/user", validateToken, userRouter);
 
 /****************************************/
 

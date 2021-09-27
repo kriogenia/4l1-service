@@ -5,13 +5,13 @@ import { generate } from "./GenerateBond";
 
 const bondRouter = Router();
 
-/* POST /user/bond/establish */
+/* POST /user/bonds/establish */
 bondRouter.post("/establish", establish);
 
-/* GET /user/bond/generate */
+/* GET /user/bonds/generate */
 bondRouter.get("/generate", generate);
 
-/* GET /user/bond/list */
+/* GET /user/bonds */
 bondRouter.get("/list", list);
 
 
