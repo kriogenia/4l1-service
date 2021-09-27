@@ -5,13 +5,13 @@ import { update } from "./UpdateUser";
 
 const userRouter = Router();
 
-/* /user/bonds/ */
-userRouter.use("/bond", bondRouter);
+/* PUT /user/:id */
+userRouter.put("/:id", update);
 
 /* GET /user/:id/cared */
 userRouter.get("/cared", cared);
 
-/* PUT /user/:id */
-userRouter.put("/update", update);
+/* /user/bonds/ */
+userRouter.use("/bond", bondRouter);
 
 export default userRouter;

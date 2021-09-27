@@ -120,7 +120,7 @@ export const getRole = async (userId: string): Promise<Role> => {
  * @param user User to be updated with its new info
  * @returns update user
  */
-export const update = async (user: LeanDocument<User>): Promise<User> => {
+export const update = async (user: Partial<User>): Promise<User> => {
 	return new Promise((resolve, reject) => {
 		UserModel.findByIdAndUpdate(user._id, user).exec(
 			(err, result) => {

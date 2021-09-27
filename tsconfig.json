@@ -29,8 +29,6 @@
 	},
 	"include": [
 		"src/**/*",
-		"__tests__/**/*",
-		"jest.config.ts", 
 		"@types/**/*"	
 	]
 }

@@ -1,7 +1,6 @@
 import { openSession, putRequest } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
 import { SessionPackage } from "@/interfaces";
-import { LeanDocument } from "mongoose";
 import { Role, User, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
 import { msg_update_completed } from "@/shared/strings";
@@ -11,12 +10,12 @@ beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-const endpoint = "/user/update/";
+const endpoint = "/user/";
 
 describe("Calling PUT " + endpoint, () => {
 
 	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let user: Partial<User>;
 
 	beforeEach((done) => {
 		openSession((response) => {
@@ -44,7 +43,7 @@ describe("Calling PUT " + endpoint, () => {
 			}
 		};
 
-		const response = await putRequest(endpoint, session.auth)
+		const response = await putRequest(endpoint + user._id, session.auth)
 			.send(updatedUser)
 			.expect(StatusCodes.CREATED);
 		expect(response.body.message).toEqual(msg_update_completed);
@@ -60,7 +59,6 @@ describe("Calling PUT " + endpoint, () => {
 
 	it("should return an error when the requester is not the user", async () => {
 		const updatedUser = {
-			_id: "not_the_same_id",
 			role: Role.Keeper,
 			displayName: "Name",
 			mainPhoneNumber: "123456789",
@@ -68,7 +66,7 @@ describe("Calling PUT " + endpoint, () => {
 			email: "email@address.com"
 		};
 
-		const response = await putRequest(endpoint, session.auth)
+		const response = await putRequest(endpoint + "not_the_same_id", session.auth)
 			.send(updatedUser)
 			.expect(StatusCodes.UNAUTHORIZED);
 		expect(response.body.message).toEqual(ERR_MSG.unauthorized_operation);

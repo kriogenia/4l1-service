@@ -45,6 +45,7 @@ describe("Calling GET " + endpoint, () => {
 		expect(messages.map((msg) => msg.timestamp).every((t) => t > 0)).toBeTruthy();
 	});
 
+	// TODO give a look to this tests, it fails half the times
 	it(`should return the last ${DEFAULT_BATCH_SIZE} messages of Keepers`, async () => {
 		const patient = await UserModel.create({
 			googleId: "patient",
