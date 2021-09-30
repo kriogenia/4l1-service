@@ -1,7 +1,8 @@
-import { FeedModel, MessageType } from "@/models/Message";
-import { Role, User, UserModel } from "@/models/User";
-import { create, DEFAULT_PAGE, getBatch, MessageData } from "@/services/FeedService";
+import { FeedModel, MessageType, Message, TextMessage, TaskMessage } from "@/models/Message";
+import { Role, User, UserModel, UserSchema } from "@/models/User";
+import { create, DEFAULT_PAGE, getBatch } from "@/services/FeedService";
 import * as db from "@test-util/MongoMemory";
+import { Ref } from "@typegoose/typegoose";
 
 /* Test database deployment and management */
 beforeAll(db.connect);
@@ -20,10 +21,10 @@ beforeEach(async () => {
 
 describe("The create operation", () => {
 
-	it ("should persist the new message", (done) => {
-		const message: MessageData = {
+	it ("should persist text messages", (done) => {
+		const message: Message = {
 			message: "message",
-			user: author._id,
+			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
 			type: MessageType.Text,
@@ -31,10 +32,38 @@ describe("The create operation", () => {
 		};
 
 		expect.assertions(7);
-		create(message).then((persisted) => {
+		create(message).then((persisted: TextMessage) => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.message).toBe(message.message);
-			expect(persisted.user).toBe(author._id);
+			expect(persisted.submitter).toBe(author._id);
+			expect(persisted.username).toEqual(author.displayName);
+			expect(persisted.timestamp).toBe(message.timestamp);
+			expect(persisted.type).toEqual(message.type);
+			expect(persisted.room).toEqual(message.room);
+			done();
+		});
+
+	});
+
+	it ("should persist task messages", (done) => {
+		const message: Message = {
+			title: "title",
+			description: "description",
+			done: false,
+			submitter: author._id,
+			username: author.displayName,
+			timestamp: 0,
+			type: MessageType.Task,
+			room: "room"
+		};
+
+		expect.assertions(9);
+		create(message).then((persisted: TaskMessage) => {
+			expect(persisted.id).not.toBeNull();
+			expect(persisted.title).toBe(message.title);
+			expect(persisted.description).toBe(message.description);
+			expect(persisted.done).toEqual(message.done);
+			expect(persisted.submitter).toBe(author._id);
 			expect(persisted.username).toEqual(author.displayName);
 			expect(persisted.timestamp).toBe(message.timestamp);
 			expect(persisted.type).toEqual(message.type);
@@ -53,10 +82,10 @@ describe("The batch retrieval with a collection of x elements and a size of y", 
 	const size = 5;
 
 	beforeEach((done) => {
-		const messages: MessageData[] = new Array(total).fill({}).map((_, index) => {
+		const messages: Message[] = new Array(total).fill({}).map((_, index) => {
 			return {
 				message: index.toString(),
-				user: author._id,
+				submitter: author._id as unknown as Ref<UserSchema>,
 				username: author.displayName,
 				timestamp: index,
 				type: MessageType.Text,

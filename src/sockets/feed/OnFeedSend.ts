@@ -5,10 +5,12 @@ import { FEED, FeedEvent } from ".";
 import * as FeedService from "@/services/FeedService";
 import { MessageType } from "@/models/Message";
 import { UserInfo } from "../schemas";
+import { UserSchema } from "@/models/User";
+import { Ref } from "@typegoose/typegoose";
 
 export interface Input {
 	message: string,
-	user: UserInfo,
+	submitter: UserInfo,
 	timestamp: number
 }
 
@@ -28,11 +30,11 @@ Promise<void> => {
 	const room = getRoom(FEED, socket);
 	if (!room) return;
 	// save the message into the DB
-	LOG.info(`User[${data.user._id}] sent "${data.message}"`);
+	LOG.info(`User[${data.submitter._id}] sent "${data.message}"`);
 	return FeedService.create({
 		message: data.message,
-		user: data.user._id,
-		username: data.user.displayName,
+		submitter: data.submitter._id as unknown as Ref<UserSchema>,
+		username: data.submitter.displayName,
 		timestamp: data.timestamp,
 		type: MessageType.Text,
 		room: room

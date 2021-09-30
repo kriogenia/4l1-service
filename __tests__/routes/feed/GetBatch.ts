@@ -125,7 +125,7 @@ const fillDb = (user: LeanDocument<User>, room: string) => {
 			.map((_, index) => {
 				return {
 					message: index.toString(),
-					user: user._id,
+					submitter: user._id,
 					username: "name",
 					timestamp: index,
 					type: MessageType.Text,

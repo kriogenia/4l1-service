@@ -1,29 +1,25 @@
-import { FeedModel, Message, MessageType } from "@/models/Message"
+import { FeedModel, Message, MessageType, TaskMessageModel, TextMessageModel } from "@/models/Message"
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_BATCH_SIZE = 25;
 
 /** Minimum info to create new Messages */
-export interface MessageData {
-	message: string,
-	user: string,
-	username: string,
-	timestamp: number,
-	type: MessageType,
-	room: string
-}
 
 /**
  * Creates a new message with the specified info
  * @param message message to create
  * @returns the Message created and returned from the database
  */
-export const create = async (message: MessageData):
-Promise<Message> => await FeedModel.create(message);
+export const create = async (message: Message):
+Promise<Message> => {
+	return await ((message.type === MessageType.Text) 
+		? TextMessageModel.create(message) 
+		: TaskMessageModel.create(message));
+}
 
 /**
  * Returns a batch of messages from the specified room.
- * The default size is 30.
+ * The default size is 25.
  * @param room room of the messages to return
  * @param page the page of messages to retrieve (from 1 to n/size)
  * @param size size of the batch to retrieve

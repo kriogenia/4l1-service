@@ -50,10 +50,10 @@ export interface UserContact {
 export class UserSchema {
 
 	@prop({ required: true, unique: true })
-	public googleId: string;
+	public googleId!: string;
 
 	@prop({ required: true, enum: Role })
-	public role: Role;
+	public role!: Role;
 
 	@prop()
 	public displayName?: string;

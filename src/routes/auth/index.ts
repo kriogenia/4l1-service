@@ -4,11 +4,11 @@ import { signIn } from "./SignIn";
 
 const authRouter = Router();
 
-/* GET /auth/signin */
+/* GET /auth/signin/{token} */
 authRouter.get("/signin/:token", signIn);
 
-/* GET /auth/refresh */
-authRouter.get("/refresh", refresh);
+/* GET /auth/refresh/{token} */
+authRouter.get("/refresh/:token", refresh);
 
 /* POST /auth/logout */
 

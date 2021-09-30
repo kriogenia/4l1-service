@@ -36,16 +36,15 @@ describe("Sending a message", () => {
 
 	it("should send it to all the users and store it",
 	(done) => {
-		const created: Partial<Message> = {
+		const created: Message = {
 			_id: "id",
-			message: message.message,
-			user: message.user._id as Ref<User>,
+			submitter: message.user._id as Ref<User>,
 			username: message.user.displayName,
 			timestamp: message.timestamp,
 			type: MessageType.Text,
 			room: `feed:${s.idClientA}`
 		};
-		mockCreate.mockReturnValue(Promise.resolve(created as Message));
+		mockCreate.mockReturnValue(Promise.resolve(created));
 
 		s.joinFeed(() => {
 			s.clientB.on(FeedEvent.NEW, (msg: Output) => {
@@ -55,7 +54,7 @@ describe("Sending a message", () => {
 				});
 				expect(mockCreate).toBeCalledWith({
 					message: message.message,
-					user: message.user._id,
+					submitter: message.user._id,
 					username: message.user.displayName,
 					timestamp: message.timestamp,
 					type: MessageType.Text,
