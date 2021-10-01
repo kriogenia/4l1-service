@@ -1,6 +1,7 @@
 import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
+import { UserDto, UserPublicDto } from "./dto";
 
 /** List of possible types of user */
 export enum Role {
@@ -13,23 +14,11 @@ export enum Role {
  * Simplified model representing an address with the needed info to allow personal 
  * localization of the user. 
  * */
-interface Address {
+export interface Address {
 	firstLine?: string,
 	secondLine?: string,
 	locality?: string,
 	region?: string
-}
-
-/**
- * Reduced and sharable version of the user data to just enable contact
- */
-export interface UserContact {
-	role: Role,
-	displayName?: string,
-	mainPhoneNumber?: string,
-	altPhoneNumber?: string,
-	address?: Address,
-	email?: string
 }
 
 /**
@@ -49,8 +38,8 @@ export interface UserContact {
 })
 export class UserSchema {
 
-	@prop({ required: true, unique: true })
-	public googleId!: string;
+	@prop({ required: true, unique: true, select: false })
+	public googleId?: string;
 
 	@prop({ required: true, enum: Role })
 	public role!: Role;
@@ -76,7 +65,14 @@ export class UserSchema {
 	@prop({ ref: () => UserSchema })
 	public cared?: Ref<UserSchema>;
 
-	public get public(): UserContact {
+	public dto(this: DocumentType<UserSchema>): UserDto {
+		return {
+			_id: this._id,
+			...this.public,
+		}
+	}
+
+	public get public(): UserPublicDto {
 		return {
 			role: this.role,
 			displayName: this.displayName,

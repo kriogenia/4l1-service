@@ -1,4 +1,4 @@
-import { Severity } from "@/shared/enums";
+import { Severity } from "@/shared/entities";
 import { HttpError } from "@/shared/errors";
 import { StatusCodes } from "http-status-codes";
 

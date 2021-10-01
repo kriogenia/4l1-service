@@ -1,4 +1,4 @@
-import { Severity } from "./enums";
+import { Severity } from "./entities";
 import { HttpError } from "./errors";
 import { LOG } from "./Logger";
 

@@ -1,10 +1,9 @@
 import { openSession, patchRequest } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
-import { SessionPackage } from "@/interfaces";
-import { Role, User, UserModel } from "@/models/User";
+import { Role, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
-import { msg_update_completed } from "@/shared/strings";
 import { ERR_MSG } from "@/shared/errors";
+import { SessionDto, UserDto } from "@/models/dto";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -14,8 +13,8 @@ const endpoint = "/user/";
 
 describe("Calling PUT " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: Partial<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {
@@ -43,10 +42,16 @@ describe("Calling PUT " + endpoint, () => {
 			}
 		};
 
-		const response = await patchRequest(endpoint + user._id, session.auth)
+		const { body } = await patchRequest(endpoint + user._id, session.auth)
 			.send(updatedUser)
 			.expect(StatusCodes.CREATED);
-		expect(response.body.message).toEqual(msg_update_completed);
+
+		expect(body.role).toEqual(updatedUser.role);
+		expect(body.displayName).toEqual(updatedUser.displayName);
+		expect(body.mainPhoneNumber).toEqual(updatedUser.mainPhoneNumber);
+		expect(body.altPhoneNumber).toEqual(updatedUser.altPhoneNumber);
+		expect(body.email).toEqual(updatedUser.email);
+		expect(body.address).toEqual(updatedUser.address);
 
 		const dbUser = await UserModel.findById(user._id);
 		expect(dbUser.role).toEqual(updatedUser.role);

@@ -17,3 +17,7 @@ export enum Environment {
     WARN,
     ERR
 }
+
+export interface BasicResponse {
+	message: string
+}

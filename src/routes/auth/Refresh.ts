@@ -1,4 +1,4 @@
-import { SessionPackage } from "@/interfaces";
+import { SessionDto } from "@/models/dto";
 import * as TokenService from "@/services/TokenService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
@@ -10,7 +10,7 @@ interface RefreshParams {
 }
 
 interface RefreshResponse {
-	session: SessionPackage
+	session: SessionDto
 }
 
 /**

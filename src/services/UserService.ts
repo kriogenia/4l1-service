@@ -122,7 +122,7 @@ export const getRole = async (userId: string): Promise<Role> => {
  */
 export const update = async (user: Partial<User>): Promise<User> => {
 	return new Promise((resolve, reject) => {
-		UserModel.findByIdAndUpdate(user._id, user).exec(
+		UserModel.findByIdAndUpdate(user._id, user, { new: true }).exec(
 			(err, result) => {
 				if (err) return reject(err);
 				resolve(result);

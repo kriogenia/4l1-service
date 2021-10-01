@@ -1,9 +1,9 @@
-import { SessionPackage } from "@/interfaces";
 import * as SessionService from "@/services/SessionService";
 import { extractId, sessionPackage, refresh, checkPackage, bond, decodeBond } from "@/services/TokenService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { mocked } from "ts-jest/utils";
 import * as jwt from "jsonwebtoken";
+import { SessionDto } from "@/models/dto";
 
 /** Session service mock */
 jest.mock("@/services/SessionService");
@@ -175,7 +175,7 @@ describe("The id extraction", () => {
 
 });
 
-const verifyPackage = (pack: SessionPackage) => {
+const verifyPackage = (pack: SessionDto) => {
 	// Check auth token
 	const decodedAuth = jwt.verify(pack.auth, process.env.AUTH_TOKEN_SECRET) as jwt.JwtPayload;
 	expect(decodedAuth.sessionId).toBe(id);

@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { Environment } from "@/shared/enums";
+import { Environment } from "@/shared/entities";
 import { config } from "dotenv";
 import path from 'path';
 

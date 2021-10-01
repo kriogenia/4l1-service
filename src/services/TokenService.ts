@@ -1,4 +1,4 @@
-import { SessionPackage } from "@/interfaces";
+import { SessionDto } from "@/models/dto";
 import { badRequestError, ERR_MSG, unathorizedError } from "@/shared/errors";
 import * as jwt from "jsonwebtoken";
 import * as SessionService from "./SessionService";
@@ -22,7 +22,7 @@ interface TokenPayload extends jwt.JwtPayload {
  * @param id of the user
  * @returns object with the both tokens and expiring time
  */
-export const sessionPackage = (id: string) : SessionPackage => {
+export const sessionPackage = (id: string) : SessionDto => {
 	const { AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME } = process.env;
 	const auth =  newToken(id, AUTH_TOKEN_SECRET, AUTH_TOKEN_EXPIRATION_TIME);
 	const { REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION_TIME } = process.env;
@@ -84,7 +84,7 @@ export const decodeBond = async (token: string): Promise<string> => {
  * @returns 		New tokens and expiration time
  */
 export const refresh = async (auth: string, refresh: string):
-Promise<SessionPackage> => {
+Promise<SessionDto> => {
 	return verifyToken(refresh, process.env.REFRESH_TOKEN_SECRET)
 		.then(() => SessionService.isSessionRefreshable(refresh))
 		.then((isRefreshable) =>{

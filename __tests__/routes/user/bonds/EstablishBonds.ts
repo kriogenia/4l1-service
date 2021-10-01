@@ -1,4 +1,3 @@
-import { SessionPackage } from "@/interfaces";
 import { Role, User, UserModel } from "@/models/User";
 import { ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
@@ -7,6 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import { LeanDocument } from "mongoose";
 import * as jwt from "jsonwebtoken";
 import { msg_bonding_completed } from "@/shared/strings";
+import { SessionDto, UserDto } from "@/models/dto";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -16,8 +16,8 @@ const endpoint = "/user/bonds/establish";
 
 describe("Calling POST " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {

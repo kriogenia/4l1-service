@@ -1,11 +1,12 @@
-import { Role, UserContact } from "@/models/User";
+import { Role } from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as UserService from "@/services/UserService";
 import { badRequestError, ERR_MSG } from "@/shared/errors";
+import { UserPublicDto } from "@/models/dto";
 
 interface BondsResponse {
-	bonds: UserContact[]
+	bonds: UserPublicDto[]
 }
 
 export const list = async (

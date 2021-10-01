@@ -1,6 +1,5 @@
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
-import { SessionPackage } from "@/interfaces";
 import { LeanDocument } from "mongoose";
 import { Role, User, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
@@ -8,6 +7,7 @@ import { DEFAULT_BATCH_SIZE } from "@/services/FeedService";
 import { FeedModel, Message, MessageType } from "@/models/Message";
 import { FEED } from "@/sockets/feed";
 import { ERR_MSG } from "@/shared/errors";
+import { SessionDto, UserDto } from "@/models/dto";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -17,8 +17,8 @@ const endpoint = "/feed/messages";
 
 describe("Calling GET " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {
@@ -119,7 +119,7 @@ describe("Calling GET " + endpoint, () => {
 
 });
 
-const fillDb = (user: LeanDocument<User>, room: string) => {
+const fillDb = (user: UserDto, room: string) => {
 	return new Promise((resolve, _reject) => {
 		FeedModel.create(new Array(DEFAULT_BATCH_SIZE + 1).fill({})
 			.map((_, index) => {

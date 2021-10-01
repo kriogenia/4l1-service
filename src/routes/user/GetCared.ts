@@ -1,16 +1,15 @@
-import { User } from "@/models/User";
+import { UserDto } from "@/models/dto";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 
 interface GetCaredParams {
 	id: string
 }
 
 interface GetCaredResponse {
-	cared: LeanDocument<User>
+	cared: UserDto
 }
 
 /**
@@ -30,6 +29,6 @@ export const cared = async (
 	}
 
 	return UserService.getCared(req.sessionId)
-		.then((result) => res.status(StatusCodes.OK).send({ cared: result }))
+		.then((result) => res.status(StatusCodes.OK).send({ cared: result?.dto()}))
 		.catch(next);
 }

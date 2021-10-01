@@ -29,7 +29,7 @@ export class MessageSchema {
 	@prop({ required: true })
 	public timestamp!: number;
 
-	@prop({ required: true })
+	@prop({ required: true, select: false })
 	public room!: string;
 
 	@prop({ required: true })
