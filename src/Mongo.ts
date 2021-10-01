@@ -17,3 +17,5 @@ export const connectToMongo = () => {
 	});
 
 };
+
+export const objectId = (id: string) => new mongoose.Types.ObjectId(id);

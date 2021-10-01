@@ -12,7 +12,7 @@ beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-const endpoint = "/user/bond/establish";
+const endpoint = "/user/bonds/establish";
 
 describe("Calling POST " + endpoint, () => {
 

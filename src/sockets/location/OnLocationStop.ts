@@ -1,6 +1,6 @@
+import { UserMinDto } from "@/models/dto";
 import { Server, Socket } from "socket.io";
 import { LOCATION, LocationEvent } from ".";
-import { UserInfo } from "../schemas";
 import { getRoom } from "../SocketHelper";
 
 /**
@@ -10,7 +10,7 @@ import { getRoom } from "../SocketHelper";
  * @param _io server
  * @param data id and name of the user leaving
  */
-export const onStop = (socket: Socket, io: Server) => (data: UserInfo): void => {
+export const onStop = (socket: Socket, io: Server) => (data: UserMinDto): void => {
 	const room = getRoom(LOCATION, socket);
 	if (!room) return;
 	

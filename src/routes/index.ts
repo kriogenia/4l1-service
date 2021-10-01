@@ -22,7 +22,7 @@ baseRouter.use("/auth", authRouter);
 baseRouter.use("/feed", validateToken, feedRouter);
 
 /* /task */
-baseRouter.use("/tasks", /*validateToken,*/ taskRouter);
+baseRouter.use("/tasks", validateToken, taskRouter);
 
 /* /user */
 baseRouter.use("/user", validateToken, userRouter);

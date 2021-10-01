@@ -10,7 +10,7 @@ beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-const endpoint = "/user/bond";
+const endpoint = "/user/bonds";
 
 describe("Calling GET " + endpoint, () => {
 

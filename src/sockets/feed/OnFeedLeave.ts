@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
-import { UserInfo } from "../schemas";
+import { UserMinDto } from "@/models/dto";
 
 /**
  * Event triggered when a user leaves a Feed Room.
@@ -11,7 +11,7 @@ import { UserInfo } from "../schemas";
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onLeave = (socket: Socket, _io: Server) => (data: UserInfo): void => {
+export const onLeave = (socket: Socket, _io: Server) => (data: UserMinDto): void => {
 	const room = getRoom(FEED, socket);
 	if (!room) return;
 	// leave the feed room

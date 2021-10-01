@@ -6,6 +6,7 @@ import { Input, Output } from "@/sockets/feed/OnFeedSend";
 import { Message, MessageType } from "@/models/Message";
 import { Ref } from "@typegoose/typegoose";
 import { User } from "@/models/User";
+import { objectId } from "@/Mongo";
 
 jest.mock("@/services/FeedService");
 /** Needed mock for socket tests */
@@ -19,8 +20,8 @@ describe("Sending a message", () => {
 
 	const message: Input = {
 		message: "message",
-		user: {
-			_id: "keeper",
+		submitter: {
+			_id: "fda9ec283b194985a9927fea",
 			displayName: "KEEPER"
 		},
 		timestamp: 1
@@ -38,8 +39,8 @@ describe("Sending a message", () => {
 	(done) => {
 		const created: Message = {
 			_id: "id",
-			submitter: message.user._id as Ref<User>,
-			username: message.user.displayName,
+			submitter: message.submitter._id as Ref<User>,
+			username: message.submitter.displayName,
 			timestamp: message.timestamp,
 			type: MessageType.Text,
 			room: `feed:${s.idClientA}`
@@ -54,8 +55,8 @@ describe("Sending a message", () => {
 				});
 				expect(mockCreate).toBeCalledWith({
 					message: message.message,
-					submitter: message.user._id,
-					username: message.user.displayName,
+					submitter: objectId(message.submitter._id),
+					username: message.submitter.displayName,
 					timestamp: message.timestamp,
 					type: MessageType.Text,
 					room: `feed:${s.idClientA}`

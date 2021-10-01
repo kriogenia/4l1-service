@@ -3,7 +3,7 @@ import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
 import { GLOBAL, GlobalRoomEvent } from "../global";
-import { UserInfo } from "../schemas";
+import { UserMinDto } from "@/models/dto";
 
 /**
  * Event triggered when a user joins a Feed Room.
@@ -12,7 +12,7 @@ import { UserInfo } from "../schemas";
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onJoin = (socket: Socket, _io: Server) => (data: UserInfo): void => {
+export const onJoin = (socket: Socket, _io: Server) => (data: UserMinDto): void => {
 	const global = getRoom(GLOBAL, socket);
 	if (!global) {
 		LOG.err("The user is not connected to a Global Room");

@@ -1,5 +1,6 @@
 import { getDiscriminatorModelForClass, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
+import { BeAnObject, DocumentType, Ref, ReturnModelType } from "@typegoose/typegoose/lib/types";
+import { TaskDto } from "./dto/Message";
 import { UserSchema } from "./User";
 
 /** List of possible types of messages */
@@ -10,9 +11,10 @@ export enum MessageType {
 
 /**
  * Entity of the feed messages
- * @property {string} message content of the message
  * @property {UserSchema} submitter author of the message
+ * @property {string} username submitter display name
  * @property {number} timestamp creation timestamp
+ * @property {string} room id of the room where it was sent
  * @property {Type} type type of the message
  */
 @modelOptions({ schemaOptions: { collection: "messages" } })
@@ -35,6 +37,11 @@ export class MessageSchema {
 
 }
 
+/**
+ * Specific entity of the text messages
+ * 
+ * @property {string} message content of the message
+ */
 class TextMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
@@ -42,6 +49,13 @@ class TextMessageSchema extends MessageSchema {
 
 }
 
+/**
+ * Specific entity of the task messages
+ * 
+ * @property {string} title title of the task
+ * @property {string} description task description
+ * @property {boolean} done completion state
+ */
 class TaskMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
@@ -52,6 +66,21 @@ class TaskMessageSchema extends MessageSchema {
 	
 	@prop({ required: true })
 	public done!: boolean;
+
+	public dto(this: DocumentType<TaskMessageSchema>): TaskDto {
+		return {
+			_id: this._id,
+			title: this.title,
+			description: this.description,
+			done: this.done,
+			timestamp: this.timestamp,
+			submitter: {
+				_id: this.submitter.toString(),
+				displayName: this.username
+			},
+			type: this.type
+		}
+	}
 
 }
 

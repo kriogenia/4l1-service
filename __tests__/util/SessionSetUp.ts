@@ -51,12 +51,12 @@ export const openSession = (done: (response: {
 }
 
 /**
- * Builds a test PUT request to the specified endpoint with the authorization token
+ * Builds a test PATCH request to the specified endpoint with the authorization token
  * retrieved in the openSession
  * @param endpoint of the request
  * @param token authorization token
  * @returns request ready to be sent or populated
  */
- export const putRequest = (endpoint: string, token: string) => {
-	return request(app).put(endpoint).set("Authorization", `Bearer ${token}`);
+ export const patchRequest = (endpoint: string, token: string) => {
+	return request(app).patch(endpoint).set("Authorization", `Bearer ${token}`);
 }

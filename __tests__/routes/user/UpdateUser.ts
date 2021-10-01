@@ -1,4 +1,4 @@
-import { openSession, putRequest } from "@test-util/SessionSetUp";
+import { openSession, patchRequest } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
 import { SessionPackage } from "@/interfaces";
 import { Role, User, UserModel } from "@/models/User";
@@ -43,7 +43,7 @@ describe("Calling PUT " + endpoint, () => {
 			}
 		};
 
-		const response = await putRequest(endpoint + user._id, session.auth)
+		const response = await patchRequest(endpoint + user._id, session.auth)
 			.send(updatedUser)
 			.expect(StatusCodes.CREATED);
 		expect(response.body.message).toEqual(msg_update_completed);
@@ -66,7 +66,7 @@ describe("Calling PUT " + endpoint, () => {
 			email: "email@address.com"
 		};
 
-		const response = await putRequest(endpoint + "not_the_same_id", session.auth)
+		const response = await patchRequest(endpoint + "not_the_same_id", session.auth)
 			.send(updatedUser)
 			.expect(StatusCodes.UNAUTHORIZED);
 		expect(response.body.message).toEqual(ERR_MSG.unauthorized_operation);

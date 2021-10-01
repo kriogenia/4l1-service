@@ -4,13 +4,14 @@ import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
 import * as FeedService from "@/services/FeedService";
 import { MessageType } from "@/models/Message";
-import { UserInfo } from "../schemas";
 import { UserSchema } from "@/models/User";
 import { Ref } from "@typegoose/typegoose";
+import { UserMinDto } from "@/models/dto";
+import { objectId } from "@/Mongo";
 
 export interface Input {
 	message: string,
-	submitter: UserInfo,
+	submitter: UserMinDto,
 	timestamp: number
 }
 
@@ -33,7 +34,7 @@ Promise<void> => {
 	LOG.info(`User[${data.submitter._id}] sent "${data.message}"`);
 	return FeedService.create({
 		message: data.message,
-		submitter: data.submitter._id as unknown as Ref<UserSchema>,
+		submitter: objectId(data.submitter._id),
 		username: data.submitter.displayName,
 		timestamp: data.timestamp,
 		type: MessageType.Text,
