@@ -1,6 +1,5 @@
 import { Role, User, UserModel } from "@/models/User"
 import { badRequestError, ERR_MSG } from "@/shared/errors";
-import { LeanDocument } from "mongoose";
 
 /**
  * Builds a bond between the users with the specified ids

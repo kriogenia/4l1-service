@@ -1,8 +1,7 @@
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
-import { LeanDocument } from "mongoose";
 import { ERR_MSG } from "@/shared/errors";
-import { Role, User, UserModel } from "@/models/User";
+import { Role, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
 import { SessionDto, UserDto } from "@/models/dto";
 

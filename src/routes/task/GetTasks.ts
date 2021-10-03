@@ -17,7 +17,6 @@ export const getTask = async (
 	res: Response<NewTaskResponse>, 
 	_next: NextFunction): Promise<void|Response<NewTaskResponse>> => 
 {
-	console.log("on get");
 	return res.status(StatusCodes.OK).send({
 		message: "GET Tasks"
 	});

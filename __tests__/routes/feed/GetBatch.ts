@@ -1,7 +1,7 @@
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
 import { LeanDocument } from "mongoose";
-import { Role, User, UserModel } from "@/models/User";
+import { Role, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
 import { DEFAULT_BATCH_SIZE } from "@/services/FeedService";
 import { FeedModel, Message, MessageType } from "@/models/Message";
@@ -34,7 +34,7 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
 		const response = await getRequest(endpoint, session.auth)
 			.send()
@@ -70,7 +70,7 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
 		const response = await getRequest(endpoint, session.auth)
 			.query({ page: 2})
@@ -86,7 +86,7 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
 		const response = await getRequest(endpoint, session.auth)
 			.query({ page: -1})

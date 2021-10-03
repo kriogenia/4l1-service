@@ -1,5 +1,5 @@
 import { getDiscriminatorModelForClass, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import { BeAnObject, DocumentType, Ref, ReturnModelType } from "@typegoose/typegoose/lib/types";
+import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { TaskDto } from "./dto/Message";
 import { UserSchema } from "./User";
 

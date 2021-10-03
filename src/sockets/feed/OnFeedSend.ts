@@ -4,8 +4,6 @@ import { getRoom } from "../SocketHelper";
 import { FEED, FeedEvent } from ".";
 import * as FeedService from "@/services/FeedService";
 import { MessageType } from "@/models/Message";
-import { UserSchema } from "@/models/User";
-import { Ref } from "@typegoose/typegoose";
 import { UserMinDto } from "@/models/dto";
 import { objectId } from "@/Mongo";
 

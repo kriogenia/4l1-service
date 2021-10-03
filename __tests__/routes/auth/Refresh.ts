@@ -1,5 +1,3 @@
-import { app } from "@/App";
-import request from "supertest";
 import * as db from "@test-util/MongoMemory";
 import { ERR_MSG } from "@/shared/errors";
 import { StatusCodes } from "http-status-codes";

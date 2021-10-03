@@ -34,6 +34,7 @@ export const newTask = async (
 		.then((room) => {	// save the task
 			return FeedService.create({
 				title: data.title,
+				description: data.description,
 				submitter: objectId(data.submitter._id),
 				username: data.submitter.displayName,
 				done: data.done,
@@ -44,7 +45,7 @@ export const newTask = async (
 		})
 		.then((task) => {	// share and return the task
 			const response: TaskDto = (task as TaskMessage).dto();
-			(app.get("io") as Server).to(task.room).emit(FeedEvent.NEW, response);
-			return res.status(StatusCodes.OK).send(response);
+			(app.get("io") as Server)?.to(task.room).emit(FeedEvent.NEW, response);
+			return res.status(StatusCodes.CREATED).send(response);
 		});
 }

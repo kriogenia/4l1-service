@@ -1,9 +1,8 @@
-import { Role, User, UserModel } from "@/models/User";
+import { Role, UserModel } from "@/models/User";
 import { ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
 import { openSession, postRequest } from "@test-util/SessionSetUp";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 import * as jwt from "jsonwebtoken";
 import { msg_bonding_completed } from "@/shared/strings";
 import { SessionDto, UserDto } from "@/models/dto";

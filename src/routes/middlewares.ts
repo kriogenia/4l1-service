@@ -1,6 +1,6 @@
 import * as TokenService from "@/services/TokenService";
 import { errorHandler } from "@/shared/ErrorHandler";
-import { badRequestError, ERR_MSG, HttpError, unathorizedError } from "@/shared/errors";
+import { badRequestError, ERR_MSG, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 

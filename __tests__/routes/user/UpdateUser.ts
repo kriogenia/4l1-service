@@ -11,7 +11,7 @@ afterAll(db.close);
 
 const endpoint = "/user/";
 
-describe("Calling PUT " + endpoint, () => {
+describe("Calling PATCH " + endpoint, () => {
 
 	let session: SessionDto;
 	let user: UserDto;

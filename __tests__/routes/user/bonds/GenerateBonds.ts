@@ -1,8 +1,6 @@
-import { User } from "@/models/User";
 import * as db from "@test-util/MongoMemory";
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 import * as jwt from "jsonwebtoken";
 import { SessionDto, UserDto } from "@/models/dto";
 
