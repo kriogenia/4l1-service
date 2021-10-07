@@ -1,8 +1,9 @@
 import { MessageType, Message, TaskMessage, TaskMessageModel } from "@/models/Message";
-import { Role, User, UserModel, UserSchema } from "@/models/User";
+import { Role, User, UserModel } from "@/models/User";
 import { create, DEFAULT_MAX_AGE, getRelevant } from "@/services/TaskService";
+import { DAY_IN_MILLIS } from "@/shared/values";
+import { isTaskRelevant } from "@test-util/checkers";
 import * as db from "@test-util/MongoMemory";
-import { Ref } from "@typegoose/typegoose";
 
 /* Test database deployment and management */
 beforeAll(db.connect);
@@ -10,8 +11,6 @@ afterEach(db.clear);
 afterAll(db.close);
 
 let author: User;
-
-const daysMillis = 24 * 60 * 60 * 1000;
 
 beforeEach(async () => {
 	author = await UserModel.create({
@@ -62,9 +61,9 @@ describe("The relevant retrieval", () => {
 			return {
 				title: index.toString(),
 				done: index % 2 != 0,
-				submitter: author._id as unknown as Ref<UserSchema>,
+				submitter: author._id,
 				username: author.displayName,
-				timestamp: Date.now() - index * daysMillis,
+				timestamp: Date.now() - index * DAY_IN_MILLIS,
 				type: MessageType.Text,
 				room: room
 			}
@@ -78,7 +77,7 @@ describe("The relevant retrieval", () => {
 		getRelevant(room).then((messages) => {
 			expect(messages.length).toBe(5);
 			messages.forEach((msg) => {
-				expect(isRelevant(msg, DEFAULT_MAX_AGE)).toBeTruthy();
+				expect(isTaskRelevant(msg, DEFAULT_MAX_AGE)).toBeTruthy();
 			});
 			done();
 		});
@@ -90,15 +89,23 @@ describe("The relevant retrieval", () => {
 		getRelevant(room, days).then((messages) => {
 			messages.forEach((msg) => {
 				expect(messages.length).toBe(4);
-				expect(isRelevant(msg, days)).toBeTruthy();
+				expect(isTaskRelevant(msg, days)).toBeTruthy();
+			});
+			done();
+		});
+	});
+
+
+	it("should retrieve all the relevant tasks with a big enough value", 
+	(done) => {
+		const days = 100;
+		getRelevant(room, days).then((messages) => {
+			messages.forEach((msg) => {
+				expect(messages.length).toBe(7);
+				expect(isTaskRelevant(msg, days)).toBeTruthy();
 			});
 			done();
 		});
 	});
 
 });
-
-const isRelevant = (task: TaskMessage, maxAge: number): boolean => {
-	if (!task.done) return true;
-	return (task.timestamp <= maxAge * daysMillis);
-}

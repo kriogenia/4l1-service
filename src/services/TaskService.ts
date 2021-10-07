@@ -1,6 +1,7 @@
 import { Message, MessageType, TaskMessage, TaskMessageModel } from "@/models/Message"
+import { DAY_IN_MILLIS } from "@/shared/values";
 
-export const DEFAULT_MAX_AGE = 3 * 24 * 60 * 60 * 1000 // 3 days
+export const DEFAULT_MAX_AGE = 3; // 3 days
 
 /**
  * Creates a task with the specified info
@@ -28,7 +29,7 @@ Promise<TaskMessage[]> => {
 	return new Promise((resolve, reject) => {
 		return TaskMessageModel.find({ room: room }).or([
 			{ done: false }, 
-			{ timestamp: { $gte: Date.now() - maxAge } }
+			{ timestamp: { $gte: Date.now() - maxAge * DAY_IN_MILLIS } }
 		]).exec((err, result) => {
 			if (err) reject(err);
 			resolve(result);

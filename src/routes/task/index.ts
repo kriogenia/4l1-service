@@ -8,7 +8,7 @@ const taskRouter = Router();
 taskRouter.post("", newTask);
 
 /* GET /tasks */
-//taskRouter.get("", getTasks);
+taskRouter.get("", getTasks);
 
 /* PUT tasks/:id */
 /* DELETE tasks/:id */

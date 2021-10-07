@@ -21,3 +21,5 @@ export enum Environment {
 export interface BasicResponse {
 	message: string
 }
+
+export const DAY_IN_MILLIS = 24 * 60 * 60 * 1000;

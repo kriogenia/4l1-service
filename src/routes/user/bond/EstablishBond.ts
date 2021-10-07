@@ -1,6 +1,6 @@
 import * as TokenService from "@/services/TokenService";
 import * as UserService from "@/services/UserService";
-import { BasicResponse } from "@/shared/entities";
+import { BasicResponse } from "@/shared/values";
 import { msg_bonding_completed } from "@/shared/strings";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
