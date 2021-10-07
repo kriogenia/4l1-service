@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getTask } from "./GetTasks";
+import { getTasks } from "./GetTasks";
 import { newTask } from "./NewTask";
 
 const taskRouter = Router();
@@ -8,7 +8,7 @@ const taskRouter = Router();
 taskRouter.post("", newTask);
 
 /* GET /tasks */
-taskRouter.get("", getTask);
+//taskRouter.get("", getTasks);
 
 /* PUT tasks/:id */
 /* DELETE tasks/:id */

@@ -12,7 +12,7 @@ export const DEFAULT_BATCH_SIZE = 25;
  */
 export const create = async (message: Message):
 Promise<Message> => {
-	return await ((message.type === MessageType.Text) 
+	return ((message.type === MessageType.Text) 
 		? TextMessageModel.create(message) 
 		: TaskMessageModel.create(message));
 }
@@ -27,6 +27,7 @@ Promise<Message> => {
  */
 export const getBatch = async(room: string, page = DEFAULT_PAGE, size = DEFAULT_BATCH_SIZE):
 Promise<Message[]> => {
+	page = Math.max(DEFAULT_PAGE, page);
 	return new Promise((resolve, reject) => {
 		FeedModel.find({ room: room })
 			.sort({ timestamp: "desc" })	// retrieve the more recent messages
