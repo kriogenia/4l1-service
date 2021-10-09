@@ -1,4 +1,4 @@
-import { deleteRequest, openSession, postRequest } from "@test-util/SessionSetUp";
+import { deleteRequest, openSession } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
 import { StatusCodes } from "http-status-codes";
 import { SessionDto, UserDto } from "@/models/dto";
@@ -9,9 +9,8 @@ afterEach(db.clear);
 afterAll(db.close);
 
 const endpoint = "/tasks/";
-const endpointEnd = "/done";
 
-describe("Calling " + endpoint + ":id" + endpointEnd, () => {
+describe("Calling DELETE " + endpoint + ":id", () => {
 
 	let session: SessionDto;
 	let user: UserDto;
@@ -26,7 +25,7 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 		});
 	});
 
-	it("with POST should set the task as done", async () => {
+	it("should delete the specified task", async () => {
 		const task = await TaskMessageModel.create({
 			title: "title",
 			description: "description",
@@ -38,32 +37,12 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 			type: MessageType.Task
 		});
 
-		await postRequest(endpoint + task._id + endpointEnd, session.auth)
+		await deleteRequest(endpoint + task._id, session.auth)
 			.send()
 			.expect(StatusCodes.NO_CONTENT);
 
 		const dbTask = await TaskMessageModel.findById(task._id);
-		expect(dbTask.done).toBeTruthy();
-	});
-
-	it("with DELETE should set the task as not done", async () => {
-		const task = await TaskMessageModel.create({
-			title: "title",
-			description: "description",
-			done: true,
-			submitter: user._id,
-			username: "name",
-			timestamp: 0,
-			room: "room",
-			type: MessageType.Task
-		});
-
-		await deleteRequest(endpoint + task._id + endpointEnd, session.auth)
-			.send()
-			.expect(StatusCodes.NO_CONTENT);
-
-		const dbTask = await TaskMessageModel.findById(task._id);
-		expect(dbTask.done).toBeFalsy();
+		expect(dbTask).toBeNull();
 	});
 
 });

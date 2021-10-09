@@ -1,6 +1,6 @@
 import { MessageType, Message, TaskMessage, TaskMessageModel } from "@/models/Message";
 import { Role, User, UserModel } from "@/models/User";
-import { create, DEFAULT_MAX_AGE, getRelevant, update } from "@/services/TaskService";
+import { create, DEFAULT_MAX_AGE, getRelevant, remove, update } from "@/services/TaskService";
 import { DAY_IN_MILLIS } from "@/shared/values";
 import { isTaskRelevant } from "@test-util/checkers";
 import * as db from "@test-util/MongoMemory";
@@ -46,6 +46,29 @@ describe("The create operation", () => {
 			expect(persisted.room).toEqual(message.room);
 			done();
 		});
+
+	});
+
+});
+
+describe("The remove operation", () => {
+
+	it ("should remove the specified task when given a valid id", async () => {
+		const task = await TaskMessageModel.create({
+			title: "title",
+			description: "description",
+			done: false,
+			submitter: author._id,
+			username: author.displayName,
+			timestamp: 0,
+			room: "room",
+			type: MessageType.Task
+		});
+
+		await remove(task._id);
+
+		const dbTask = await TaskMessageModel.findById(task._id);
+		expect(dbTask).toBeNull();
 
 	});
 

@@ -1,23 +1,21 @@
-import * as TaskService from "@/services/TaskService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import * as TaskService from "@/services/TaskService";
 import { IdParam } from "@/shared/values";
 
 /**
- * Updates the done state of a given task
- * @param done true to set is done, false otherwise
- * 
- * @param req request with the requester id
+ * Removes the requested task
+ * @param req request with the requester id and requested task id
  * @param res carried response
  * @param next invokation of the next middleware to use in case of error
- * @returns data of the cared user or null
  */
-export const setDone = (done: boolean) => async (
-	req: Request<IdParam>, 
+export const deleteTask = async (
+	req: Request<IdParam>,
 	res: Response, 
 	next: NextFunction): Promise<void|Response> => 
 {
-	return TaskService.update({ _id: req.params.id, done: done })
+	return TaskService.remove(req.params.id)
 		.then(() => res.status(StatusCodes.NO_CONTENT).send())
 		.catch(next);
+	
 }

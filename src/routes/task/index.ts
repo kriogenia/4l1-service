@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { deleteTask } from "./DeleteTask";
 import { getTasks } from "./GetTasks";
 import { newTask } from "./NewTask";
 import { setDone } from "./SetDone";
@@ -11,8 +12,9 @@ taskRouter.post("", newTask);
 /* GET /tasks */
 taskRouter.get("", getTasks);
 
-/* PATCH tasks/:id */
-/* DELETE tasks/:id */
+/* PATCH /tasks/:id */
+/* DELETE /tasks/:id */
+taskRouter.delete("/:id", deleteTask);
 
 /* POST /tasks:/:id/done */
 taskRouter.post("/:id/done", setDone(true));

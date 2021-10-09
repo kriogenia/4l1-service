@@ -5,7 +5,7 @@ export const DEFAULT_MAX_AGE = 3; // 3 days
 
 /**
  * Creates a task with the specified info
- * @param task tasl to create
+ * @param task task to create
  * @returns the TaskMessage created and returned from the database
  */
 export const create = async (task: Message):
@@ -15,6 +15,22 @@ Promise<TaskMessage> => {
 		type: MessageType.Task
 	});
 }
+
+/**
+ * Removes a task with the specified Id
+ * @param id of the task
+ */
+ export const remove = async (id: string):
+ Promise<TaskMessage> => {
+	return new Promise((resolve, reject) => {
+		TaskMessageModel.findByIdAndRemove(id).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
+			}
+		);
+	});
+ }
 
 /**
  * Retrieves all the tasks that are either yet to be completed or created in the
