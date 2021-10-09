@@ -3,10 +3,8 @@ import { StatusCodes } from "http-status-codes";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { UserDto, UserPublicDto } from "@/models/dto";
+import { IdParam } from "@/shared/values";
 
-interface UpdateParams {
-	id: string
-}
 /**
  * Updates the stored information of the current user with provided new info
  * @param req request with the new information and user identification
@@ -15,7 +13,7 @@ interface UpdateParams {
  * @returns the sendind response with the success or error confirmation message
  */
 export const update = async (
-	req: Request<UpdateParams, unknown, UserPublicDto>, 
+	req: Request<IdParam, unknown, UserPublicDto>, 
 	res: Response<UserDto>, 
 	next: NextFunction): Promise<void|Response<UserDto>> => 
 {

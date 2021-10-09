@@ -1,13 +1,9 @@
 import { app } from "@/App";
-import * as UserService from "@/services/UserService";
-import { MessageType } from "@/models/Message";
-import { Role } from "@/models/User";
 import * as TaskService from "@/services/TaskService";
-import { FEED, FeedEvent } from "@/sockets/feed";
+import { FeedEvent } from "@/sockets/feed";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Server } from "socket.io";
-import { badRequestError, ERR_MSG } from "@/shared/errors";
 import { TaskMinDto } from "@/models/dto";
 import { TaskDto } from "@/models/dto/Message";
 import { objectId } from "@/Mongo";

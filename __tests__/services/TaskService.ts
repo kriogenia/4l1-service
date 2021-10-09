@@ -1,6 +1,6 @@
 import { MessageType, Message, TaskMessage, TaskMessageModel } from "@/models/Message";
 import { Role, User, UserModel } from "@/models/User";
-import { create, DEFAULT_MAX_AGE, getRelevant } from "@/services/TaskService";
+import { create, DEFAULT_MAX_AGE, getRelevant, update } from "@/services/TaskService";
 import { DAY_IN_MILLIS } from "@/shared/values";
 import { isTaskRelevant } from "@test-util/checkers";
 import * as db from "@test-util/MongoMemory";
@@ -106,6 +106,38 @@ describe("The relevant retrieval", () => {
 			});
 			done();
 		});
+	});
+
+});
+
+describe("The update", () => {
+
+	it("should update the task with the given data", async () => {
+		const task = await TaskMessageModel.create({
+			title: "title",
+			description: "description",
+			done: false,
+			submitter: author._id,
+			username: author.displayName,
+			timestamp: 0,
+			room: "room",
+			type: MessageType.Task
+		});
+		
+		task.title = "new";
+		task.description = "also new";
+		task.done = true;
+		task.timestamp = 1;
+
+		await update(task);
+		const dbTask = await TaskMessageModel.findById(task._id);
+
+		expect(dbTask.title).toEqual(task.title);
+		expect(dbTask.description).toEqual(task.description);
+		expect(dbTask.done).toEqual(task.done);
+		expect(dbTask.submitter).toEqual(task.submitter);
+		expect(dbTask.username).toEqual(task.username);
+		expect(dbTask.timestamp).toEqual(task.timestamp);
 	});
 
 });

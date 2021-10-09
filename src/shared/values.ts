@@ -22,4 +22,8 @@ export interface BasicResponse {
 	message: string
 }
 
+export interface IdParam {
+	id: string
+}
+
 export const DAY_IN_MILLIS = 24 * 60 * 60 * 1000;

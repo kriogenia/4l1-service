@@ -36,3 +36,19 @@ Promise<TaskMessage[]> => {
 		});
 	});
 }
+
+/**
+ * Updates the persisted task with the provided information
+ * @param task Task to be updated with its new info
+ * @returns update task
+ */
+ export const update = async (task: Partial<TaskMessage>): Promise<TaskMessage> => {
+	return new Promise((resolve, reject) => {
+		TaskMessageModel.findByIdAndUpdate(task._id, task, { new: true }).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
+			}
+		);
+	});
+}

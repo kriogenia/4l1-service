@@ -136,7 +136,7 @@ export const update = async (user: Partial<User>): Promise<User> => {
  * @returns new User created with those credentials
  */
 const generateUser = async (userId: string): Promise<User> => {
-	return await UserModel.create({
+	return UserModel.create({
 		googleId: userId,
 		role: Role.Blank
 	});

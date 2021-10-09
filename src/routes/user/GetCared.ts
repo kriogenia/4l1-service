@@ -1,12 +1,9 @@
 import { UserDto } from "@/models/dto";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
+import { IdParam } from "@/shared/values";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-
-interface GetCaredParams {
-	id: string
-}
 
 interface GetCaredResponse {
 	cared: UserDto
@@ -20,7 +17,7 @@ interface GetCaredResponse {
  * @returns data of the cared user or null
  */
 export const cared = async (
-	req: Request<GetCaredParams>, 
+	req: Request<IdParam>, 
 	res: Response<GetCaredResponse>, 
 	next: NextFunction): Promise<void|Response<GetCaredResponse>> => 
 {
