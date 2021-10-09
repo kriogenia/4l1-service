@@ -2,6 +2,8 @@ import * as TaskService from "@/services/TaskService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { IdParam } from "@/shared/values";
+import { getFeedRoom } from "@/sockets/SocketHelper";
+import { ERR_MSG, unathorizedError } from "@/shared/errors";
 
 /**
  * Updates the done state of a given task
@@ -17,7 +19,13 @@ export const setDone = (done: boolean) => async (
 	res: Response, 
 	next: NextFunction): Promise<void|Response> => 
 {
-	return TaskService.update({ _id: req.params.id, done: done })
+	const { id } = req.params;
+	return getFeedRoom(req.sessionId)
+		.then((room) => TaskService.belongsTo(id, room))
+		.then((canEdit) => {
+			if (!canEdit) throw unathorizedError(ERR_MSG.unauthorized_operation);
+			return TaskService.update({ _id: id, done: done });
+		})
 		.then(() => res.status(StatusCodes.NO_CONTENT).send())
 		.catch(next);
 }

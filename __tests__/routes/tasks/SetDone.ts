@@ -3,6 +3,8 @@ import * as db from "@test-util/MongoMemory";
 import { StatusCodes } from "http-status-codes";
 import { SessionDto, UserDto } from "@/models/dto";
 import { MessageType, TaskMessageModel } from "@/models/Message";
+import { Role, UserModel } from "@/models/User";
+import { FEED } from "@/sockets/feed";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -26,16 +28,23 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 		});
 	});
 
+	const taskData = {
+		title: "title",
+		description: "description",
+		done: false,
+		username: "name",
+		timestamp: 0,
+		type: MessageType.Task
+	}
+
 	it("with POST should set the task as done", async () => {
 		const task = await TaskMessageModel.create({
-			title: "title",
-			description: "description",
-			done: false,
+			...taskData,
 			submitter: user._id,
-			username: "name",
-			timestamp: 0,
-			room: "room",
-			type: MessageType.Task
+			room: `${FEED}:${user._id}`
+		});
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
 		});
 
 		await postRequest(endpoint + task._id + endpointEnd, session.auth)
@@ -48,14 +57,12 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 
 	it("with DELETE should set the task as not done", async () => {
 		const task = await TaskMessageModel.create({
-			title: "title",
-			description: "description",
-			done: true,
+			...taskData,
 			submitter: user._id,
-			username: "name",
-			timestamp: 0,
-			room: "room",
-			type: MessageType.Task
+			room: `${FEED}:${user._id}`
+		});
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
 		});
 
 		await deleteRequest(endpoint + task._id + endpointEnd, session.auth)

@@ -3,6 +3,8 @@ import * as db from "@test-util/MongoMemory";
 import { StatusCodes } from "http-status-codes";
 import { SessionDto, UserDto } from "@/models/dto";
 import { MessageType, TaskMessageModel } from "@/models/Message";
+import { FEED } from "@/sockets/feed";
+import { Role, UserModel } from "@/models/User";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -33,8 +35,11 @@ describe("Calling DELETE " + endpoint + ":id", () => {
 			submitter: user._id,
 			username: "name",
 			timestamp: 0,
-			room: "room",
+			room: `${FEED}:${user._id}`,
 			type: MessageType.Task
+		});
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
 		});
 
 		await deleteRequest(endpoint + task._id, session.auth)

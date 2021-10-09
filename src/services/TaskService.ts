@@ -32,6 +32,22 @@ Promise<TaskMessage> => {
 	});
  }
 
+ /**
+  * Updates the persisted task with the provided information
+  * @param task Task to be updated with its new info
+  * @returns update task
+  */
+  export const update = async (task: Partial<TaskMessage>): Promise<TaskMessage> => {
+	return new Promise((resolve, reject) => {
+		TaskMessageModel.findByIdAndUpdate(task._id, task, { new: true }).exec(
+			(err, result) => {
+				if (err) return reject(err);
+				resolve(result);
+			}
+		);
+	});
+ }
+
 /**
  * Retrieves all the tasks that are either yet to be completed or created in the
  * span of days from the specified maxAge
@@ -54,17 +70,19 @@ Promise<TaskMessage[]> => {
 }
 
 /**
- * Updates the persisted task with the provided information
- * @param task Task to be updated with its new info
- * @returns update task
+ * Checks if the given task belongs to the specified room
+ * @param id of the task
+ * @param room name
+ * @returns true if it belongs to it, false otherwise
  */
- export const update = async (task: Partial<TaskMessage>): Promise<TaskMessage> => {
+ export const belongsTo = async (id: string, room: string):
+ Promise<boolean> => {
 	return new Promise((resolve, reject) => {
-		TaskMessageModel.findByIdAndUpdate(task._id, task, { new: true }).exec(
+		TaskMessageModel.find({ _id: id, room: room }).exec(
 			(err, result) => {
 				if (err) return reject(err);
-				resolve(result);
+				resolve(result.length != 0);
 			}
 		);
 	});
-}
+ }

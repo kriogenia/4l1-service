@@ -1,6 +1,6 @@
 import { MessageType, Message, TaskMessage, TaskMessageModel } from "@/models/Message";
 import { Role, User, UserModel } from "@/models/User";
-import { create, DEFAULT_MAX_AGE, getRelevant, remove, update } from "@/services/TaskService";
+import { belongsTo, create, DEFAULT_MAX_AGE, getRelevant, remove, update } from "@/services/TaskService";
 import { DAY_IN_MILLIS } from "@/shared/values";
 import { isTaskRelevant } from "@test-util/checkers";
 import * as db from "@test-util/MongoMemory";
@@ -161,6 +161,30 @@ describe("The update", () => {
 		expect(dbTask.submitter).toEqual(task.submitter);
 		expect(dbTask.username).toEqual(task.username);
 		expect(dbTask.timestamp).toEqual(task.timestamp);
+	});
+
+});
+
+describe("The room check", () => {
+
+	const taskData = {
+		title: "title",
+		description: "description",
+		done: false,
+		username: "name",
+		timestamp: 0,
+		room: "room",
+		type: MessageType.Task
+	};
+
+	it("should return true if the task belongs to the specified room", async () => {
+		const task = await TaskMessageModel.create({...taskData, submitter: author._id });
+		expect(await belongsTo(task._id, task.room)).toBeTruthy();
+	});
+
+	it("should return false if the task doesn't belong to the specified room", async () => {
+		const task = await TaskMessageModel.create({...taskData, submitter: author._id });
+		expect(await belongsTo(task._id, "different")).toBeFalsy();
 	});
 
 });
