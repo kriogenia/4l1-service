@@ -10,18 +10,7 @@ import { app } from "./App";
 const server = createServer(app);
 
 /* SOCKET.IO SERVER */
-const io = new Server(server, {
-	maxHttpBufferSize: 1e4,
-	connectTimeout: 5000,
-	transports:['websocket','polling'],
-	pingInterval: 25 * 1000,
-	pingTimeout: 5000,
-	allowEIO3: true,
-	cors: {
-		origin: "http://localhost:3000",
-		methods: ["GET", "POST"],
-	}
-});
+const io = new Server(server);		// change to io.listen?
 app.set("io", io);	// Stores io in express to access it anywhere
 
 /* SOCKET.IO LISTENER */

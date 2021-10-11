@@ -1,6 +1,7 @@
 import path from "path";
 import { config } from "dotenv";
 import commandLineArgs from "command-line-args";
+import { Environment } from "@/shared/constants";
  
 (() => {
 	// Setup command line options to specify environment
@@ -8,11 +9,12 @@ import commandLineArgs from "command-line-args";
 		{
 			name: "env",
 			alias: "e",
-			defaultValue: "development",
+			defaultValue: "azure",
 			type: String,
 		},
 	]);
 	const env: string = options.env;
+	if (env === Environment.AZ) return;
 	// Set the env file
 	const result = config({
 		path: path.join(__dirname, `env/${env}.env`),

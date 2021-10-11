@@ -1,11 +1,10 @@
 import './pre-start';
 import { server } from "@server";
-import { LOG } from './shared/Logger';
-
-const port = Number(process.env.PORT || 3000);
-const host = process.env.host || "localhost";
+import { LOG } from '@/shared/Logger';
+import { AddressInfo } from 'net'
 
 /* STARTS THE SERVER */
-server.listen(port, host, () => {
-	LOG.imp(`Server deployed at ${host}:${port}`);
+server.listen(process.env.PORT || 3000, () => {
+	const address = server.address() as AddressInfo;
+	LOG.imp(`Server listening at http://${address.address}:${address.port}`);
 });
