@@ -128,6 +128,7 @@ const fillDb = (user: UserDto, room: string) => {
 					submitter: user._id,
 					username: "name",
 					timestamp: index,
+					lastUpdate: index,
 					type: MessageType.Text,
 					room: room
 				}

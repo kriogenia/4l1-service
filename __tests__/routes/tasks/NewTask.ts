@@ -34,6 +34,7 @@ describe("Calling POST " + endpoint, () => {
 			description: "description",
 			done: false,
 			timestamp: 1,
+			lastUpdate: 1,
 			submitter: {
 				_id: user._id,
 				displayName: "name"

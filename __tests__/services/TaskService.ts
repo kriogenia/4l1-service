@@ -30,6 +30,7 @@ describe("The create operation", () => {
 			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
+			lastUpdate: 0,
 			room: "room"
 		};
 
@@ -61,6 +62,7 @@ describe("The remove operation", () => {
 			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
+			lastUpdate: 0,
 			room: "room",
 			type: MessageType.Task
 		});
@@ -86,7 +88,8 @@ describe("The relevant retrieval", () => {
 				done: index % 2 != 0,
 				submitter: author._id,
 				username: author.displayName,
-				timestamp: Date.now() - index * DAY_IN_MILLIS,
+				timestamp: 0,
+				lastUpdate: Date.now() - index * DAY_IN_MILLIS,
 				type: MessageType.Text,
 				room: room
 			}
@@ -143,6 +146,7 @@ describe("The update", () => {
 			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
+			lastUpdate: 0,
 			room: "room",
 			type: MessageType.Task
 		});
@@ -152,6 +156,7 @@ describe("The update", () => {
 		task.done = true;
 		task.timestamp = 1;
 
+		const currentTime = Date.now();
 		await update(task);
 		const dbTask = await TaskMessageModel.findById(task._id);
 
@@ -161,6 +166,7 @@ describe("The update", () => {
 		expect(dbTask.submitter).toEqual(task.submitter);
 		expect(dbTask.username).toEqual(task.username);
 		expect(dbTask.timestamp).toEqual(task.timestamp);
+		expect(dbTask.lastUpdate).toBeGreaterThanOrEqual(currentTime);
 	});
 
 });
@@ -173,6 +179,7 @@ describe("The room check", () => {
 		done: false,
 		username: "name",
 		timestamp: 0,
+		lastUpdate: 0,
 		room: "room",
 		type: MessageType.Task
 	};

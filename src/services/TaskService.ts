@@ -39,6 +39,7 @@ Promise<TaskMessage> => {
   */
   export const update = async (task: Partial<TaskMessage>): Promise<TaskMessage> => {
 	return new Promise((resolve, reject) => {
+		task.lastUpdate = Date.now();
 		TaskMessageModel.findByIdAndUpdate(task._id, task, { new: true }).exec(
 			(err, result) => {
 				if (err) return reject(err);
@@ -49,7 +50,7 @@ Promise<TaskMessage> => {
  }
 
 /**
- * Retrieves all the tasks that are either yet to be completed or created in the
+ * Retrieves all the tasks that are either yet to be completed or updated in the
  * span of days from the specified maxAge
  * @param room room of the tasks to retrieve
  * @param maxAge maximum number of days of existance of the task
@@ -61,7 +62,7 @@ Promise<TaskMessage[]> => {
 	return new Promise((resolve, reject) => {
 		return TaskMessageModel.find({ room: room }).or([
 			{ done: false }, 
-			{ timestamp: { $gte: Date.now() - maxAge * DAY_IN_MILLIS } }
+			{ lastUpdate: { $gte: Date.now() - maxAge * DAY_IN_MILLIS } }
 		]).exec((err, result) => {
 			if (err) reject(err);
 			resolve(result);

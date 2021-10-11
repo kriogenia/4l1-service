@@ -34,6 +34,7 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 		done: false,
 		username: "name",
 		timestamp: 0,
+		lastUpdate: 0,
 		type: MessageType.Task
 	}
 

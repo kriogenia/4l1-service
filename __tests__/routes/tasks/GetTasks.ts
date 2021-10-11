@@ -94,7 +94,8 @@ const fillDb = (user: UserDto, room: string) => {
 				done: index % 2 != 0,
 				submitter: user._id as unknown as Ref<UserSchema>,
 				username: "name",
-				timestamp: Date.now() - index * DAY_IN_MILLIS,
+				timestamp: 0,
+				lastUpdate: Date.now() - index * DAY_IN_MILLIS,
 				type: MessageType.Task,
 				room: room
 			}

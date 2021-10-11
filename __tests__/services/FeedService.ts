@@ -27,17 +27,18 @@ describe("The create operation", () => {
 			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
+			lastUpdate: 0,
 			type: MessageType.Text,
 			room: "room"
 		};
 
-		expect.assertions(7);
 		create(message).then((persisted: TextMessage) => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.message).toBe(message.message);
 			expect(persisted.submitter).toBe(author._id);
 			expect(persisted.username).toEqual(author.displayName);
 			expect(persisted.timestamp).toBe(message.timestamp);
+			expect(persisted.lastUpdate).toBe(message.lastUpdate);
 			expect(persisted.type).toEqual(message.type);
 			expect(persisted.room).toEqual(message.room);
 			done();
@@ -53,11 +54,11 @@ describe("The create operation", () => {
 			submitter: author._id,
 			username: author.displayName,
 			timestamp: 0,
+			lastUpdate: 0,
 			type: MessageType.Task,
 			room: "room"
 		};
 
-		expect.assertions(9);
 		create(message).then((persisted: TaskMessage) => {
 			expect(persisted.id).not.toBeNull();
 			expect(persisted.title).toBe(message.title);
@@ -66,6 +67,7 @@ describe("The create operation", () => {
 			expect(persisted.submitter).toBe(author._id);
 			expect(persisted.username).toEqual(author.displayName);
 			expect(persisted.timestamp).toBe(message.timestamp);
+			expect(persisted.lastUpdate).toBe(message.lastUpdate);
 			expect(persisted.type).toEqual(message.type);
 			expect(persisted.room).toEqual(message.room);
 			done();
@@ -88,6 +90,7 @@ describe("The batch retrieval with a collection of x elements and a size of y", 
 				submitter: author._id as unknown as Ref<UserSchema>,
 				username: author.displayName,
 				timestamp: index,
+				lastUpdate: index,
 				type: MessageType.Text,
 				room: room
 			}

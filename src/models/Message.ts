@@ -14,6 +14,7 @@ export enum MessageType {
  * @property {UserSchema} submitter author of the message
  * @property {string} username submitter display name
  * @property {number} timestamp creation timestamp
+ * @property {number} lastUpdate timestamp of the last update
  * @property {string} room id of the room where it was sent
  * @property {Type} type type of the message
  */
@@ -28,6 +29,9 @@ export class MessageSchema {
 
 	@prop({ required: true })
 	public timestamp!: number;
+
+	@prop({ required: true })
+	public lastUpdate!: number;
 
 	@prop({ required: true, select: false })
 	public room!: string;
@@ -62,7 +66,7 @@ class TaskMessageSchema extends MessageSchema {
 	public title!: string;
 	
 	@prop()
-	public description: string;
+	public description?: string;
 	
 	@prop({ required: true })
 	public done!: boolean;
@@ -74,6 +78,7 @@ class TaskMessageSchema extends MessageSchema {
 			description: this.description,
 			done: this.done,
 			timestamp: this.timestamp,
+			lastUpdate: this.lastUpdate,
 			submitter: {
 				_id: this.submitter.toString(),
 				displayName: this.username

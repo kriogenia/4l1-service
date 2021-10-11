@@ -6,7 +6,8 @@ export interface TaskMinDto {
 	description?: string
 	submitter: UserMinDto,
 	done: boolean,
-	timestamp: number
+	timestamp: number,
+	lastUpdate: number
 }
 
 export interface TaskDto extends TaskMinDto {

@@ -25,12 +25,9 @@ export const newTask = async (
 	return getFeedRoom(req.sessionId)
 		.then((room) => {	// save the task
 			return TaskService.create({
-				title: data.title,
-				description: data.description,
+				...data,
 				submitter: objectId(data.submitter._id),
 				username: data.submitter.displayName,
-				done: data.done,
-				timestamp: data.timestamp,
 				room: room
 			});
 		})

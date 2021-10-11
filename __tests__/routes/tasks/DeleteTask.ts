@@ -35,6 +35,7 @@ describe("Calling DELETE " + endpoint + ":id", () => {
 			submitter: user._id,
 			username: "name",
 			timestamp: 0,
+			lastUpdate: 0,
 			room: `${FEED}:${user._id}`,
 			type: MessageType.Task
 		});

@@ -10,5 +10,5 @@ export const checkSessionPackage = (session: SessionDto) => {
 
 export const isTaskRelevant = (task: TaskMessage | TaskDto, maxAge: number): boolean => {
 	if (!task.done) return true;
-	return (task.timestamp >= Date.now() - maxAge * DAY_IN_MILLIS);
+	return (task.lastUpdate >= Date.now() - maxAge * DAY_IN_MILLIS);
 }
