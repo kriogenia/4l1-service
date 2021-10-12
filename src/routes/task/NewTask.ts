@@ -21,19 +21,19 @@ export const newTask = async (
 	res: Response<TaskDto>, 
 	_next: NextFunction): Promise<void|Response<TaskDto>> => 
 {
-	const data = req.body;
+	const { submitter, ...data} = req.body;
 	return getFeedRoom(req.sessionId)
 		.then((room) => {	// save the task
 			return TaskService.create({
 				...data,
-				submitter: objectId(data.submitter._id),
-				username: data.submitter.displayName,
+				submitter: objectId(submitter._id),
+				username: submitter.displayName,
 				room: room
 			});
 		})
 		.then((task) => {	// share and return the task
 			const response: TaskDto = task.dto();
-			(app.get("io") as Server)?.to(task.room).emit(FeedEvent.NEW, response);
+			(app.get("io") as Server)?.to(task.room).emit(FeedEvent.NEW, task);
 			return res.status(StatusCodes.CREATED).send(response);
 		});
 }

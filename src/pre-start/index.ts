@@ -1,7 +1,7 @@
 import path from "path";
 import { config } from "dotenv";
 import commandLineArgs from "command-line-args";
-import { Environment } from "@/shared/constants";
+import { Environment } from "@/shared/values";
  
 (() => {
 	// Setup command line options to specify environment
