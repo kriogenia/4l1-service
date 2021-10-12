@@ -3,17 +3,15 @@ import { StatusCodes } from "http-status-codes";
 import * as UserService from "@/services/UserService";
 import * as GoogleAuth from "@/services/GoogleAuth";
 import * as TokenService from "@/services/TokenService";
-import { User } from "@/models/User";
-import { LeanDocument } from "mongoose";
-import { SessionPackage } from "@/interfaces";
+import { SessionDto, UserDto } from "@/models/dto";
 
 interface SignInParams {
 	token: string
 }
 
 interface SignInResponse {
-	session: SessionPackage,
-	user: LeanDocument<User>
+	session: SessionDto,
+	user: UserDto
 }
 
 /**
@@ -36,7 +34,7 @@ export const signIn = async (
 		.then(UserService.getByGoogleId)	// And get the user to return
 		.then((user) => res.status(StatusCodes.OK).json({
 				session: TokenService.sessionPackage(user.id),
-				user: user.toJSON()
+				user: user.dto()
 			}).send())
 		.catch(next);
 }

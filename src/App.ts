@@ -2,7 +2,7 @@ import express, { json } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import baseRouter from "@/routes";
-import { Environment } from "@/shared/enums";
+import { Environment } from "@/shared/values";
 import { handleError } from "@/routes/middlewares";
 
 /*********** CREATE THE EXPRESS APPLICATION **********/

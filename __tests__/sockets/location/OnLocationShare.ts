@@ -1,7 +1,7 @@
+import { UserMinDto } from "@/models/dto";
 import { RootEvent } from "@/sockets";
 import { GlobalRoomEvent } from "@/sockets/global";
 import { LocationEvent } from "@/sockets/location";
-import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 /** Needed mock for socket tests */
@@ -11,7 +11,7 @@ describe("Start sharing the location", () => {
 
 	const s = new SocketTestHelper();
 
-	const share: UserInfo = {
+	const share: UserMinDto = {
 		_id: "keeper",
 		displayName: "KEEPER"
 	}
@@ -27,7 +27,7 @@ describe("Start sharing the location", () => {
 	it("should connect the user to the location room and notify the other users",
 	(done) => {
 		s.joinGlobal(() => {
-			s.clientA.on(GlobalRoomEvent.SHARING_LOCATION, (msg: UserInfo) => {
+			s.clientA.on(GlobalRoomEvent.SHARING_LOCATION, (msg: UserMinDto) => {
 				expect(msg).toEqual(share);
 				done();
 			});

@@ -16,27 +16,35 @@ import { StatusCodes } from "http-status-codes";
  */
 export const validateToken = async (req: Request, res: Response, next: NextFunction)
 : Promise<void> => {
-	const bearerHeader = req.headers.authorization;
-	if (!bearerHeader) {
-		return next(badRequestError(ERR_MSG.auth_header_missing));
-	}
+	const header = req.headers.authorization;
+	let token: string;
+	try { token = extractToken(header); } catch(e) { return next(e); }
 
-	const parts = bearerHeader.split(" ");
-	if (parts.length !== 2 || !/^Bearer$/i.test(parts[0])) {
-		return next(badRequestError(ERR_MSG.auth_header_wrong));
-	}
-
-	return TokenService.checkAuth(parts[1])
+	return TokenService.checkAuth(token)
 		.then((isValid) => {
 			if (isValid) {
-				res.setHeader("Authorization", bearerHeader);
-				req.sessionId = TokenService.extractId(parts[1]);
+				res.setHeader("Authorization", header);
+				req.sessionId = TokenService.extractId(token);
 				next();
 			} else {
 				throw unathorizedError(ERR_MSG.session_invalid);
 			}
 		})
 		.catch(next)
+}
+
+
+export const extractToken = (header: string): string => {
+	if (!header) {
+		throw badRequestError(ERR_MSG.auth_header_missing);
+	}
+
+	const parts = header.split(" ");
+	if (parts.length !== 2 || !/^Bearer$/i.test(parts[0])) {
+		throw badRequestError(ERR_MSG.auth_header_wrong);
+	}
+
+	return parts[1];
 }
 
 /**

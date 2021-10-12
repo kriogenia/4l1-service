@@ -1,5 +1,5 @@
+import { UserMinDto } from "@/models/dto";
 import { LocationEvent } from "@/sockets/location";
-import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 /** Needed mock for socket tests */
@@ -9,7 +9,7 @@ describe("Stop sharing the location", () => {
 
 	const s = new SocketTestHelper();
 
-	const stop: UserInfo = {
+	const stop: UserMinDto = {
 		_id: "keeper",
 		displayName: "KEEPER"
 	}
@@ -25,7 +25,7 @@ describe("Stop sharing the location", () => {
 	it("should broadcast the notification to the rest of users",
 	(done) => {
 		s.joinLocation(() => {
-			s.clientB.on(LocationEvent.STOP, (msg: UserInfo) => {
+			s.clientB.on(LocationEvent.STOP, (msg: UserMinDto) => {
 				expect(msg).toEqual(stop);
 				done();
 			});

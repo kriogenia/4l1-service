@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { Severity } from "../enums";
+import { Severity } from "../values";
 import { HttpError } from "./HttpError";
 
 export * as ERR_MSG from "./messages";

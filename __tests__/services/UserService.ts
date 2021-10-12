@@ -88,11 +88,10 @@ describe("The cared request", () => {
 			cared: patient
 		});
 
-		expect.assertions(3);
+		expect.assertions(2);
 		return UserService.getCared(keeper._id)
 			.then((cared) => {
 				expect(cared._id).toEqual(patient._id);
-				expect(cared.googleId).toEqual(patient.googleId);
 				expect(cared.role).toEqual(patient.role);
 			});
 	});
@@ -130,18 +129,22 @@ describe("The patient bonds list request", () => {
 	it("should return the full list of bonds of the user when they exist", async () => {
 		const keeper1 = UserModel.create({
 			googleId: "keeper1",
+			displayName: "keeper1",
 			role: Role.Keeper
 		});
 		const keeper2 = UserModel.create({
 			googleId: "keeper2",
+			displayName: "keeper2",
 			role: Role.Keeper
 		});
 		const keeper3 = UserModel.create({
 			googleId: "keeper3",
+			displayName: "keeper3",
 			role: Role.Keeper
 		});
 		const patient = await UserModel.create({
 			googleId: "patient",
+			displayName: "patient",
 			role: Role.Patient,
 			bonds: [ (await keeper1)._id, (await keeper2)._id, (await keeper3)._id ]
 		});
@@ -149,9 +152,9 @@ describe("The patient bonds list request", () => {
 		const bonds = await UserService.getBonds(patient._id);
 
 		expect(bonds.length).toBe(3);
-		expect(bonds[0].googleId).toEqual((await keeper1).googleId);
-		expect(bonds[1].googleId).toEqual((await keeper2).googleId);
-		expect(bonds[2].googleId).toEqual((await keeper3).googleId);
+		expect(bonds[0].displayName).toEqual((await keeper1).displayName);
+		expect(bonds[1].displayName).toEqual((await keeper2).displayName);
+		expect(bonds[2].displayName).toEqual((await keeper3).displayName);
 	});
 
 	it("should return an empty list when the user is not bonded", async () => {
@@ -189,15 +192,18 @@ describe("The cared bonds list request", () => {
 		});
 		const keeper3 = UserModel.create({
 			googleId: "keeper3",
+			displayName: "keeper3",
 			role: Role.Keeper
 		});
 		const patient = await UserModel.create({
 			googleId: "patient",
+			displayName: "patient",
 			role: Role.Patient,
 			bonds: [ (await keeper2)._id, (await keeper3)._id ]
 		});
 		const keeper = await UserModel.create({
 			googleId: "keeper1",
+			displayName: "keeper1",
 			role: Role.Keeper
 		});
 		await patient.bondWith(keeper);
@@ -205,9 +211,9 @@ describe("The cared bonds list request", () => {
 		const bonds = await UserService.getBondsOfCared(keeper._id);
 
 		expect(bonds.length).toBe(3);
-		expect(bonds[0].googleId).toEqual((await keeper2).googleId);
-		expect(bonds[1].googleId).toEqual((await keeper3).googleId);
-		expect(bonds[2].googleId).toEqual(keeper.googleId);
+		expect(bonds[0].displayName).toEqual((await keeper2).displayName);
+		expect(bonds[1].displayName).toEqual((await keeper3).displayName);
+		expect(bonds[2].displayName).toEqual(keeper.displayName);
 	});
 
 	it("should throw an error when the requestor is not bonded", async () => {
@@ -265,7 +271,6 @@ describe("The function getUserByGoogleId", () => {
 			.then((user) => {
 				expect(user.id).toEqual(expected.id);
 				expect(user.displayName).toBe(expected.displayName);
-				expect(user.googleId).toBe(expected.googleId);
 				expect(user.role).toBe(expected.role);
 			});
 	});

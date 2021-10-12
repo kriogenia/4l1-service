@@ -1,21 +1,20 @@
-import { SessionPackage } from "@/interfaces";
-import { Role, User, UserContact, UserModel } from "@/models/User";
+import { SessionDto, UserDto, UserPublicDto } from "@/models/dto";
+import { Role, UserModel } from "@/models/User";
 import { ERR_MSG } from "@/shared/errors";
 import * as db from "@test-util/MongoMemory";
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 
 beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-const endpoint = "/user/bond/list";
+const endpoint = "/user/bonds";
 
 describe("Calling GET " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {
@@ -42,7 +41,7 @@ describe("Calling GET " + endpoint, () => {
 			.send()
 			.expect(StatusCodes.OK);
 
-		const bonds = response.body.bonds as UserContact[];
+		const bonds = response.body.bonds as UserPublicDto[];
 		expect(bonds.length).toBe(1);
 		expect(bonds[0]).toMatchObject({
 			role: keeper.role,
@@ -70,7 +69,7 @@ describe("Calling GET " + endpoint, () => {
 			.send()
 			.expect(StatusCodes.OK);
 
-		const bonds = response.body.bonds as UserContact[];
+		const bonds = response.body.bonds as UserPublicDto[];
 		expect(bonds.length).toBe(1);
 		expect(bonds[0]).toMatchObject({
 			role: otherKeeper.role,

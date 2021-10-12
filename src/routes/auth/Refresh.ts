@@ -1,16 +1,16 @@
-import { SessionPackage } from "@/interfaces";
+import { SessionDto } from "@/models/dto";
 import * as TokenService from "@/services/TokenService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { extractToken } from "../middlewares";
 
-interface RefreshBody {
-	auth: string,
-	refresh: string
+interface RefreshParams {
+	token: string
 }
 
 interface RefreshResponse {
-	session: SessionPackage
+	session: SessionDto
 }
 
 /**
@@ -22,11 +22,12 @@ interface RefreshResponse {
  * @returns the sendind response with the new session package or error message
  */
 export const refresh = async (
-	req: Request<unknown, unknown, RefreshBody>, 
+	req: Request<RefreshParams>, 
 	res: Response<RefreshResponse>, 
 	next: NextFunction): Promise<void|Response<RefreshResponse>> => 
 {
-	const { auth, refresh } = req.body;
+	const auth = extractToken(req.headers.authorization);
+	const refresh = req.params.token;
 	return TokenService
 		.checkPackage(auth, refresh)				// Checks that the session is valid
 		.then((isValid) => {

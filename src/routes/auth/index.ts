@@ -4,10 +4,12 @@ import { signIn } from "./SignIn";
 
 const authRouter = Router();
 
-/* GET /auth/signin */
+/* GET /auth/signin/{token} */
 authRouter.get("/signin/:token", signIn);
 
-/* POST /auth/refresh */
-authRouter.post("/refresh", refresh);
+/* GET /auth/refresh/{token} */
+authRouter.get("/refresh/:token", refresh);
+
+/* POST /auth/logout */
 
 export default authRouter;

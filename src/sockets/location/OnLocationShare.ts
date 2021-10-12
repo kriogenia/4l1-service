@@ -2,8 +2,8 @@ import { Server, Socket } from "socket.io";
 import { GLOBAL, GlobalRoomEvent } from "../global";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
-import { UserInfo } from "../schemas";
 import { LOCATION } from ".";
+import { UserMinDto } from "@/models/dto";
 
 /**
  * Event triggered when a user starts sharing their location.
@@ -13,7 +13,7 @@ import { LOCATION } from ".";
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onShare = (socket: Socket, _io: Server) => (data: UserInfo): void => {
+export const onShare = (socket: Socket, _io: Server) => (data: UserMinDto): void => {
 	const global = getRoom(GLOBAL, socket);
 	if (!global) {
 		LOG.err("The user is not connected to a Global Room");

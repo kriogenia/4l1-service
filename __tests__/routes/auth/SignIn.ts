@@ -32,7 +32,6 @@ describe("Calling GET " + endpoint, () => {
 
 		checkSessionPackage(response.body.session);
 		expect(response.body.user._id).not.toHaveLength(0);
-		expect(response.body.user.googleId).toBe(token);
 		expect(response.body.user.role).toBe(Role.Blank)
 	});
 	
@@ -48,7 +47,6 @@ describe("Calling GET " + endpoint, () => {
 
 		checkSessionPackage(response.body.session);
 		expect(response.body.user.id).toEqual(user.toJSON().id);
-		expect(response.body.user.googleId).toBe(user.googleId);
 		expect(response.body.user.role).toBe(user.role);
 	});
 

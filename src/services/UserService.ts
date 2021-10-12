@@ -1,6 +1,5 @@
 import { Role, User, UserModel } from "@/models/User"
 import { badRequestError, ERR_MSG } from "@/shared/errors";
-import { LeanDocument } from "mongoose";
 
 /**
  * Builds a bond between the users with the specified ids
@@ -120,9 +119,9 @@ export const getRole = async (userId: string): Promise<Role> => {
  * @param user User to be updated with its new info
  * @returns update user
  */
-export const update = async (user: LeanDocument<User>): Promise<User> => {
+export const update = async (user: Partial<User>): Promise<User> => {
 	return new Promise((resolve, reject) => {
-		UserModel.findByIdAndUpdate(user._id, user).exec(
+		UserModel.findByIdAndUpdate(user._id, user, { new: true }).exec(
 			(err, result) => {
 				if (err) return reject(err);
 				resolve(result);
@@ -137,7 +136,7 @@ export const update = async (user: LeanDocument<User>): Promise<User> => {
  * @returns new User created with those credentials
  */
 const generateUser = async (userId: string): Promise<User> => {
-	return await UserModel.create({
+	return UserModel.create({
 		googleId: userId,
 		role: Role.Blank
 	});

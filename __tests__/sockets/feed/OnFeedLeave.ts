@@ -1,5 +1,5 @@
+import { UserMinDto } from "@/models/dto";
 import { FeedEvent } from "@/sockets/feed";
-import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 /** Needed mock for socket tests */
@@ -9,7 +9,7 @@ describe("Leaving the feed room", () => {
 
 	const s = new SocketTestHelper();
 
-	const leave: UserInfo = {
+	const leave: UserMinDto = {
 		_id: "keeper",
 		displayName: "KEEPER"
 	}
@@ -25,7 +25,7 @@ describe("Leaving the feed room", () => {
 	it("should broadcast the notification to the rest of users",
 	(done) => {
 		s.joinFeed(() => {
-			s.clientB.on(FeedEvent.LEAVE, (msg: UserInfo) => {
+			s.clientB.on(FeedEvent.LEAVE, (msg: UserMinDto) => {
 				expect(msg).toEqual(leave);
 				done();
 			});

@@ -1,21 +1,19 @@
-import { SessionPackage } from "@/interfaces";
-import { User } from "@/models/User";
 import * as db from "@test-util/MongoMemory";
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 import * as jwt from "jsonwebtoken";
+import { SessionDto, UserDto } from "@/models/dto";
 
 beforeAll(db.connect);
 afterEach(db.clear);
 afterAll(db.close);
 
-const endpoint = "/user/bond/generate";
+const endpoint = "/user/bonds/generate";
 
 describe("Calling GET " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {

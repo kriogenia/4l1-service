@@ -1,11 +1,9 @@
-import { User } from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { LeanDocument } from "mongoose";
 import * as UserService from "@/services/UserService";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
-import { msg_update_completed } from "@/shared/strings";
-import { BasicResponse } from "@/interfaces";
+import { UserDto, UserPublicDto } from "@/models/dto";
+import { IdParam } from "@/shared/values";
 
 /**
  * Updates the stored information of the current user with provided new info
@@ -15,14 +13,15 @@ import { BasicResponse } from "@/interfaces";
  * @returns the sendind response with the success or error confirmation message
  */
 export const update = async (
-	req: Request<unknown, unknown, LeanDocument<User>>, 
-	res: Response<BasicResponse>, 
-	next: NextFunction): Promise<void|Response<BasicResponse>> => 
+	req: Request<IdParam, unknown, UserPublicDto>, 
+	res: Response<UserDto>, 
+	next: NextFunction): Promise<void|Response<UserDto>> => 
 {
-	if (req.sessionId !== req.body._id) {
-		next(unathorizedError(ERR_MSG.unauthorized_operation))
+	if (req.sessionId !== req.params.id) {
+		return next(unathorizedError(ERR_MSG.unauthorized_operation));
 	}
-	return UserService.update(req.body)
-		.then(() => res.status(StatusCodes.CREATED).send({ message: msg_update_completed }))
+
+	return UserService.update({ _id: req.params.id, ...req.body})
+		.then((user) => res.status(StatusCodes.CREATED).send(user.dto()))
 		.catch(next);
 }

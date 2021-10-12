@@ -6,11 +6,11 @@ import { Server } from "socket.io";
 import { AddressInfo } from "net";
 import { GlobalRoomEvent } from "@/sockets/global";
 import { LocationEvent } from "@/sockets/location";
-import { UserInfo } from "@/sockets/schemas";
 import * as UserService from "@/services/UserService";
 import { mocked } from "ts-jest/utils";
 import { Role, User } from "@/models/User";
 import { FeedEvent } from "@/sockets/feed";
+import { UserMinDto } from "@/models/dto";
 
 export class SocketTestHelper {
 
@@ -104,7 +104,7 @@ export class SocketTestHelper {
 	 * @param callback 	rest of the test
 	 */
 	joinLocation = (callback: () => void) => {
-		const share: UserInfo = {
+		const share: UserMinDto = {
 			_id: this.idClientA,
 			displayName: "KEEPER"
 		}
@@ -125,7 +125,7 @@ export class SocketTestHelper {
 	 * @param callback 	rest of the test
 	 */
 	joinFeed = (callback: () => void) => {
-		const share: UserInfo = {
+		const share: UserMinDto = {
 			_id: this.idClientA,
 			displayName: "KEEPER"
 		}

@@ -1,13 +1,13 @@
 import { getRequest, openSession } from "@test-util/SessionSetUp";
 import * as db from "@test-util/MongoMemory";
-import { SessionPackage } from "@/interfaces";
 import { LeanDocument } from "mongoose";
-import { Role, User, UserModel } from "@/models/User";
+import { Role, UserModel } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
 import { DEFAULT_BATCH_SIZE } from "@/services/FeedService";
 import { FeedModel, Message, MessageType } from "@/models/Message";
 import { FEED } from "@/sockets/feed";
 import { ERR_MSG } from "@/shared/errors";
+import { SessionDto, UserDto } from "@/models/dto";
 
 beforeAll(db.connect);
 afterEach(db.clear);
@@ -17,8 +17,8 @@ const endpoint = "/feed/messages";
 
 describe("Calling GET " + endpoint, () => {
 
-	let session: SessionPackage;
-	let user: LeanDocument<User>;
+	let session: SessionDto;
+	let user: UserDto;
 
 	beforeEach((done) => {
 		openSession((response) => {
@@ -34,7 +34,7 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
 		const response = await getRequest(endpoint, session.auth)
 			.send()
@@ -45,6 +45,7 @@ describe("Calling GET " + endpoint, () => {
 		expect(messages.map((msg) => msg.timestamp).every((t) => t > 0)).toBeTruthy();
 	});
 
+	// TODO give a look to this tests, it fails half the times
 	it(`should return the last ${DEFAULT_BATCH_SIZE} messages of Keepers`, async () => {
 		const patient = await UserModel.create({
 			googleId: "patient",
@@ -69,9 +70,10 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
-		const response = await getRequest(`${endpoint}/2`, session.auth)
+		const response = await getRequest(endpoint, session.auth)
+			.query({ page: 2})
 			.send()
 			.expect(StatusCodes.OK);
 
@@ -84,9 +86,10 @@ describe("Calling GET " + endpoint, () => {
 		await UserModel.findByIdAndUpdate(user._id, {
 			role: Role.Patient
 		});
-		fillDb(user, `${FEED}:${user._id as string}`);
+		fillDb(user, `${FEED}:${user._id}`);
 
-		const response = await getRequest(`${endpoint}/-1`, session.auth)
+		const response = await getRequest(endpoint, session.auth)
+			.query({ page: -1})
 			.send()
 			.expect(StatusCodes.OK);
 
@@ -116,15 +119,16 @@ describe("Calling GET " + endpoint, () => {
 
 });
 
-const fillDb = (user: LeanDocument<User>, room: string) => {
+const fillDb = (user: UserDto, room: string) => {
 	return new Promise((resolve, _reject) => {
 		FeedModel.create(new Array(DEFAULT_BATCH_SIZE + 1).fill({})
 			.map((_, index) => {
 				return {
 					message: index.toString(),
-					user: user._id,
+					submitter: user._id,
 					username: "name",
 					timestamp: index,
+					lastUpdate: index,
 					type: MessageType.Text,
 					room: room
 				}

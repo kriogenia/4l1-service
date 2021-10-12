@@ -13,6 +13,7 @@ const config: Config.InitialOptions = {
 		"<rootDir>/__tests__/util/test.config.ts"
 	],
 	testPathIgnorePatterns: [
+		"<rootDir>/dist",
 		"<rootDir>/__tests__/util/*"
 	]
 }

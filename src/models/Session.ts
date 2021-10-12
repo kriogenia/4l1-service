@@ -11,13 +11,13 @@ import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 export class SessionSchema {
 
 	@prop({ required: true, unique: true })
-	public refresh: string;
+	public refresh!: string;
 
 	@prop({ required: true })
-	public auth: string;
+	public auth!: string;
 
 	@prop({ required: true })
-	public expiration: number;
+	public expiration!: number;
 
 }
 

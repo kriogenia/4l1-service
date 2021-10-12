@@ -1,7 +1,7 @@
+import { UserMinDto } from "@/models/dto";
 import { RootEvent } from "@/sockets";
 import { FeedEvent } from "@/sockets/feed";
 import { GlobalRoomEvent } from "@/sockets/global";
-import { UserInfo } from "@/sockets/schemas";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 /** Needed mock for socket tests */
@@ -11,7 +11,7 @@ describe("Joining the feed", () => {
 
 	const s = new SocketTestHelper();
 
-	const share: UserInfo = {
+	const share: UserMinDto = {
 		_id: "keeper",
 		displayName: "KEEPER"
 	}
@@ -27,7 +27,7 @@ describe("Joining the feed", () => {
 	it("should connect the user to the feed room and notify the other users",
 	(done) => {
 		s.joinGlobal(() => {
-			s.clientA.on(GlobalRoomEvent.JOINING_FEED, (msg: UserInfo) => {
+			s.clientA.on(GlobalRoomEvent.JOINING_FEED, (msg: UserMinDto) => {
 				expect(msg).toEqual(share);
 				done();
 			});
