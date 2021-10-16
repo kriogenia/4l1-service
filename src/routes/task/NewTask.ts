@@ -1,13 +1,12 @@
-import { app } from "@/App";
 import * as TaskService from "@/services/TaskService";
 import { FeedEvent } from "@/sockets/feed";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Server } from "socket.io";
 import { TaskMinDto } from "@/models/dto";
 import { TaskDto } from "@/models/dto/Message";
 import { objectId } from "@/Mongo";
 import { getFeedRoom } from "@/sockets/SocketHelper";
+import { io } from "@server";
 
 /**
  * Returns the cared user of the requester, if it exists
@@ -33,7 +32,7 @@ export const newTask = async (
 		})
 		.then((task) => {	// share and return the task
 			const response: TaskDto = task.dto();
-			(app.get("io") as Server)?.to(task.room).emit(FeedEvent.NEW, task);
+			io.to(task.room).emit(FeedEvent.NEW, task);
 			return res.status(StatusCodes.CREATED).send(response);
 		});
 }
