@@ -10,6 +10,7 @@ export const FEED = "feed";
  */
 
 export enum FeedEvent {
+	DELETE = "feed:delete",
 	LEAVE = "feed:leave",
 	NEW = "feed:new",
 	JOIN = "feed:join",
