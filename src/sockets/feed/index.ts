@@ -8,11 +8,14 @@ export const FEED = "feed";
 /**
  * Keys of the Feed events
  */
+
 export enum FeedEvent {
+	DELETE = "feed:delete",
 	LEAVE = "feed:leave",
 	NEW = "feed:new",
 	JOIN = "feed:join",
-	SEND = "feed:send"
+	SEND = "feed:send",
+	TASK_STATE_UPDATE = "feed:task_state_update"
 }
 
 /**
