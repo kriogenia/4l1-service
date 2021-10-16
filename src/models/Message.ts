@@ -46,7 +46,7 @@ export class MessageSchema {
  * 
  * @property {string} message content of the message
  */
-class TextMessageSchema extends MessageSchema {
+ export class TextMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
 	public message!: string;
@@ -60,7 +60,7 @@ class TextMessageSchema extends MessageSchema {
  * @property {string} description task description
  * @property {boolean} done completion state
  */
-class TaskMessageSchema extends MessageSchema {
+export class TaskMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
 	public title!: string;
