@@ -35,11 +35,11 @@ export class NotificationSchema {
 	@prop({ required: true })
 	public timestamp!: number;
 
+	@prop()
+	public subject?: string;
+
 	@prop({ ref: () => UserSchema })
 	public interested!: Ref<UserSchema>[];
-
-	@prop({ ref: () => TaskMessageSchema })
-	public subject?: Ref<TaskMessageSchema>[];
 
 	public dto(this: DocumentType<NotificationSchema>): NotificationDto {
 		return {
