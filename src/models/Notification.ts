@@ -1,8 +1,9 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { NotificationDto } from "./dto";
-import { TaskMessageSchema } from "./Message";
 import { UserSchema } from "./User";
+
+export const NOTIFY = "notify";
 
 export enum Action {
 	BOND_CREATED = "bond_created",
@@ -43,10 +44,15 @@ export class NotificationSchema {
 
 	public dto(this: DocumentType<NotificationSchema>): NotificationDto {
 		return {
+			_id: this._id,
 			action: this.action,
 			instigator: this.instigator,
 			timestamp: this.timestamp
 		}
+	}
+
+	public get event(): string {
+		return `${NOTIFY}:${this.action}`
 	}
 
 }

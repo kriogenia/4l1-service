@@ -32,7 +32,7 @@ describe("The create operation", () => {
 			displayName: "bond2",
 			role: Role.Keeper
 		});
-		const patient = await UserModel.findByIdAndUpdate(author._id, {
+		await UserModel.findByIdAndUpdate(author._id, {
 			bonds: [ (await bond1)._id, (await bond2)._id ]
 		});
 

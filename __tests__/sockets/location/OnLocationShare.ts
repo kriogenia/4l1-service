@@ -1,9 +1,12 @@
-import { UserMinDto } from "@/models/dto";
+import { NotificationDto, UserMinDto } from "@/models/dto";
+import { Action, NOTIFY, Notification } from "@/models/Notification";
+import { create } from "@/services/NotificationService";
 import { RootEvent } from "@/sockets";
-import { GlobalRoomEvent } from "@/sockets/global";
 import { LocationEvent } from "@/sockets/location";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
+import { mocked } from "ts-jest/utils";
 
+jest.mock("@/services/NotificationService");
 /** Needed mock for socket tests */
 jest.mock("@/services/UserService");
 
@@ -26,9 +29,23 @@ describe("Start sharing the location", () => {
 
 	it("should connect the user to the location room and notify the other users",
 	(done) => {
+		const action = Action.LOCATION_SHARING_START;
+		const created: Partial<Notification> = {
+			event: `${NOTIFY}:${action}`,
+			dto: jest.fn().mockReturnValue({
+				_id: "id",
+				action: action,
+				instigator: share.displayName,
+				timestamp: 0,
+			})
+		};
+		mocked(create).mockReturnValue(Promise.resolve(created as Notification));
+
 		s.joinGlobal(() => {
-			s.clientA.on(GlobalRoomEvent.SHARING_LOCATION, (msg: UserMinDto) => {
-				expect(msg).toEqual(share);
+			s.clientA.on(`${NOTIFY}:${action}`, (msg: NotificationDto) => {
+				expect(msg._id).toBe("id");
+				expect(msg.action).toBe(action);
+				expect(msg.instigator).toEqual(share.displayName);
 				done();
 			});
 

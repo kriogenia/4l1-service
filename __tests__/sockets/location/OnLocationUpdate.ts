@@ -4,6 +4,7 @@ import { SocketTestHelper } from "@test-util/SocketSetUp";
 
 /** Needed mock for socket tests */
 jest.mock("@/services/UserService");
+jest.mock("@/services/NotificationService");
 
 describe("Updating the location", () => {
 

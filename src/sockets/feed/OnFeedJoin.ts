@@ -1,8 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { LOG } from "@/shared/Logger";
-import { getRoom } from "../SocketHelper";
+import { getRoom } from "@/sockets/SocketHelper";
 import { FEED, FeedEvent } from ".";
-import { GLOBAL, GlobalRoomEvent } from "../global";
+import { GLOBAL, GlobalRoomEvent } from "@/sockets/global";
 import { UserMinDto } from "@/models/dto";
 
 /**
