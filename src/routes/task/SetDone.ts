@@ -1,9 +1,11 @@
+import { io } from "@/Server";
 import * as TaskService from "@/services/TaskService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { IdParam } from "@/shared/values";
 import { getFeedRoom } from "@/sockets/SocketHelper";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
+import { FeedEvent } from "@/sockets/feed";
 
 /**
  * Updates the done state of a given task
@@ -21,11 +23,14 @@ export const setDone = (done: boolean) => async (
 {
 	const { id } = req.params;
 	return getFeedRoom(req.sessionId)
-		.then((room) => TaskService.belongsTo(id, room))
-		.then((canEdit) => {
-			if (!canEdit) throw unathorizedError(ERR_MSG.unauthorized_operation);
-			return TaskService.update({ _id: id, done: done });
+		.then((room) => {
+			if (!TaskService.belongsTo(id, room)) {
+				throw unathorizedError(ERR_MSG.unauthorized_operation);
+			}
+			return [room, TaskService.update({ _id: id, done: done })];
+		}).then(async ([room, task]) => {
+			res.status(StatusCodes.NO_CONTENT).send();
+			io.to(room as string).emit(FeedEvent.TASK_STATE_UPDATE, await task);
 		})
-		.then(() => res.status(StatusCodes.NO_CONTENT).send())
 		.catch(next);
 }

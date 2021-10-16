@@ -25,6 +25,6 @@ export const establish = async (
 		.then((patientId) => UserService.bond(patientId, keeperId))
 		.then(() => res.status(StatusCodes.OK).send({ 
 			message: msg_bonding_completed
-		}))
+		}))	// TODO send new bonding creation message
 		.catch(next);
 }
