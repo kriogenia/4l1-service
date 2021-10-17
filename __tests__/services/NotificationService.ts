@@ -1,6 +1,7 @@
+import { MessageType, TaskMessageModel } from "@/models/Message";
 import { Action, Notification, NotificationModel } from "@/models/Notification";
 import { Role, User, UserModel } from "@/models/User";
-import { create, removeSharingLocation } from "@/services/NotificationService";
+import { create, removeCreatedTask, removeSharingLocation } from "@/services/NotificationService";
 import * as db from "@test-util/MongoMemory";
 
 /* Test database deployment and management */
@@ -62,6 +63,37 @@ describe("The removal of sharing location notifications", () => {
 		});
 
 		const removed = await removeSharingLocation(author._id);
+		expect(removed.dto().toString()).toEqual(notification.dto().toString());
+
+		const inDb = await NotificationModel.findById(notification._id);
+		expect(inDb).toBeNull();
+	});
+
+});
+
+describe("The removal of task creation notifications", () => {
+
+	it("should remove the matching notification", async () => {
+		const task = await TaskMessageModel.create({
+			title: "title",
+			description: "description",
+			done: false,
+			submitter: author._id,
+			username: author.displayName,
+			timestamp: 0,
+			lastUpdate: 0,
+			room: "room",
+			type: MessageType.Task
+		});
+		const notification: Notification = await NotificationModel.create({
+			action: Action.TASK_CREATED,
+			instigator: "name",
+			timestamp: 0,
+			tags: [ task._id, task.title ],
+			interested: [ author._id ]
+		});
+
+		const removed = await removeCreatedTask(task._id);
 		expect(removed.dto().toString()).toEqual(notification.dto().toString());
 
 		const inDb = await NotificationModel.findById(notification._id);

@@ -32,14 +32,31 @@ Promise<Notification> => {
 }
 
 /**
+ * Removes the current notification of a new task created
+ * @param taskId id of the deleted task
+ * @returns removed notification
+ */
+export const removeCreatedTask = async (taskId: string): 
+Promise<Notification> => removeByActionAndTag(Action.TASK_CREATED, taskId);
+
+/**
  * Removes the current notification of sharing location of the user
  * @param userId id of the notification user
  * @returns removed notification
  */
 export const removeSharingLocation = async (userId: string): 
+Promise<Notification> => removeByActionAndTag(Action.LOCATION_SHARING_START, userId);
+
+/**
+ * Removes a notification with an specified action and tag
+ * @param action Action of the notification
+ * @param tag Tag to identify the notification (should be unique)
+ * @returns 
+ */
+const removeByActionAndTag = async (action: Action, tag: string): 
 Promise<Notification> => {
 	return NotificationModel.findOneAndRemove({
-			action: Action.LOCATION_SHARING_START,
-			tags: { $all: [userId] }
+			action: action,
+			tags: { $all: [tag] }
 	});
 };

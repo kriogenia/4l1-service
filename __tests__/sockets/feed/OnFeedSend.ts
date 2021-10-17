@@ -5,15 +5,18 @@ import { mocked } from "ts-jest/utils";
 import { Message, MessageType } from "@/models/Message";
 import { Ref } from "@typegoose/typegoose";
 import { User } from "@/models/User";
+import { io } from "@server";
 
 jest.mock("@/services/FeedService");
 /** Needed mock for socket tests */
 jest.mock("@/services/UserService");
+jest.mock("@server");
 
 describe("Sending a message", () => {
 
 	const s = new SocketTestHelper();
 
+	mocked(io);
 	const mockCreate = mocked(create);
 
 	beforeAll(s.setUpServer);

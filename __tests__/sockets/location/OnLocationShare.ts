@@ -3,9 +3,11 @@ import { Action, NOTIFY, Notification } from "@/models/Notification";
 import { create } from "@/services/NotificationService";
 import { RootEvent } from "@/sockets";
 import { LocationEvent } from "@/sockets/location";
+import { io } from "@server";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
 import { mocked } from "ts-jest/utils";
 
+jest.mock("@server");
 jest.mock("@/services/NotificationService");
 /** Needed mock for socket tests */
 jest.mock("@/services/UserService");
@@ -13,6 +15,8 @@ jest.mock("@/services/UserService");
 describe("Start sharing the location", () => {
 
 	const s = new SocketTestHelper();
+	
+	mocked(io);
 
 	const share: UserMinDto = {
 		_id: "keeper",
