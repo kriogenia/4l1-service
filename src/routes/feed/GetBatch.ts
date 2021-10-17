@@ -15,8 +15,8 @@ interface GetBatchResponse {
 
 /**
  * Returns the requested batch of messages of the specified chat
- * The default size of any batch is 30.
- * @param req request with the Google credentials
+ * The default size of any batch is 25.
+ * @param req request with the user credentials and page position
  * @param res carried response
  * @param next invokation of the next middleware to use in case of error
  * @returns the sending response with the list of messages.

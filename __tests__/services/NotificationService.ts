@@ -1,7 +1,8 @@
 import { MessageType, TaskMessageModel } from "@/models/Message";
 import { Action, Notification, NotificationModel } from "@/models/Notification";
 import { Role, User, UserModel } from "@/models/User";
-import { create, removeCreatedTask, removeSharingLocation } from "@/services/NotificationService";
+import { create, DEFAULT_MAX_AGE, getUnread, removeCreatedTask, removeSharingLocation } from "@/services/NotificationService";
+import { DAY_IN_MILLIS } from "@/shared/values";
 import * as db from "@test-util/MongoMemory";
 
 /* Test database deployment and management */
@@ -47,6 +48,42 @@ describe("The create operation", () => {
 				expect(persisted.interested.length).toBe(2);
 		});
 
+	});
+
+});
+
+describe("The retrieval of unread notifications", () => {
+
+	beforeEach((done) => {
+		const notifications: Partial<Notification>[] = new Array(10).fill({}).map((_, index) => {
+			return {
+				action: Action.BOND_CREATED,
+				instigator: author._id,
+				timestamp: Date.now() - index * DAY_IN_MILLIS,
+				interested: (index % 2 === 0) ? [ author._id ] : []
+			}
+		});
+		NotificationModel.create(notifications, done);
+	});
+
+	it ("should retrieve the specified notifications of the last 7 days if no age is specified", async () => {
+		const maxAge = DEFAULT_MAX_AGE;
+		return getUnread(author._id).then((notifications) => {
+			expect(notifications.length).toBe(4);
+			notifications.forEach((n) => {
+				expect(n.timestamp).toBeGreaterThanOrEqual(Date.now() - maxAge * DAY_IN_MILLIS)
+			});
+		})
+	});
+
+	it ("should retrieve all the unread notifications with a big enough age", async () => {
+		const maxAge = 100;
+		return getUnread(author._id, maxAge).then((notifications) => {
+			expect(notifications.length).toBe(5);
+			notifications.forEach((n) => {
+				expect(n.timestamp).toBeGreaterThanOrEqual(Date.now() - maxAge * DAY_IN_MILLIS)
+			});
+		})
 	});
 
 });

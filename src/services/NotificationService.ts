@@ -1,7 +1,10 @@
 import { Action, NotificationModel, Notification } from "@/models/Notification";
 import { Role } from "@/models/User";
 import { ERR_MSG } from "@/shared/errors";
+import { DAY_IN_MILLIS } from "@/shared/values";
 import * as UserService from "./UserService";
+
+export const DEFAULT_MAX_AGE = 7; // 7 days
 
 /**
  * Creates a new notification of the specified action filling it with the interested
@@ -37,6 +40,21 @@ Promise<Notification> => {
 			});
 		})
 		.catch((e) => { throw e });
+}
+
+/**
+ * Returns the list of unread notifications of an user with the specified age treshold.
+ * The default max age is 7 days.
+ * @param userId id of the user
+ * @param maxAge max age in days of the notifications to retrieve
+ * @returns the list of unread notifications
+ */
+export const getUnread = async (userId: string, maxAge: number = DEFAULT_MAX_AGE): 
+Promise<Notification[]> => {
+	return NotificationModel.find({
+		timestamp: { $gte: Date.now() - maxAge * DAY_IN_MILLIS },
+		interested: { $all: [ userId ] }
+	});
 }
 
 /**
