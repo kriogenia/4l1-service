@@ -1,6 +1,8 @@
 import { UserMinDto } from "@/models/dto";
+import { removeSharingLocation } from "@/services/NotificationService";
 import { LocationEvent } from "@/sockets/location";
 import { SocketTestHelper } from "@test-util/SocketSetUp";
+import { mocked } from "ts-jest/utils";
 
 /** Needed mock for socket tests */
 jest.mock("@/services/UserService");
@@ -25,6 +27,8 @@ describe("Stop sharing the location", () => {
 
 	it("should broadcast the notification to the rest of users",
 	(done) => {
+		mocked(removeSharingLocation).mockReturnValue(Promise.resolve(null));
+
 		s.joinLocation(() => {
 			s.clientB.on(LocationEvent.STOP, (msg: UserMinDto) => {
 				expect(msg).toEqual(stop);

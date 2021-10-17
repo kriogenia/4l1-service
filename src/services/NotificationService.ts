@@ -11,7 +11,7 @@ import * as UserService from "./UserService";
  * @param tags tags to apply to the action
  * @returns the Notification created and returned from the database
  */
-export const create = async (action: Action, instigatorId: string, tags: string[] = null):
+export const create = async (action: Action, instigatorId: string, tags: string[] = []):
 Promise<Notification> => {
 	return UserService.getById(instigatorId)
 		.then(async (user) => {

@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, mongoose, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { NotificationDto } from "./dto";
 import { UserSchema } from "./User";
@@ -24,10 +24,7 @@ export enum Action {
  * @property {User[]} interested users to notify with the notification
  * @property {string[]} tags of the notification
  */
- @modelOptions({ 
-	schemaOptions: { collection: "notifications" },
-	options: { allowMixed: Severity.ALLOW } 
-})
+ @modelOptions({ schemaOptions: { collection: "notifications" }})
 export class NotificationSchema {
 
 	@prop({ required: true })
@@ -39,8 +36,8 @@ export class NotificationSchema {
 	@prop({ required: true })
 	public timestamp!: number;
 
-	@prop()
-	public tags?: string[];
+	@prop({ type: String, default: [] })
+	public tags?: mongoose.Types.Array<string>;
 
 	@prop({ ref: () => UserSchema })
 	public interested!: Ref<UserSchema>[];

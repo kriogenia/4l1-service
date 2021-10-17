@@ -28,7 +28,9 @@ Promise<void> => {
 	socket.join(room);
 	LOG.info(`User[${data._id}] started sharing its location on Room[${room}]`);
 	// and notify it
-	const notification = await NotificationService.create(
-		Action.LOCATION_SHARING_START, data._id, [data._id]);
-	socket.broadcast.to(global).emit(notification.event, notification.dto());
+	return NotificationService.create(Action.LOCATION_SHARING_START, data._id, [data._id])
+		.then((notification) => {
+			socket.broadcast.to(global).emit(notification.event, notification.dto());
+		})
+		.catch((e)  => { LOG.err(e)});
 }
