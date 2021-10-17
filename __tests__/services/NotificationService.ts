@@ -44,7 +44,7 @@ describe("The create operation", () => {
 				expect(persisted.action).toEqual(Action.BOND_CREATED);
 				expect(persisted.instigator).toEqual(author.displayName);
 				expect(persisted.timestamp).toBeGreaterThanOrEqual(time);
-				expect(persisted.interested.length).toBe(3);
+				expect(persisted.interested.length).toBe(2);
 		});
 
 	});

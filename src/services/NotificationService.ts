@@ -18,14 +18,22 @@ Promise<Notification> => {
 			if (user.role === Role.Blank) {
 				throw Error(ERR_MSG.only_keepers_cared);
 			}
-			const bonds = user.role === Role.Patient ? user.bonds
+
+			const interested = user.role === Role.Patient ? user.bonds
 				: (await UserService.getCared(instigatorId)).bonds;
+			if (interested.length === 0) return null;
+			
+			if (user.role === Role.Keeper) {
+				interested.remove(user._id);
+				interested.push(user.cared);
+			}
+			
 			return NotificationModel.create({
 				action: action,
 				instigator: user.displayName,
 				timestamp: Date.now(),
 				tags: tags,
-				interested: [ user, ...bonds ]
+				interested: interested
 			});
 		})
 		.catch((e) => { throw e });

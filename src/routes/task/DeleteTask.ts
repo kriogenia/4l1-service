@@ -7,9 +7,8 @@ import { FEED, FeedEvent } from "@/sockets/feed";
 import { getFeedRoom } from "@/sockets/SocketHelper";
 import * as NotificationService from "@/services/NotificationService";
 import { io } from "@server";
-import { TaskMessage } from "@/models/Message";
 import { GLOBAL } from "@/sockets/global";
-import { Action, NOTIFY } from "@/models/Notification";
+import { Action } from "@/models/Notification";
 
 /**
  * Removes the requested task
@@ -33,14 +32,14 @@ export const deleteTask = async (
 			return TaskService.remove(id);
 		})
 		.then(async (task) => {
-			res.status(StatusCodes.NO_CONTENT).send();
 			io.to(roomId).emit(FeedEvent.DELETE, task);
+			res.status(StatusCodes.NO_CONTENT).send();
 			return NotificationService.removeCreatedTask(id)
 		})
 		.then((notification) => {
 			if (!notification) return;
-			io.to(roomId.replace(FEED, GLOBAL)).emit(
-				`${NOTIFY}:${Action.TASK_DELETED}`, notification.dto());
+			notification.action = Action.TASK_DELETED;
+			io.to(roomId.replace(FEED, GLOBAL)).emit(notification.event, notification.dto());
 		})
 		.catch(next);
 }

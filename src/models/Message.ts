@@ -70,7 +70,7 @@ export class MessageSchema {
 @post<TaskMessageSchema>("save", (task) => {
 	// creates a notification of the task creation and shares it
 	NotificationService.create(
-		Action.TASK_CREATED, task.submitter.toString(), [ task._id, task.title])
+		Action.TASK_CREATED, task.submitter.toString(), [ task.title, task._id ])
 		.then((notification) => {
 			const room = task.room.replace(FEED, GLOBAL)
 			io.to(room).emit(notification.event, notification.dto());

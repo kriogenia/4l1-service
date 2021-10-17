@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, mongoose, prop, Severity } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, mongoose, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { NotificationDto } from "./dto";
 import { UserSchema } from "./User";
