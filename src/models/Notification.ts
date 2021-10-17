@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { NotificationDto } from "./dto";
 import { UserSchema } from "./User";
@@ -13,7 +13,7 @@ export enum Action {
 	TASK_DONE = "task_done",
 	TASK_UNDONE = "task_undone",
 	LOCATION_SHARING_START = "location_sharing_start",
-	LOCATION_SHARING_END = "location_sharing_end"
+	LOCATION_SHARING_STOP = "location_sharing_stop"
 }
 
 /**
@@ -22,9 +22,12 @@ export enum Action {
  * @property {string} instigator display name of the notification perpretator
  * @property {number} timestamp creation timestamp of the notification
  * @property {User[]} interested users to notify with the notification
- * @property {TaskMessage} subject entity of the notification
+ * @property {string[]} tags of the notification
  */
- @modelOptions({ schemaOptions: { collection: "notifications" } })
+ @modelOptions({ 
+	schemaOptions: { collection: "notifications" },
+	options: { allowMixed: Severity.ALLOW } 
+})
 export class NotificationSchema {
 
 	@prop({ required: true })
@@ -37,7 +40,7 @@ export class NotificationSchema {
 	public timestamp!: number;
 
 	@prop()
-	public subject?: string;
+	public tags?: string[];
 
 	@prop({ ref: () => UserSchema })
 	public interested!: Ref<UserSchema>[];
@@ -47,7 +50,8 @@ export class NotificationSchema {
 			_id: this._id,
 			action: this.action,
 			instigator: this.instigator,
-			timestamp: this.timestamp
+			timestamp: this.timestamp,
+			tags: this.tags
 		}
 	}
 

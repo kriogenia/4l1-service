@@ -8,10 +8,10 @@ import * as UserService from "./UserService";
  * users
  * @param action to notify
  * @param instigatorId id of the action instigator
- * @param subject subject of the aciton if it exists
+ * @param tags tags to apply to the action
  * @returns the Notification created and returned from the database
  */
-export const create = async (action: Action, instigatorId: string, subject: string = null):
+export const create = async (action: Action, instigatorId: string, tags: string[] = null):
 Promise<Notification> => {
 	return UserService.getById(instigatorId)
 		.then(async (user) => {
@@ -24,9 +24,22 @@ Promise<Notification> => {
 				action: action,
 				instigator: user.displayName,
 				timestamp: Date.now(),
-				subject: subject,
+				tags: tags,
 				interested: [ user, ...bonds ]
 			});
 		})
 		.catch((e) => { throw e });
 }
+
+/**
+ * Removes the current notification of sharing location of the user
+ * @param userId id of the notification user
+ * @returns removed notification
+ */
+export const removeSharingLocation = async (userId: string): 
+Promise<Notification> => {
+	return NotificationModel.findOneAndRemove({
+			action: Action.LOCATION_SHARING_START,
+			tags: { $all: [userId] }
+	});
+};

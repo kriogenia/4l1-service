@@ -1,7 +1,6 @@
-import { Notification } from "@/models/Notification";
-import { Action } from "@/models/Notification";
+import { Action, Notification, NotificationModel } from "@/models/Notification";
 import { Role, User, UserModel } from "@/models/User";
-import { create } from "@/services/NotificationService";
+import { create, removeSharingLocation } from "@/services/NotificationService";
 import * as db from "@test-util/MongoMemory";
 
 /* Test database deployment and management */
@@ -47,6 +46,26 @@ describe("The create operation", () => {
 				expect(persisted.interested.length).toBe(3);
 		});
 
+	});
+
+});
+
+describe("The removal of sharing location notifications", () => {
+
+	it("should remove the matching notification", async () => {
+		const notification: Notification = await NotificationModel.create({
+			action: Action.LOCATION_SHARING_START,
+			instigator: "name",
+			timestamp: 0,
+			tags: [ author._id ],
+			interested: [ author._id ]
+		});
+
+		const removed = await removeSharingLocation(author._id);
+		expect(removed.dto().toString()).toEqual(notification.dto().toString());
+
+		const inDb = await NotificationModel.findById(notification._id);
+		expect(inDb).toBeNull();
 	});
 
 });
