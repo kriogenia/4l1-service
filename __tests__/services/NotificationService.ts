@@ -1,7 +1,8 @@
 import { MessageType, TaskMessageModel } from "@/models/Message";
 import { Action, Notification, NotificationModel } from "@/models/Notification";
 import { Role, User, UserModel } from "@/models/User";
-import { create, DEFAULT_MAX_AGE, getUnread, removeCreatedTask, removeSharingLocation } from "@/services/NotificationService";
+import { create, DEFAULT_MAX_AGE, getUnread, removeCreatedTask, 
+	removeSharingLocation, setReadByUser } from "@/services/NotificationService";
 import { DAY_IN_MILLIS } from "@/shared/values";
 import * as db from "@test-util/MongoMemory";
 
@@ -84,6 +85,44 @@ describe("The retrieval of unread notifications", () => {
 				expect(n.timestamp).toBeGreaterThanOrEqual(Date.now() - maxAge * DAY_IN_MILLIS)
 			});
 		})
+	});
+
+});
+
+describe("Setting a notification as read by an user", () => {
+
+	it("should do it and keep the notification if still have interesteds", async () => {
+		const other = UserModel.create({
+			googleId: "other",
+			displayName: "other",
+			role: Role.Keeper
+		});
+		const notification: Notification = await NotificationModel.create({
+			action: Action.LOCATION_SHARING_START,
+			instigator: "name",
+			timestamp: 0,
+			interested: [ author._id, (await other)._id ]
+		});
+
+		await setReadByUser(notification._id, author._id);
+
+		const inDb = await NotificationModel.findById(notification._id);
+		expect(inDb.interested.length).toBe(1);
+		expect(inDb.interested[0]).toEqual((await other)._id);
+	});
+
+	it("should do it and delete the notification if lost all its interested", async () => {
+		const notification: Notification = await NotificationModel.create({
+			action: Action.LOCATION_SHARING_START,
+			instigator: "name",
+			timestamp: 0,
+			interested: [ author._id ]
+		});
+
+		await setReadByUser(notification._id, author._id);
+
+		const inDb = await NotificationModel.findById(notification._id);
+		expect(inDb).toBeNull();
 	});
 
 });

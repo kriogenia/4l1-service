@@ -1,5 +1,5 @@
 import { UserMinDto } from "@/models/dto";
-import { Action, NOTIFY } from "@/models/Notification";
+import { Action } from "@/models/Notification";
 import * as NotificationService from "@/services/NotificationService";
 import { LOG } from "@/shared/Logger";
 import { Server, Socket } from "socket.io";
@@ -25,8 +25,8 @@ Promise<void> => {
 	return NotificationService.removeSharingLocation(data._id)
 		.then((notification) => {
 			if (!notification) return;
-			socket.broadcast.to(getRoom(GLOBAL, socket)).emit(
-				`${NOTIFY}:${Action.LOCATION_SHARING_STOP}`, notification.dto());
+			notification.action = Action.LOCATION_SHARING_STOP;
+			socket.broadcast.to(getRoom(GLOBAL, socket)).emit(notification.event, notification.dto());
 		})
 		.catch((e) => { LOG.err(e) });
 }

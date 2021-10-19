@@ -58,6 +58,20 @@ Promise<Notification[]> => {
 }
 
 /**
+ * Sets the specified notification as read by the specified user
+ */
+export const setReadByUser = async (notificationId: string, userId: string):
+Promise<void> => {
+	return NotificationModel.findById(notificationId)
+		.then(async (notification) => {
+			if (!notification) return;
+			notification.removeInterested(userId);
+			notification.isFullRead() ? notification.remove() : await notification.save();
+		})
+		.catch((e) => { throw e; });
+}
+
+/**
  * Removes the current notification of a new task created
  * @param taskId id of the deleted task
  * @returns removed notification
