@@ -58,15 +58,31 @@ Promise<Notification[]> => {
 }
 
 /**
+ * Sets the notifications of an user as read
+ * @param userId id of the user reading the notification
+ */
+export const setAllRead = async (userId: string):
+Promise<void> => {
+	return NotificationModel.find({ interested: { $all: [ userId ] } })
+		.then(async (notifications) => {
+			await Promise.all(notifications.map((n) => n.removeInterested(userId)));
+			//notifications.forEach((notification) => {
+		//		notification.removeInterested(userId);
+		//	});
+		})
+		.catch((e) => { throw e; });
+}
+
+/**
  * Sets the specified notification as read by the specified user
+ * @param notificationId id of the notification to set as read
  */
 export const setReadByUser = async (notificationId: string, userId: string):
 Promise<void> => {
 	return NotificationModel.findById(notificationId)
 		.then(async (notification) => {
 			if (!notification) return;
-			notification.removeInterested(userId);
-			notification.isFullRead() ? notification.remove() : await notification.save();
+			await notification.removeInterested(userId);
 		})
 		.catch((e) => { throw e; });
 }

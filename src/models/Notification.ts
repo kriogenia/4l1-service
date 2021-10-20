@@ -56,12 +56,10 @@ export class NotificationSchema {
 		return `${NOTIFY}:${this.action}`
 	}
 
-	public removeInterested(this: DocumentType<NotificationSchema>, id: string): void {
+	public async removeInterested(this: DocumentType<NotificationSchema>, id: string): 
+	Promise<void> {
 		this.interested = this.interested.filter((n) => n.toString() != id);
-	}
-
-	public isFullRead(this: DocumentType<NotificationSchema>): boolean {
-		return this.interested.length === 0;
+		this.interested.length === 0 ? this.remove() : await this.save();
 	}
 
 }

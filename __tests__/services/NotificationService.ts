@@ -2,7 +2,7 @@ import { MessageType, TaskMessageModel } from "@/models/Message";
 import { Action, Notification, NotificationModel } from "@/models/Notification";
 import { Role, User, UserModel } from "@/models/User";
 import { create, DEFAULT_MAX_AGE, getUnread, removeCreatedTask, 
-	removeSharingLocation, setReadByUser } from "@/services/NotificationService";
+	removeSharingLocation, setAllRead, setReadByUser } from "@/services/NotificationService";
 import { DAY_IN_MILLIS } from "@/shared/values";
 import * as db from "@test-util/MongoMemory";
 
@@ -85,6 +85,34 @@ describe("The retrieval of unread notifications", () => {
 				expect(n.timestamp).toBeGreaterThanOrEqual(Date.now() - maxAge * DAY_IN_MILLIS)
 			});
 		})
+	});
+
+});
+
+describe("Setting the notifications of an user as read", () => {
+
+	it("should let only those that still have interesteds", async () => {
+		const other = await UserModel.create({
+			googleId: "other",
+			displayName: "other",
+			role: Role.Keeper
+		});
+		const notifications: Partial<Notification>[] = new Array(10).fill({}).map((_, index) => {
+			return {
+				action: Action.BOND_CREATED,
+				instigator: "name",
+				timestamp: 0,
+				interested: (index % 2 === 0) ? [ author._id ] : [ author._id, other._id ]
+			}
+		});
+		await NotificationModel.create(notifications);
+
+		await setAllRead(author._id);
+
+		const ofAuthor = await NotificationModel.find({ interested: { $all: [ author._id ] } });
+		expect(ofAuthor.length).toBe(0);
+		const ofOther = await NotificationModel.find({ interested: { $all: [ other._id ] } });
+		expect(ofOther.length).toBe(5);
 	});
 
 });
