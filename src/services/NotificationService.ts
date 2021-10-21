@@ -66,9 +66,6 @@ Promise<void> => {
 	return NotificationModel.find({ interested: { $all: [ userId ] } })
 		.then(async (notifications) => {
 			await Promise.all(notifications.map((n) => n.removeInterested(userId)));
-			//notifications.forEach((notification) => {
-		//		notification.removeInterested(userId);
-		//	});
 		})
 		.catch((e) => { throw e; });
 }

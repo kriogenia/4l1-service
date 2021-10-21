@@ -7,6 +7,9 @@ const notificationsRouter = Router();
 /* GET /feed/notifications */
 notificationsRouter.get("/", getNotifications);
 
+/* POST /feed/notifications/read */
+notificationsRouter.post("/read", setNotificationRead);
+
 /* POST /feed/notifications/:id/read */
 notificationsRouter.post("/:id/read", setNotificationRead);
 
