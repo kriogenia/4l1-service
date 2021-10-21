@@ -1,9 +1,11 @@
 import { Server, Socket } from "socket.io";
-import { GLOBAL, GlobalRoomEvent } from "../global";
+import { GLOBAL } from "../global";
 import { LOG } from "@/shared/Logger";
 import { getRoom } from "../SocketHelper";
 import { LOCATION } from ".";
 import { UserMinDto } from "@/models/dto";
+import * as NotificationService from "@/services/NotificationService";
+import { Action } from "@/models/Notification";
 
 /**
  * Event triggered when a user starts sharing their location.
@@ -13,7 +15,8 @@ import { UserMinDto } from "@/models/dto";
  * @param _io server
  * @param data id and name of the user sharing the location
  */
-export const onShare = (socket: Socket, _io: Server) => (data: UserMinDto): void => {
+export const onShare = (socket: Socket, _io: Server) => async (data: UserMinDto): 
+Promise<void> => {
 	const global = getRoom(GLOBAL, socket);
 	if (!global) {
 		LOG.err("The user is not connected to a Global Room");
@@ -24,6 +27,10 @@ export const onShare = (socket: Socket, _io: Server) => (data: UserMinDto): void
 	const room = global.replace(GLOBAL, LOCATION);
 	socket.join(room);
 	LOG.info(`User[${data._id}] started sharing its location on Room[${room}]`);
-	// and communicate it through the global room
-	socket.broadcast.to(global).emit(GlobalRoomEvent.SHARING_LOCATION, data);
+	// and notify it
+	return NotificationService.create(Action.LOCATION_SHARING_START, data._id, [data._id])
+		.then((notification) => {
+			socket.broadcast.to(global).emit(notification.event, notification.dto());
+		})
+		.catch((e)  => { LOG.err(e)});
 }

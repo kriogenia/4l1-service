@@ -1,5 +1,5 @@
 import { badRequestError, ERR_MSG } from "@/shared/errors";
-import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, mongoose, prop, Severity } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { UserDto, UserPublicDto } from "./dto";
 
@@ -34,7 +34,7 @@ export interface Address {
  */
  @modelOptions({ 
 	schemaOptions: { collection: "users" },
-	options: { allowMixed: Severity.ALLOW } 
+	options: { allowMixed: Severity.ALLOW }
 })
 export class UserSchema {
 
@@ -60,7 +60,7 @@ export class UserSchema {
 	public email?: string;
 
 	@prop({ ref: () => UserSchema })
-	public bonds?: Ref<UserSchema>[];
+	public bonds?: mongoose.Types.Array<Ref<UserSchema>>;
 
 	@prop({ ref: () => UserSchema })
 	public cared?: Ref<UserSchema>;

@@ -39,13 +39,13 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 	}
 
 	it("with POST should set the task as done", async () => {
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
+		});
 		const task = await TaskMessageModel.create({
 			...taskData,
 			submitter: user._id,
 			room: `${FEED}:${user._id}`
-		});
-		await UserModel.findByIdAndUpdate(user._id, {
-			role: Role.Patient
 		});
 
 		await postRequest(endpoint + task._id + endpointEnd, session.auth)
@@ -57,13 +57,13 @@ describe("Calling " + endpoint + ":id" + endpointEnd, () => {
 	});
 
 	it("with DELETE should set the task as not done", async () => {
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
+		});
 		const task = await TaskMessageModel.create({
 			...taskData,
 			submitter: user._id,
 			room: `${FEED}:${user._id}`
-		});
-		await UserModel.findByIdAndUpdate(user._id, {
-			role: Role.Patient
 		});
 
 		await deleteRequest(endpoint + task._id + endpointEnd, session.auth)

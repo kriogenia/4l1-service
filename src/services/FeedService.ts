@@ -3,8 +3,6 @@ import { FeedModel, Message, MessageType, TaskMessageModel, TextMessageModel } f
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_BATCH_SIZE = 25;
 
-/** Minimum info to create new Messages */
-
 /**
  * Creates a new message with the specified info
  * @param message message to create

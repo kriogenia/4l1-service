@@ -1,6 +1,13 @@
-import { getDiscriminatorModelForClass, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import * as NotificationService from "@/services/NotificationService";
+import { LOG } from "@/shared/Logger";
+import { FEED } from "@/sockets/feed";
+import { GLOBAL } from "@/sockets/global";
+import { io } from "@server";
+import { getDiscriminatorModelForClass, getModelForClass, modelOptions, 
+	post, prop } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType, Ref } from "@typegoose/typegoose/lib/types";
 import { TaskDto } from "./dto/Message";
+import { Action } from "./Notification";
 import { UserSchema } from "./User";
 
 /** List of possible types of messages */
@@ -46,7 +53,7 @@ export class MessageSchema {
  * 
  * @property {string} message content of the message
  */
-class TextMessageSchema extends MessageSchema {
+ export class TextMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
 	public message!: string;
@@ -60,7 +67,17 @@ class TextMessageSchema extends MessageSchema {
  * @property {string} description task description
  * @property {boolean} done completion state
  */
-class TaskMessageSchema extends MessageSchema {
+@post<TaskMessageSchema>("save", (task) => {
+	// creates a notification of the task creation and shares it
+	NotificationService.create(
+		Action.TASK_CREATED, task.submitter.toString(), [ task.title, task._id ])
+		.then((notification) => {
+			const room = task.room.replace(FEED, GLOBAL)
+			io.to(room).emit(notification.event, notification.dto());
+		})
+		.catch((e) => LOG.err(e));
+})
+export class TaskMessageSchema extends MessageSchema {
 
 	@prop({ required: true })
 	public title!: string;

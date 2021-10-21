@@ -28,6 +28,9 @@ describe("Calling DELETE " + endpoint + ":id", () => {
 	});
 
 	it("should delete the specified task", async () => {
+		await UserModel.findByIdAndUpdate(user._id, {
+			role: Role.Patient
+		});
 		const task = await TaskMessageModel.create({
 			title: "title",
 			description: "description",
@@ -38,9 +41,6 @@ describe("Calling DELETE " + endpoint + ":id", () => {
 			lastUpdate: 0,
 			room: `${FEED}:${user._id}`,
 			type: MessageType.Task
-		});
-		await UserModel.findByIdAndUpdate(user._id, {
-			role: Role.Patient
 		});
 
 		await deleteRequest(endpoint + task._id, session.auth)

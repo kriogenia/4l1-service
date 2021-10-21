@@ -11,6 +11,8 @@ import { mocked } from "ts-jest/utils";
 import { Role, User } from "@/models/User";
 import { FeedEvent } from "@/sockets/feed";
 import { UserMinDto } from "@/models/dto";
+import { Action, NOTIFY, Notification } from "@/models/Notification";
+import { create } from "@/services/NotificationService";
 
 export class SocketTestHelper {
 
@@ -108,11 +110,23 @@ export class SocketTestHelper {
 			_id: this.idClientA,
 			displayName: "KEEPER"
 		}
+		const action = Action.LOCATION_SHARING_START;
+		const created: Partial<Notification> = {
+			event: `${NOTIFY}:${action}`,
+			dto: jest.fn().mockReturnValue({
+				_id: share._id,
+				action: action,
+				instigator: share.displayName,
+				timestamp: 0,
+			})
+		};
+		mocked(create).mockReturnValue(Promise.resolve(created as Notification));
+		
 		this.joinGlobal(() => {
-			this.clientB.on(GlobalRoomEvent.SHARING_LOCATION, () => {
+			this.clientB.on(`${NOTIFY}:${action}`, () => {
 				this.clientB.emit(LocationEvent.SHARE, share);
 			});
-			this.clientA.on(GlobalRoomEvent.SHARING_LOCATION, () => {
+			this.clientA.on(`${NOTIFY}:${action}`, () => {
 				callback();
 			});
 			this.clientA.emit(LocationEvent.SHARE, share);
