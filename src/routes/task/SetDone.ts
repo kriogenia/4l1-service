@@ -5,7 +5,10 @@ import { StatusCodes } from "http-status-codes";
 import { IdParam } from "@/shared/values";
 import { getFeedRoom } from "@/sockets/SocketHelper";
 import { ERR_MSG, unathorizedError } from "@/shared/errors";
-import { FeedEvent } from "@/sockets/feed";
+import { FEED } from "@/sockets/feed";
+import * as NotificationService from "@/services/NotificationService";
+import { Action } from "@/models/Notification";
+import { GLOBAL } from "@/sockets/global";
 
 /**
  * Updates the done state of a given task
@@ -22,15 +25,25 @@ export const setDone = (done: boolean) => async (
 	next: NextFunction): Promise<void|Response> => 
 {
 	const { id } = req.params;
-	return getFeedRoom(req.sessionId)
+	const userId = req.sessionId;
+	let roomId: string;
+	return getFeedRoom(userId)
 		.then((room) => {
+			roomId = room;
 			if (!TaskService.belongsTo(id, room)) {
 				throw unathorizedError(ERR_MSG.unauthorized_operation);
 			}
-			return [room, TaskService.update({ _id: id, done: done })];
-		}).then(async ([room, task]) => {
+			return TaskService.update({ _id: id, done: done });
+		})
+		.then(async (task) => {
 			res.status(StatusCodes.NO_CONTENT).send();
-			io.to(room as string).emit(FeedEvent.TASK_STATE_UPDATE, await task);
+			return NotificationService.create(done ? Action.TASK_DONE: Action.TASK_UNDONE, 
+				userId, [ task.title, task._id ])
+		})
+		.then((notification) => {
+			if (!notification) return;
+			io.to(roomId.replace(FEED, GLOBAL)).emit(
+				notification.event, notification.dto());
 		})
 		.catch(next);
 }

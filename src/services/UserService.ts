@@ -62,7 +62,8 @@ export const getCared = async (userId: string): Promise<User> => {
 				}
 				if (!user.cared) return null;	// If the user doesn't have cared, return null
 				return getById(user.cared.toString());
-			});
+			})
+			.catch((e) => { throw e });
 }
 
 /**

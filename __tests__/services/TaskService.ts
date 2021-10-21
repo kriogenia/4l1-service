@@ -122,7 +122,7 @@ describe("The relevant retrieval", () => {
 	});
 
 
-	it("should retrieve all the relevant tasks with a big enough value", 
+	it("should retrieve all the relevant tasks with a big enough age", 
 	(done) => {
 		const days = 100;
 		getRelevant(room, days).then((messages) => {
