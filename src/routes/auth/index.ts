@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { validateToken } from "../middlewares";
 import { refresh } from "./Refresh";
 import { signIn } from "./SignIn";
 import { signOut } from "./SignOut";
@@ -9,7 +10,9 @@ const authRouter = Router();
 authRouter.get("/signin/:token", signIn);
 
 /* DELETE /auth/session/{token} */
-authRouter.delete("/session/:token", signOut);
+const logOutRouter = Router();			// Internal private endpoint
+logOutRouter.delete("/session/:token", signOut);
+authRouter.use(validateToken, logOutRouter);
 
 /* GET /auth/refresh/{token} */
 authRouter.get("/refresh/:token", refresh);
