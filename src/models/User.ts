@@ -97,7 +97,7 @@ export class UserSchema {
 		if (this.bonds.length >= parseInt(process.env.MAX_BONDS)) {
 			throw badRequestError(ERR_MSG.maximum_bonds_reached);
 		}
-		if (keeper.cared !== undefined) {
+		if (keeper.cared !== undefined && keeper.cared !== null) {
 			throw badRequestError(ERR_MSG.keeper_already_bonded);
 		}
 		this.bonds.push(keeper);
@@ -117,9 +117,9 @@ export class UserSchema {
 		}
 		if (this.role === Role.Patient) {
 			this.bonds.remove(bond);
-			bond.cared = null;
+			bond.cared = undefined;
 		} else {
-			this.cared = null;
+			this.cared = undefined;
 			bond.bonds.remove(this);
 		}
 		await Promise.all([this.save(), bond.save()]);
