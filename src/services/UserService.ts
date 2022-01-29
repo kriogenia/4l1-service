@@ -14,6 +14,18 @@ export const bond = async (patientId: string, keeperId: string): Promise<void> =
 }
 
 /**
+ * Removes a bond between the users with the specified ids
+ * @param userId id of the user
+ * @param bondId id of its bond
+ * @returns promise without return
+ */
+export const unbond = async (userId: string, bondId: string): Promise<void> => {
+	const user = await UserModel.findById(userId);
+	const bond = await UserModel.findById(bondId);
+	return user.unbondWith(bond);
+}
+
+/**
  * Promise of user retrieve by its Id
  * @param userId of the user to get
  * @returns data of the user with the matching id
