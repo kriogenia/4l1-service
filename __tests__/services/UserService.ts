@@ -106,14 +106,14 @@ describe("The unbond function", () => {
 		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
 
 		const storedKeeper = await UserModel.findById(keeper._id);
-		expect(storedKeeper.cared).toBeNull();
+		expect(storedKeeper.cared).toBeUndefined();
 	});	
 
 	it("should remove the bond when a Keeper removes a Patient", async () => {
 		await UserService.unbond(keeper._id, patient._id);
 
 		const storedKeeper = await UserModel.findById(keeper._id);
-		expect(storedKeeper.cared).toBeNull();
+		expect(storedKeeper.cared).toBeUndefined();
 		const storedPatient = await UserModel.findById(patient._id);
 		expect(storedPatient.bonds.length).toBe(1);
 		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
@@ -139,7 +139,7 @@ describe("The unbond function", () => {
 		expect(storedPatient.bonds.length).toBe(1);
 		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
 		const storedKeeper = await UserModel.findById(keeper._id);
-		expect(storedKeeper.cared).toBeNull();
+		expect(storedKeeper.cared).toBeUndefined();
 	});
 
 });

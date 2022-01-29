@@ -1,5 +1,5 @@
-import Logger from "jet-logger";
 import mongoose from "mongoose";
+import { LOG } from "./shared/Logger";
 
 export const connectToMongo = () => {
 
@@ -10,10 +10,10 @@ export const connectToMongo = () => {
 		useUnifiedTopology: true
 	})
 	.then(() => {
-		Logger.Imp("Connected to MongoDB database");
+		LOG.imp("Connected to MongoDB database");
 	})
 	.catch((e: Error) => {
-		Logger.Err(e);
+		LOG.err(e);
 	});
 
 };

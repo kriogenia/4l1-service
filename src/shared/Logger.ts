@@ -6,6 +6,6 @@
 
  import Logger from "jet-logger";
 
- const LOG = new Logger();
+ const LOG = Logger;
  
  export { LOG };
