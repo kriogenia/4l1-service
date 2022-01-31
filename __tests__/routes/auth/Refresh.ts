@@ -29,7 +29,7 @@ describe("Calling GET " + endpoint, () => {
 		const response = await getRequest(endpoint + "refreshToken", "authToken")
 			.send()
 			.expect(StatusCodes.UNAUTHORIZED);
-		expect(response.body.message).toBe(ERR_MSG.session_invalid);
+		expect(response.body.message).toBe(ERR_MSG.token_invalid);
 	});
 
 });

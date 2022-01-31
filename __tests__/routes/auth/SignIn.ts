@@ -55,7 +55,7 @@ describe("Calling GET " + endpoint, () => {
 		await request(app)
 			.get(`${endpoint}`)
 			.send()
-			.expect(StatusCodes.NOT_FOUND);
+			.expect(StatusCodes.BAD_REQUEST);
 	});
 
 });

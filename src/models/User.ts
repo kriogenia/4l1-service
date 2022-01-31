@@ -86,7 +86,7 @@ export class UserSchema {
 	/**
 	 * Builds a bond between the specified patient and keeper if the requisites
 	 * are covered
-	 * @param patient 	patient to be bonded
+	 * @param this 	patient to be bonded
 	 * @param keeper	keeper to be bonded
 	 */
 	public async bondWith(this: DocumentType<UserSchema>, keeper: DocumentType<UserSchema>)
@@ -97,12 +97,32 @@ export class UserSchema {
 		if (this.bonds.length >= parseInt(process.env.MAX_BONDS)) {
 			throw badRequestError(ERR_MSG.maximum_bonds_reached);
 		}
-		if (keeper.cared !== undefined) {
+		if (keeper.cared !== undefined && keeper.cared !== null) {
 			throw badRequestError(ERR_MSG.keeper_already_bonded);
 		}
 		this.bonds.push(keeper);
 		keeper.cared = this;
 		await Promise.all([this.save(), keeper.save()]);
+	}
+
+	/**
+	 * Removes a bond between the specified users
+	 * @param this 		current user
+	 * @param bond		user to unbond
+	 */
+	public async unbondWith(this: DocumentType<UserSchema>, bond: DocumentType<UserSchema>)
+	: Promise<void> {
+		if (this.role === Role.Blank || bond.role == Role.Blank) {
+			throw Error("Invalid unbonding. BLANK users can't have bonds");
+		}
+		if (this.role === Role.Patient) {
+			this.bonds.remove(bond);
+			bond.cared = undefined;
+		} else {
+			this.cared = undefined;
+			bond.bonds.remove(this);
+		}
+		await Promise.all([this.save(), bond.save()]);
 	}
 
 }

@@ -23,7 +23,7 @@ export const list = async (
 		? UserService.getBonds(id)
 		: UserService.getBondsOfCared(id);
 	return list.then((users) => {
-		const bonds = users.filter(u => u._id != id).map(u => u.public);
+		const bonds = users.filter(u => u._id != id).map(u => u.dto());
 		return res.status(StatusCodes.OK).send({bonds: bonds});
 	}).catch(next);
 }

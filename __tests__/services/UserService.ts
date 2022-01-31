@@ -75,6 +75,75 @@ describe("The bond function", () => {
 
 });
 
+describe("The unbond function", () => {
+
+	let patient: User;
+	let keeper: User;
+	let other: User;
+
+	beforeEach(async () => {
+		patient = await UserModel.create({
+			googleId: "patient",
+			role: Role.Patient
+		});
+		keeper = await UserModel.create({
+			googleId: "keeper",
+			role: Role.Keeper
+		});
+		other = await UserModel.create({
+			googleId: "other",
+			role: Role.Keeper
+		});
+		await UserService.bond(patient._id, other._id);
+		await UserService.bond(patient._id, keeper._id);
+	});
+
+	it("should remove the bond when a Patient removes a KeeperBond", async () => {
+		await UserService.unbond(patient._id, keeper._id);
+
+		const storedPatient = await UserModel.findById(patient._id);
+		expect(storedPatient.bonds.length).toBe(1);
+		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
+
+		const storedKeeper = await UserModel.findById(keeper._id);
+		expect(storedKeeper.cared).toBeUndefined();
+	});	
+
+	it("should remove the bond when a Keeper removes a Patient", async () => {
+		await UserService.unbond(keeper._id, patient._id);
+
+		const storedKeeper = await UserModel.findById(keeper._id);
+		expect(storedKeeper.cared).toBeUndefined();
+		const storedPatient = await UserModel.findById(patient._id);
+		expect(storedPatient.bonds.length).toBe(1);
+		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
+	});	
+
+	it("should throw an error when the user roles are wrong", async () => {
+		const blank = await UserModel.create({
+			googleId: "keeper",
+			role: Role.Blank
+		});
+
+		const message = "Invalid unbonding. BLANK users can't have bonds";
+		expect.assertions(2);
+		await UserService.unbond(blank._id, patient._id).catch(e => { expect(e).toEqual(Error(message))});
+		await UserService.unbond(keeper._id, blank._id).catch(e => { expect(e).toEqual(Error(message))});
+	});
+
+	it("should do nothing when the bond does not exist", async () => {
+		await UserService.unbond(patient._id, keeper._id);
+		// Already unbonded, same result
+		await UserService.unbond(patient._id, keeper._id);
+		const storedPatient = await UserModel.findById(patient._id);
+		expect(storedPatient.bonds.length).toBe(1);
+		expect(storedPatient.bonds[0]).not.toEqual(keeper._id);
+		const storedKeeper = await UserModel.findById(keeper._id);
+		expect(storedKeeper.cared).toBeUndefined();
+	});
+
+});
+
 describe("The cared request", () => {
 
 	it("should return the data of the user cared when it exists", async () => {
