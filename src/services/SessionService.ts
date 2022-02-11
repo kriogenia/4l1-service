@@ -34,7 +34,9 @@ Promise<number> => {
  * @returns true if the session is open, false otherwise
  */
  export const isSessionOpen = async (token: string): 
- Promise<boolean> => SessionModel.exists({ auth: token });
+ Promise<boolean> => {
+	return await SessionModel.countDocuments({ auth: token }) > 0;
+};
 
 /**
  * Checks if the specified refresh session is currently open
@@ -42,7 +44,7 @@ Promise<number> => {
  * @returns true if the session is open, false otherwise
  */
 export const isSessionRefreshable = async (token: string): 
-Promise<boolean> => SessionModel.exists({ refresh: token });
+Promise<boolean> => await SessionModel.countDocuments({ refresh: token }) > 0;
 
 /**
  * Search in the database any stored session with the provided auth token and refresh
